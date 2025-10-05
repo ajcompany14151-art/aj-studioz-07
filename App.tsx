@@ -390,7 +390,7 @@ const App: React.FC = () => {
           <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-3xl animate-float"></div>
           <div className="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-3xl animate-float delay-1000"></div>
           <div className="fixed inset-0 opacity-10" style={{ backgroundImage: `url('${patternUrl}')` }}></div>
-          <div className="fixed inset-0 opacity-5" style={{ backgroundImage: `url('${twinklePattern}')` }} className="animate-twinkle"></div>
+          <div className="fixed inset-0 opacity-5 animate-twinkle" style={{ backgroundImage: `url('${twinklePattern}')` }}></div>
         </>
       )}
       

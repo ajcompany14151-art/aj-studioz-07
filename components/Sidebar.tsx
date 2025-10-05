@@ -103,20 +103,28 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                 <div className="pt-4 px-2 space-y-4">
                     <div>
                         <label className="text-xs font-semibold text-zinc-500 px-1">APPEARANCE</label>
-                        <div className="p-1 mt-1 flex items-center gap-1 bg-zinc-200 dark:bg-zinc-950 rounded-full">
+                        <div className="p-1 mt-1 flex items-center gap-1 bg-zinc-200 dark:bg-zinc-950 rounded-full shadow-inner">
                             <button 
                                 onClick={() => setTheme('light')}
-                                className={`flex items-center justify-center gap-2 w-full px-3 py-1.5 rounded-full text-sm font-medium transition-all ${theme === 'light' ? 'bg-white text-zinc-800 shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                                className={`flex items-center justify-center gap-2 w-full px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                                    theme === 'light' 
+                                    ? 'bg-white text-zinc-800 shadow-md' 
+                                    : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'
+                                }`}
                                 aria-pressed={theme === 'light'}
                             >
                                 <SunIcon className="h-4 w-4" /> <span>Light</span>
                             </button>
                             <button 
                                 onClick={() => setTheme('dark')}
-                                className={`flex items-center justify-center gap-2 w-full px-3 py-1.5 rounded-full text-sm font-medium transition-all ${theme === 'dark' ? 'bg-black text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'}`}
+                                className={`flex items-center justify-center gap-2 w-full px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                                    theme === 'dark' 
+                                    ? 'bg-gradient-to-r from-zinc-900 to-black text-white shadow-md shadow-black/30' 
+                                    : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
+                                }`}
                                 aria-pressed={theme === 'dark'}
                             >
-                                <SparklesIcon className="h-4 w-4" /> <span>Dark</span>
+                                <SparklesIcon className="h-4 w-4" /> <span>Premium</span>
                             </button>
                         </div>
                     </div>
@@ -187,12 +195,14 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
     `}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-700 rounded-lg">
-            <img 
-              src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
-              alt="AJ Studioz Logo" 
-              className="h-6 w-6 rounded"
-            />
+          <div className="relative p-0.5 bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg shadow-red-500/25">
+            <div className="p-1.5 bg-white dark:bg-black rounded-full">
+              <img 
+                src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
+                alt="AJ Studioz Logo" 
+                className="h-6 w-6 rounded-full object-cover"
+              />
+            </div>
           </div>
           <h1 className="text-lg font-semibold text-zinc-900 dark:text-white tracking-wide">AJ STUDIOZ</h1>
         </div>

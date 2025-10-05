@@ -475,7 +475,7 @@ const App: React.FC = () => {
         {currentView === 'chat' && (
             <footer className={`w-full border-t transition-all duration-500 relative z-10 ${
               theme === 'dark'
-                ? 'bg-black/90 border-zinc-800/50 backdrop-blur-xl shadow-lg shadow-black/30'
+                ? 'bg-zinc-900/90 border-zinc-700/50 backdrop-blur-xl shadow-lg shadow-black/30'
                 : 'bg-white/90 border-zinc-200/50 backdrop-blur-xl shadow-lg shadow-zinc-200/20'
             }`}>
               <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />

@@ -78,8 +78,8 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
   }, [code, language]);
 
   return (
-    <div className={`rounded-xl my-4 overflow-hidden bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-950 dark:to-black border border-zinc-200 dark:border-zinc-900`}>
-      <div className="flex justify-between items-center px-4 py-1.5 bg-zinc-200/50 dark:bg-black/30 text-zinc-500 dark:text-zinc-400 text-xs font-sans">
+    <div className={`rounded-xl my-4 overflow-hidden bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-950 dark:to-black border border-zinc-300/60 dark:border-zinc-700/60`}>
+      <div className="flex justify-between items-center px-4 py-1.5 bg-zinc-100/70 dark:bg-zinc-900/70 backdrop-blur-sm border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 text-xs font-sans">
         <span className="font-mono tracking-tight text-zinc-700 dark:text-zinc-300 font-semibold">{language.toLowerCase()}</span>
         <div className="flex items-center gap-1">
             <CodeActionButton label="Wrap code (coming soon)" disabled>
@@ -96,7 +96,7 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
         <div className={`
           overflow-auto transition-all duration-300 ease-in-out
           [&::-webkit-scrollbar]:w-2
-          [&::-webkit-scrollbar-track]:bg-transparent
+          [&::-webkit-scrollbar-track]:bg-zinc-200/30 dark:[&::-webkit-scrollbar-track]:bg-zinc-800/30
           [&::-webkit-scrollbar-thumb]:rounded-full
           [&::-webkit-scrollbar-thumb]:bg-zinc-300/40 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-700/40
           [&::-webkit-scrollbar-thumb]:transition-colors
@@ -123,7 +123,7 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
       </div>
 
       {isCollapsible && (
-        <div className="bg-zinc-200/50 dark:bg-black/30 border-t border-zinc-200 dark:border-zinc-900 px-4 py-1.5 flex justify-center">
+        <div className="bg-zinc-100/70 dark:bg-zinc-900/70 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800 px-4 py-1.5 flex justify-center">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             aria-expanded={isExpanded}

@@ -53,7 +53,10 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, i
 
 const themes: { id: HighlightTheme; name: string }[] = [
     { id: 'atom-one-dark', name: 'Atom One Dark' },
+    { id: 'atom-one-light', name: 'Atom One Light' },
     { id: 'github-dark', name: 'GitHub Dark' },
+    { id: 'github', name: 'GitHub Light' },
+    { id: 'solarized-dark', name: 'Solarized Dark' },
     { id: 'dracula', name: 'Dracula' },
     { id: 'monokai', name: 'Monokai' },
     { id: 'nord', name: 'Nord' },

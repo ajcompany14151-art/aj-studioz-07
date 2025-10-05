@@ -17,7 +17,7 @@ export interface SavedChat {
   messages: Message[];
 }
 
-export type HighlightTheme = 'atom-one-dark' | 'github-dark' | 'dracula' | 'monokai' | 'nord';
+export type HighlightTheme = 'atom-one-dark' | 'github-dark' | 'dracula' | 'monokai' | 'nord' | 'github' | 'solarized-dark' | 'atom-one-light';
 
 export type Theme = 'light' | 'dark';
 

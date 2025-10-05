@@ -69,12 +69,15 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
   return (
     <div className={`py-6 px-2`}>
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-900 flex items-center justify-center">
-          <img 
-            src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
-            alt="AJ Studioz Logo" 
-            className="h-5 w-5 rounded"
-          />
+        <div className="relative flex-shrink-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg shadow-red-500/25"></div>
+          <div className="relative w-8 h-8 bg-white dark:bg-black rounded-full border border-zinc-300 dark:border-zinc-900 flex items-center justify-center">
+            <img 
+              src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
+              alt="AJ Studioz Logo" 
+              className="h-5 w-5 rounded-full object-cover"
+            />
+          </div>
         </div>
         <div className="flex-grow pt-0.5 w-full overflow-hidden">
           <div className="text-zinc-900 dark:text-zinc-200 w-full leading-relaxed">

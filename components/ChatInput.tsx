@@ -38,8 +38,8 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       <div 
         className="
           relative flex items-end gap-2 p-2
-          bg-zinc-100 dark:bg-black/50
-          border border-zinc-300 dark:border-zinc-700/50
+          bg-zinc-100 dark:bg-gradient-to-r dark:from-zinc-800 dark:to-zinc-900
+          border border-zinc-300 dark:border-zinc-700
           rounded-2xl
           transition-all duration-200
           focus-within:border-purple-500/50 dark:focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/30 dark:focus-within:ring-purple-500/30
@@ -63,10 +63,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           rows={1}
           placeholder="How can I help?"
           className="
-            w-full bg-transparent text-zinc-900 dark:text-zinc-100 resize-none 
+            w-full bg-transparent text-zinc-900 dark:text-white resize-none 
             focus:outline-none 
             disabled:cursor-not-allowed
-            placeholder-zinc-500 dark:placeholder-zinc-500 text-base
+            placeholder-zinc-500 dark:placeholder-zinc-400 text-base
             py-2.5 px-2
           "
           disabled={isLoading}

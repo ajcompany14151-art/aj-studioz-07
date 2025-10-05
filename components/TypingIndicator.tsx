@@ -2,10 +2,23 @@ import React from 'react';
 
 const TypingIndicatorComponent: React.FC = () => {
   return (
-    <div className="flex items-center gap-1.5 py-2">
-      <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-      <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-      <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce"></span>
+    <div className="flex items-center gap-2 py-2">
+      <div className="relative w-6 h-6">
+        <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg shadow-red-500/25"></div>
+        <div className="relative w-6 h-6 bg-white dark:bg-black rounded-full border border-zinc-300 dark:border-zinc-900 flex items-center justify-center">
+          <img 
+            src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
+            alt="AJ Studioz Logo" 
+            className="h-4 w-4 rounded-full object-cover animate-pulse"
+          />
+        </div>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce"></span>
+      </div>
+      <span className="text-sm text-zinc-600 dark:text-zinc-400 italic">AI is thinking...</span>
     </div>
   );
 };

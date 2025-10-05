@@ -1,12 +1,13 @@
-
-
-
 import { GoogleGenAI, Chat, Content } from '@google/genai';
 import { Message } from '../types';
 
-if (!process.env.API_KEY) {
-  console.error("API_KEY environment variable not set.");
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+if (!apiKey) {
+  console.error("VITE_GEMINI_API_KEY environment variable not set.");
 }
+
+const ai = new GoogleGenAI({ apiKey: apiKey || '' });
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 

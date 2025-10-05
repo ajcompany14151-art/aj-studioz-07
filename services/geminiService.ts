@@ -9,11 +9,9 @@ if (!apiKey) {
 
 const ai = new GoogleGenAI({ apiKey: apiKey || '' });
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
-
 export function createChatSession(history?: Message[]): Chat {
   const geminiHistory: Content[] | undefined = history
-    ?.filter(msg => msg.content) // Ensure we don't send empty messages in history
+    ?.filter(msg => msg.content)
     .map(msg => ({
       role: msg.role,
       parts: [{ text: msg.content }],

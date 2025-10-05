@@ -58,7 +58,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
             <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-900/50 border border-zinc-300 dark:border-zinc-700/50 flex items-center justify-center">
                 <UserIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
             </div>
-            <p className="flex-grow pt-1 text-zinc-900 dark:text-zinc-100 font-medium text-base">
+            <p className="flex-grow pt-1 text-zinc-900 dark:text-white font-medium text-base">
                 {message.content}
             </p>
         </div>
@@ -80,7 +80,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
           </div>
         </div>
         <div className="flex-grow pt-0.5 w-full overflow-hidden">
-          <div className="text-zinc-900 dark:text-zinc-100 w-full leading-relaxed">
+          <div className="text-zinc-900 dark:text-white w-full leading-relaxed">
             {isModelTyping ? (
               <div className="flex items-center gap-2 py-2">
                 <div className="relative w-6 h-6">

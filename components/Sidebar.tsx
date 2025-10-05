@@ -38,7 +38,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, i
     onClick={onClick}
     className={`flex items-center w-full gap-3 p-3 rounded-lg text-sm font-medium transition-colors ${
       isActive
-        ? 'bg-zinc-200 dark:bg-zinc-900 text-zinc-900 dark:text-white'
+        ? 'bg-zinc-200 dark:bg-zinc-950 text-zinc-900 dark:text-white'
         : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white'
     }`}
   >
@@ -85,7 +85,7 @@ const UserProfileSection: React.FC = () => {
             {isEditing ? (
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-300 dark:bg-zinc-800 border border-zinc-400 dark:border-zinc-700 flex items-center justify-center">
+                         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-300 dark:bg-zinc-900 border border-zinc-400 dark:border-zinc-800 flex items-center justify-center">
                             <UserIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
                         </div>
                         <div className="flex-grow space-y-1">
@@ -93,14 +93,14 @@ const UserProfileSection: React.FC = () => {
                                 type="text" 
                                 value={editName}
                                 onChange={(e) => setEditName(e.target.value)}
-                                className="w-full bg-zinc-200/50 dark:bg-zinc-900/80 rounded-md p-1 -m-1 text-sm font-semibold border-none focus:ring-1 focus:ring-zinc-500 text-zinc-900 dark:text-white"
+                                className="w-full bg-zinc-200/50 dark:bg-zinc-950 rounded-md p-1 -m-1 text-sm font-semibold border-none focus:ring-1 focus:ring-zinc-500 text-zinc-900 dark:text-white"
                                 aria-label="User name"
                             />
                              <input 
                                 type="email" 
                                 value={editEmail}
                                 onChange={(e) => setEditEmail(e.target.value)}
-                                className="w-full bg-zinc-200/50 dark:bg-zinc-900/80 rounded-md p-1 -m-1 text-xs border-none focus:ring-1 focus:ring-zinc-500 text-zinc-500 dark:text-zinc-400"
+                                className="w-full bg-zinc-200/50 dark:bg-zinc-950 rounded-md p-1 -m-1 text-xs border-none focus:ring-1 focus:ring-zinc-500 text-zinc-500 dark:text-zinc-400"
                                 aria-label="User email"
                             />
                         </div>
@@ -117,9 +117,9 @@ const UserProfileSection: React.FC = () => {
                     </div>
                 </div>
             ) : (
-                <div className="group flex items-center justify-between p-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-900 transition-colors">
+                <div className="group flex items-center justify-between p-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-950 transition-colors">
                     <div className="flex items-center gap-3">
-                         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-300 dark:bg-zinc-800 border border-zinc-400 dark:border-zinc-700 flex items-center justify-center">
+                         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-300 dark:bg-zinc-900 border border-zinc-400 dark:border-zinc-800 flex items-center justify-center">
                             <UserIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
                         </div>
                         <div className="overflow-hidden">
@@ -161,7 +161,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
   
   return (
     <aside className={`
-      bg-zinc-50 dark:bg-black p-4 flex flex-col h-full border-r border-zinc-200 dark:border-zinc-900 
+      bg-zinc-50 dark:bg-black p-4 flex flex-col h-full border-r border-zinc-200 dark:border-zinc-800 
       transform transition-transform transition-colors duration-300 ease-in-out
       fixed w-72 top-0 left-0 z-40 
       md:flex md:static md:w-72 md:translate-x-0
@@ -169,7 +169,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
     `}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-lg">
+          <div className="p-1.5 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-700 rounded-lg">
             <AJStudiozIcon className="h-6 w-6 text-zinc-900 dark:text-white"/>
           </div>
           <h1 className="text-lg font-semibold text-zinc-900 dark:text-white tracking-wide">AJ STUDIOZ</h1>
@@ -181,7 +181,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
 
       <button 
         onClick={handleNewChatClick}
-        className="flex items-center justify-between w-full gap-3 p-3 mb-4 rounded-lg text-sm font-medium text-zinc-900 dark:text-white bg-zinc-200 dark:bg-zinc-900 hover:bg-zinc-300/70 dark:hover:bg-zinc-800/70 border border-zinc-300 dark:border-zinc-800 transition-colors"
+        className="flex items-center justify-between w-full gap-3 p-3 mb-4 rounded-lg text-sm font-medium text-zinc-900 dark:text-white bg-zinc-200 dark:bg-zinc-950 hover:bg-zinc-300/70 dark:hover:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 transition-colors"
       >
         <span>New Chat</span>
         <PlusIcon className="h-4 w-4" />
@@ -217,7 +217,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
                 aria-checked={theme === 'dark'}
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-100 dark:focus:ring-offset-black
-                  ${theme === 'dark' ? 'bg-zinc-700' : 'bg-zinc-300'}
+                  ${theme === 'dark' ? 'bg-zinc-800' : 'bg-zinc-300'}
                 `}
             >
                 <span className="sr-only">Use {theme === 'dark' ? 'light' : 'dark'} theme</span>
@@ -238,7 +238,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
               id="theme-select"
               value={highlightTheme}
               onChange={(e) => setHighlightTheme(e.target.value as HighlightTheme)}
-              className="w-full appearance-none bg-zinc-200 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-lg p-3 pl-10 text-sm text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-700 cursor-pointer"
+              className="w-full appearance-none bg-zinc-200 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg p-3 pl-10 text-sm text-zinc-800 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-700 cursor-pointer"
               aria-label="Select code block theme"
             >
               {themes.map(theme => (
@@ -248,7 +248,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
             <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 dark:text-zinc-400 pointer-events-none" />
           </div>
         </div>
-        <div className="border-t border-zinc-200 dark:border-zinc-900">
+        <div className="border-t border-zinc-200 dark:border-zinc-800">
             <UserProfileSection />
         </div>
       </div>

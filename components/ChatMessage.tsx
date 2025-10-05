@@ -55,7 +55,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
     return (
       <div className="py-6 px-2">
         <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 flex items-center justify-center">
+            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 flex items-center justify-center">
                 <UserIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
             </div>
             <p className="flex-grow pt-1 text-zinc-900 dark:text-zinc-50 font-medium text-base">
@@ -69,7 +69,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
   return (
     <div className={`py-6 px-2`}>
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 flex items-center justify-center">
+        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 flex items-center justify-center">
           <AJStudiozIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300"/>
         </div>
         <div className="flex-grow pt-0.5 w-full overflow-hidden">
@@ -99,7 +99,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
           </div>
           {!isLoading && !isModelTyping && message.content.length > 0 && (
             <div className="mt-4">
-              <button className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-full hover:bg-zinc-200/80 dark:hover:bg-zinc-800/80 hover:text-zinc-900 dark:hover:text-white transition-colors">
+              <button className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-zinc-100 dark:bg-zinc-950 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-full hover:bg-zinc-200/80 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white transition-colors">
                 <WandIcon className="h-3.5 w-3.5" />
                 Think Harder
                 <XIcon className="h-3.5 w-3.5 text-zinc-400 dark:text-zinc-500" />

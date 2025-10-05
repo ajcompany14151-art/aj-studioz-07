@@ -38,8 +38,8 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       <div 
         className="
           relative flex items-end gap-2 p-2
-          bg-zinc-100 dark:bg-[#131313]
-          border border-zinc-300 dark:border-zinc-800/80
+          bg-zinc-100 dark:bg-zinc-950
+          border border-zinc-300 dark:border-zinc-800
           rounded-2xl
           transition-all duration-200
           focus-within:border-zinc-500 dark:focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-zinc-500/50 dark:focus-within:ring-zinc-700/50
@@ -88,7 +88,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             p-2 rounded-xl transition-all duration-200 transform flex-shrink-0
             ${isDisabled
               ? 'text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
-              : 'bg-zinc-900 text-white dark:bg-white dark:text-black hover:bg-zinc-700 dark:hover:bg-zinc-200 hover:scale-105 active:scale-95'
+              : 'bg-zinc-900 text-white dark:bg-white dark:text-black hover:bg-zinc-700 dark:hover:bg-zinc-200 hover:scale-105 active:scale-95 dark:hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]'
             }`
           }
         >

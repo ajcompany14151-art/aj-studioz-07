@@ -1,8 +1,3 @@
-
-
-
-
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { ChatInput } from './components/ChatInput';
@@ -166,8 +161,10 @@ const App: React.FC = () => {
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
+      document.documentElement.classList.add('premium-dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('premium-dark');
     }
     localStorage.setItem('app-theme', theme);
   }, [theme]);
@@ -337,7 +334,11 @@ const App: React.FC = () => {
   }, [handleSend]);
 
   return (
-    <div className="flex h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300 ease-in-out">
+    <div className={`flex h-screen font-sans transition-colors duration-300 ease-in-out ${
+      theme === 'dark' 
+        ? 'bg-gradient-to-br from-zinc-950 via-black to-zinc-950 text-zinc-100' 
+        : 'bg-white text-zinc-900'
+    }`}>
       {isSaveModalOpen && (
         <SaveChatModal
             onClose={() => setIsSaveModalOpen(false)}
@@ -375,13 +376,21 @@ const App: React.FC = () => {
         onViewChange={setCurrentView}
       />
       <div className="flex flex-col flex-grow h-screen">
-        <header className="flex items-center justify-between p-3 border-b border-zinc-200 dark:border-zinc-900 md:hidden sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-10 transition-colors duration-300 ease-in-out">
-            <button onClick={toggleSidebar} className="text-zinc-800 dark:text-white p-2 -ml-2">
+        <header className={`flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-sm z-10 transition-colors duration-300 ease-in-out ${
+          theme === 'dark'
+            ? 'bg-zinc-950/80 border-zinc-900 text-zinc-100'
+            : 'bg-white/80 border-zinc-200 text-zinc-900'
+        }`}>
+            <button onClick={toggleSidebar} className={`p-2 -ml-2 ${
+              theme === 'dark' ? 'text-zinc-100' : 'text-zinc-800'
+            }`}>
               <MenuIcon className="h-6 w-6"/>
             </button>
             <div className="flex items-center gap-2">
-                <AJStudiozIcon className="h-5 w-5 text-zinc-900 dark:text-white"/>
-                <h1 className="text-base font-semibold text-zinc-900 dark:text-white tracking-wide">AJ STUDIOZ</h1>
+                <AJStudiozIcon className={`h-5 w-5 ${
+                  theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'
+                }`}/>
+                <h1 className="text-base font-semibold tracking-wide">AJ STUDIOZ</h1>
             </div>
             <div className="w-6"></div>
         </header>
@@ -409,12 +418,22 @@ const App: React.FC = () => {
                 {isLoading && messages.length > 0 && messages[messages.length - 1].content === '' && (
                     <div className="py-6 px-2">
                         <div className="flex items-start gap-4">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-900 flex items-center justify-center">
-                                <AJStudiozIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300"/>
+                            <div className={`flex-shrink-0 w-8 h-8 rounded-lg border flex items-center justify-center ${
+                              theme === 'dark'
+                                ? 'bg-zinc-900 border-zinc-800'
+                                : 'bg-zinc-200 border-zinc-300'
+                            }`}>
+                                <AJStudiozIcon className={`h-5 w-5 ${
+                                  theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'
+                                }`}/>
                             </div>
                             <div className="flex items-center gap-2 pt-1.5">
-                                <SpinnerIcon className="h-5 w-5 animate-spin text-zinc-500 dark:text-zinc-400" />
-                                <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">AJ is thinking...</span>
+                                <SpinnerIcon className={`h-5 w-5 animate-spin ${
+                                  theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'
+                                }`} />
+                                <span className={`text-sm font-medium ${
+                                  theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'
+                                }`}>AJ is thinking...</span>
                             </div>
                         </div>
                     </div>
@@ -433,7 +452,11 @@ const App: React.FC = () => {
           )}
         </main>
         {currentView === 'chat' && (
-            <footer className="w-full border-t border-zinc-200 dark:border-zinc-900 bg-white dark:bg-black transition-colors duration-300 ease-in-out">
+            <footer className={`w-full border-t transition-colors duration-300 ease-in-out ${
+              theme === 'dark'
+                ? 'bg-zinc-950 border-zinc-900'
+                : 'bg-white border-zinc-200'
+            }`}>
               <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
             </footer>
         )}

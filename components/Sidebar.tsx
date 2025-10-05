@@ -56,7 +56,7 @@ const themes: { id: HighlightTheme; name: string }[] = [
     { id: 'github', name: 'GitHub Light' },
     { id: 'monokai', name: 'Monokai' },
     { id: 'nord', name: 'Nord' },
-    { id: 'solarized-dark', name: 'Solarized Dark' ],
+    { id: 'solarized-dark', name: 'Solarized Dark' },
 ];
 
 

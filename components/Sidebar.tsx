@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react'
 import { PlusIcon } from './icons/PlusIcon';
 import { AJStudiozIcon } from './icons/AJStudiozIcon';
@@ -57,7 +56,7 @@ const themes: { id: HighlightTheme; name: string }[] = [
     { id: 'github', name: 'GitHub Light' },
     { id: 'monokai', name: 'Monokai' },
     { id: 'nord', name: 'Nord' },
-    { id: 'solarized-dark', name: 'Solarized Dark' },
+    { id: 'solarized-dark', name: 'Solarized Dark' ],
 ];
 
 
@@ -117,7 +116,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                                 className={`flex items-center justify-center gap-2 w-full px-3 py-1.5 rounded-full text-sm font-medium transition-all ${theme === 'dark' ? 'bg-black text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'}`}
                                 aria-pressed={theme === 'dark'}
                             >
-                                <SparklesIcon className="h-4 w-4" /> <span>Premium</span>
+                                <SparklesIcon className="h-4 w-4" /> <span>Dark</span>
                             </button>
                         </div>
                     </div>
@@ -189,7 +188,11 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <div className="p-1.5 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-700 rounded-lg">
-            <AJStudiozIcon className="h-6 w-6 text-zinc-900 dark:text-white"/>
+            <img 
+              src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
+              alt="AJ Studioz Logo" 
+              className="h-6 w-6 rounded"
+            />
           </div>
           <h1 className="text-lg font-semibold text-zinc-900 dark:text-white tracking-wide">AJ STUDIOZ</h1>
         </div>

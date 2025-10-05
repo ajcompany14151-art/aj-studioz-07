@@ -13,7 +13,13 @@ import { SettingsIcon } from './icons/SettingsIcon';
 import { CheckIcon } from './icons/CheckIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { ChevronUpIcon } from './icons/ChevronUpIcon';
-import { CrownIcon } from './icons/CrownIcon';
+
+// Simple CrownIcon component to replace the missing import
+const CrownIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 11l7-7 7 7M5 19l7-7 7 7M12 3v18" />
+  </svg>
+);
 
 interface SidebarProps {
   onNewChat: () => void;

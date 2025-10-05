@@ -88,7 +88,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
                   return (
                      <div
                         key={part.key}
-                        className="prose prose-zinc dark:prose-invert max-w-none prose-p:my-2 prose-pre:my-0 prose-a:text-sky-500 dark:prose-a:text-sky-400 hover:prose-a:underline prose-ul:my-3 prose-ol:my-3"
+                        className="prose prose-zinc dark:prose-invert max-w-none prose-p:my-2 prose-pre:my-0 prose-a:text-sky-500 dark:prose-a:text-sky-400 hover:prose-a:underline prose-ul:my-3 prose-ol:my-3 prose-code:text-zinc-800 dark:prose-code:text-zinc-200 prose-code:bg-zinc-200/80 dark:prose-code:bg-zinc-800/50 prose-code:rounded-md prose-code:px-1.5 prose-code:py-1 prose-code:font-semibold"
                         dangerouslySetInnerHTML={{ __html: html }}
                       />
                   );

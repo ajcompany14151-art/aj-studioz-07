@@ -1,6 +1,4 @@
 
-
-
 import React, { useState } from 'react'
 import { PlusIcon } from './icons/PlusIcon';
 import { AJStudiozIcon } from './icons/AJStudiozIcon';
@@ -54,12 +52,12 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, i
 const themes: { id: HighlightTheme; name: string }[] = [
     { id: 'atom-one-dark', name: 'Atom One Dark' },
     { id: 'atom-one-light', name: 'Atom One Light' },
+    { id: 'dracula', name: 'Dracula' },
     { id: 'github-dark', name: 'GitHub Dark' },
     { id: 'github', name: 'GitHub Light' },
-    { id: 'solarized-dark', name: 'Solarized Dark' },
-    { id: 'dracula', name: 'Dracula' },
     { id: 'monokai', name: 'Monokai' },
     { id: 'nord', name: 'Nord' },
+    { id: 'solarized-dark', name: 'Solarized Dark' },
 ];
 
 

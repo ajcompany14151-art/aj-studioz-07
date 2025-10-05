@@ -80,9 +80,21 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
           </div>
         </div>
         <div className="flex-grow pt-0.5 w-full overflow-hidden">
-          <div className="text-zinc-900 dark:text-zinc-200 w-full leading-relaxed">
+          <div className="text-zinc-900 dark:text-zinc-100 w-full leading-relaxed">
             {isModelTyping ? (
-              <TypingIndicator />
+              <div className="flex items-center gap-2 py-2">
+                <div className="relative w-6 h-6">
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg shadow-red-500/25"></div>
+                  <div className="relative w-6 h-6 bg-white dark:bg-black rounded-full border border-zinc-300 dark:border-zinc-900 flex items-center justify-center">
+                    <img 
+                      src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
+                      alt="AJ Studioz Logo" 
+                      className="h-4 w-4 rounded-full object-cover animate-pulse"
+                    />
+                  </div>
+                </div>
+                <span className="text-sm text-zinc-600 dark:text-zinc-400 italic">AI is thinking...</span>
+              </div>
             ) : (
               <>
                 {parsedParts.map(part => {
@@ -95,7 +107,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
                   return (
                      <div
                         key={part.key}
-                        className="prose prose-zinc dark:prose-invert max-w-none prose-p:my-2 prose-pre:my-0 prose-a:text-sky-500 dark:prose-a:text-sky-400 hover:prose-a:underline prose-ul:my-3 prose-ol:my-3 prose-code:text-zinc-800 dark:prose-code:text-zinc-200 prose-code:bg-zinc-200/80 dark:prose-code:bg-zinc-800/50 prose-code:rounded-md prose-code:px-1.5 prose-code:py-1 prose-code:font-semibold"
+                        className="prose prose-zinc dark:prose-invert max-w-none prose-p:my-2 prose-pre:my-0 prose-a:text-sky-500 dark:prose-a:text-sky-400 hover:prose-a:underline prose-ul:my-3 prose-ol:my-3 prose-code:text-zinc-800 dark:prose-code:text-zinc-200 prose-code:bg-zinc-200/80 dark:prose-code:bg-zinc-800/50 prose-code:rounded-md prose-code:px-1.5 prose-code:py-1 prose-code:font-semibold prose-headings:text-zinc-900 dark:prose-headings:text-white prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-blockquote:border-l-4 prose-blockquote:border-zinc-300 dark:prose-blockquote:border-zinc-700 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-zinc-700 dark:prose-blockquote:text-zinc-300 prose-table:border-collapse prose-table:border prose-table:border-zinc-300 dark:prose-table:border-zinc-700 prose-th:bg-zinc-100 dark:prose-th:bg-zinc-900 prose-th:font-semibold prose-td:border prose-td:border-zinc-300 dark:prose-td:border-zinc-700 prose-td:px-2 prose-td:py-1"
                         dangerouslySetInnerHTML={{ __html: html }}
                       />
                   );

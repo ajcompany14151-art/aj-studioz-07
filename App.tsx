@@ -47,7 +47,7 @@ const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void }> = 
         <button
           key={title}
           onClick={() => onPromptClick(prompt)}
-          className="p-4 bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-left hover:bg-zinc-200 dark:hover:bg-zinc-900 transition-colors"
+          className="p-4 bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-xl text-left hover:bg-zinc-200 dark:hover:bg-zinc-900 transition-colors"
         >
           <p className="font-semibold text-sm text-zinc-800 dark:text-zinc-200">{title}</p>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{prompt}</p>
@@ -60,7 +60,7 @@ const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void }> = 
 const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void }> = ({ onPromptClick }) => (
     <div className="flex-grow flex items-center justify-center">
         <div className="text-center p-4">
-            <div className="inline-block p-4 bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl mb-6">
+            <div className="inline-block p-4 bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl mb-6">
                 <AJStudiozIcon className="h-10 w-10 text-zinc-900 dark:text-white"/>
             </div>
             <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2 tracking-tight">How can I help you today?</h1>
@@ -209,7 +209,7 @@ const App: React.FC = () => {
         onViewChange={setCurrentView}
       />
       <div className="flex flex-col flex-grow h-screen">
-        <header className="flex items-center justify-between p-3 border-b border-zinc-200 dark:border-zinc-800 md:hidden sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-10 transition-colors duration-300 ease-in-out">
+        <header className="flex items-center justify-between p-3 border-b border-zinc-200 dark:border-zinc-900 md:hidden sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-10 transition-colors duration-300 ease-in-out">
             <button onClick={toggleSidebar} className="text-zinc-800 dark:text-white p-2 -ml-2">
               <MenuIcon className="h-6 w-6"/>
             </button>
@@ -243,7 +243,7 @@ const App: React.FC = () => {
           )}
         </main>
         {currentView === 'chat' && (
-            <footer className="w-full border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black transition-colors duration-300 ease-in-out">
+            <footer className="w-full border-t border-zinc-200 dark:border-zinc-900 bg-white dark:bg-black transition-colors duration-300 ease-in-out">
               <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
             </footer>
         )}

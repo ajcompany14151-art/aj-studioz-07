@@ -85,7 +85,7 @@ const UserProfileSection: React.FC = () => {
             {isEditing ? (
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-300 dark:bg-zinc-900 border border-zinc-400 dark:border-zinc-800 flex items-center justify-center">
+                         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-300 dark:bg-zinc-950 border border-zinc-400 dark:border-zinc-900 flex items-center justify-center">
                             <UserIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
                         </div>
                         <div className="flex-grow space-y-1">
@@ -119,7 +119,7 @@ const UserProfileSection: React.FC = () => {
             ) : (
                 <div className="group flex items-center justify-between p-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-950 transition-colors">
                     <div className="flex items-center gap-3">
-                         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-300 dark:bg-zinc-900 border border-zinc-400 dark:border-zinc-800 flex items-center justify-center">
+                         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-300 dark:bg-zinc-950 border border-zinc-400 dark:border-zinc-900 flex items-center justify-center">
                             <UserIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
                         </div>
                         <div className="overflow-hidden">
@@ -161,7 +161,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
   
   return (
     <aside className={`
-      bg-zinc-50 dark:bg-black p-4 flex flex-col h-full border-r border-zinc-200 dark:border-zinc-800 
+      bg-zinc-50 dark:bg-black p-4 flex flex-col h-full border-r border-zinc-200 dark:border-zinc-900 
       transform transition-transform transition-colors duration-300 ease-in-out
       fixed w-72 top-0 left-0 z-40 
       md:flex md:static md:w-72 md:translate-x-0
@@ -248,7 +248,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
             <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 dark:text-zinc-400 pointer-events-none" />
           </div>
         </div>
-        <div className="border-t border-zinc-200 dark:border-zinc-800">
+        <div className="border-t border-zinc-200 dark:border-zinc-900">
             <UserProfileSection />
         </div>
       </div>

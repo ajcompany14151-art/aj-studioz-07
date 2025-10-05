@@ -39,7 +39,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         className="
           relative flex items-end gap-2 p-2
           bg-zinc-100 dark:bg-zinc-950
-          border border-zinc-300 dark:border-zinc-800
+          border border-zinc-300 dark:border-zinc-900
           rounded-2xl
           transition-all duration-200
           focus-within:border-zinc-500 dark:focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-zinc-500/50 dark:focus-within:ring-zinc-700/50

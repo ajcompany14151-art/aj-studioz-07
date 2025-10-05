@@ -72,6 +72,8 @@ const themes: { id: HighlightTheme; name: string }[] = [
     { id: 'monokai', name: 'Monokai' },
     { id: 'nord', name: 'Nord' },
     { id: 'solarized-dark', name: 'Solarized Dark' },
+    { id: 'vs2015', name: 'VS 2015' },
+    { id: 'ir-black', name: 'IR Black' },
 ];
 
 
@@ -118,7 +120,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                     </div>
                     <div className="overflow-hidden text-left">
                         <p className={`text-sm font-bold truncate ${
-                          theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'
+                          theme === 'dark' ? 'text-white' : 'text-zinc-900'
                         }`}>{userName}</p>
                         <p className={`text-xs truncate ${
                           theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'
@@ -185,7 +187,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                                 onChange={(e) => setHighlightTheme(e.target.value as HighlightTheme)}
                                 className={`w-full appearance-none rounded-xl p-3 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 cursor-pointer transition-all duration-500 shadow-sm ${
                                   theme === 'dark'
-                                    ? 'bg-gradient-to-r from-zinc-800/70 to-zinc-900/70 border-zinc-700/50 text-zinc-300 focus:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/20'
+                                    ? 'bg-gradient-to-r from-zinc-800/70 to-zinc-900/70 border-zinc-700/50 text-white focus:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/20'
                                     : 'bg-gradient-to-r from-zinc-100/70 to-zinc-50/70 border-zinc-300/50 text-zinc-800 focus:border-zinc-500/50 hover:shadow-md hover:shadow-zinc-200/20'
                                 }`}
                                 aria-label="Select code block theme"
@@ -205,7 +207,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                                 }`}>NAME</label>
                                 <input id="edit-name" type="text" value={editName} onChange={(e) => setEditName(e.target.value)} className={`mt-1 w-full rounded-xl p-3 text-sm focus:ring-2 transition-all duration-500 shadow-sm ${
                                   theme === 'dark'
-                                    ? 'bg-gradient-to-r from-zinc-800/70 to-zinc-900/70 border-zinc-700/50 focus:ring-purple-500/30 text-zinc-100 hover:shadow-lg hover:shadow-purple-500/20'
+                                    ? 'bg-gradient-to-r from-zinc-800/70 to-zinc-900/70 border-zinc-700/50 focus:ring-purple-500/30 text-white hover:shadow-lg hover:shadow-purple-500/20'
                                     : 'bg-gradient-to-r from-zinc-100/70 to-zinc-50/70 border-zinc-300/50 focus:ring-zinc-500/30 text-zinc-900 hover:shadow-md hover:shadow-zinc-200/20'
                                 }`} aria-label="User name"/>
                             </div>
@@ -215,7 +217,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                                 }`}>EMAIL</label>
                                 <input id="edit-email" type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className={`mt-1 w-full rounded-xl p-3 text-sm focus:ring-2 transition-all duration-500 shadow-sm ${
                                   theme === 'dark'
-                                    ? 'bg-gradient-to-r from-zinc-800/70 to-zinc-900/70 border-zinc-700/50 focus:ring-purple-500/30 text-zinc-100 hover:shadow-lg hover:shadow-purple-500/20'
+                                    ? 'bg-gradient-to-r from-zinc-800/70 to-zinc-900/70 border-zinc-700/50 focus:ring-purple-500/30 text-white hover:shadow-lg hover:shadow-purple-500/20'
                                     : 'bg-gradient-to-r from-zinc-100/70 to-zinc-50/70 border-zinc-300/50 focus:ring-zinc-500/30 text-zinc-900 hover:shadow-md hover:shadow-zinc-200/20'
                                 }`} aria-label="User email"/>
                             </div>
@@ -240,7 +242,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                         <div className="pt-2 animate-in slide-in-from-bottom-1 duration-300">
                              <button onClick={() => { setEditName(userName); setEditEmail(userEmail); setIsEditing(true); }} className={`group relative flex items-center justify-center w-full gap-2 p-3 rounded-xl text-sm font-bold transition-all duration-500 overflow-hidden ${
                                theme === 'dark'
-                                 ? 'text-zinc-300 hover:bg-zinc-800/30 hover:text-zinc-100 hover:shadow-lg hover:shadow-purple-500/20'
+                                 ? 'text-zinc-300 hover:bg-zinc-800/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20'
                                  : 'text-zinc-600 hover:bg-zinc-100/50 hover:text-zinc-900 hover:shadow-md hover:shadow-zinc-200/20'
                              } before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100`}>
                                 <SettingsIcon className="h-4 w-4 relative z-10"/>
@@ -268,7 +270,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
       fixed w-80 top-0 left-0 z-40 
       md:flex md:static md:w-80 md:translate-x-0
       ${theme === 'dark' 
-        ? 'bg-gradient-to-b from-slate-950/90 via-zinc-950/90 to-slate-950/90 border-zinc-800/30 shadow-2xl shadow-black/40 backdrop-blur-md before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] before:from-purple-900/20 before:to-transparent' 
+        ? 'bg-black border-zinc-800/30 shadow-2xl shadow-black/40 backdrop-blur-md before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] before:from-purple-900/20 before:to-transparent' 
         : 'bg-gradient-to-b from-white/90 via-zinc-50/90 to-white/90 border-zinc-200/30 shadow-2xl shadow-zinc-200/20 backdrop-blur-md before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] before:from-purple-500/10 before:to-transparent'
       }
       ${isOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -289,7 +291,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
             </div>
           </div>
           <h1 className={`text-xl font-bold tracking-wide transition-all duration-700 relative z-10 ${
-            theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'
+            theme === 'dark' ? 'text-white' : 'text-zinc-900'
           }`}>AJ STUDIOZ</h1>
         </div>
         <button onClick={onClose} className={`md:hidden group relative transition-all duration-500 p-2 rounded-xl ${

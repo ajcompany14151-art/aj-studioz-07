@@ -1,5 +1,8 @@
 
-import { GoogleGenAI, Chat } from '@google/genai';
+
+
+import { GoogleGenAI, Chat, Content } from '@google/genai';
+import { Message } from '../types';
 
 if (!process.env.API_KEY) {
   console.error("API_KEY environment variable not set.");
@@ -7,9 +10,17 @@ if (!process.env.API_KEY) {
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
-export function createChatSession(): Chat {
+export function createChatSession(history?: Message[]): Chat {
+  const geminiHistory: Content[] | undefined = history
+    ?.filter(msg => msg.content) // Ensure we don't send empty messages in history
+    .map(msg => ({
+      role: msg.role,
+      parts: [{ text: msg.content }],
+    }));
+
   return ai.chats.create({
     model: 'gemini-2.5-flash',
+    history: geminiHistory,
     config: {
       systemInstruction: 'You are AJ STUDIOZ AI, a helpful and versatile AI assistant with a slightly edgy and highly intelligent personality. You provide clear, concise, and accurate answers. Format code blocks appropriately for readability.',
     },

@@ -1,15 +1,22 @@
 
+
+
+
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { ChatInput } from './components/ChatInput';
 import { ChatMessage } from './components/ChatMessage';
-import { Message, MessageRole, HighlightTheme, Theme, AppView } from './types';
+import { Message, MessageRole, HighlightTheme, Theme, AppView, SavedChat } from './types';
 import { createChatSession } from './services/geminiService';
 import type { Chat } from '@google/genai';
 import { MenuIcon } from './components/icons/MenuIcon';
 import { AJStudiozIcon } from './components/icons/AJStudiozIcon';
 import { SearchIcon } from './components/icons/SearchIcon';
 import { HistoryIcon } from './components/icons/HistoryIcon';
+import { SpinnerIcon } from './components/icons/SpinnerIcon';
+import { SaveChatModal } from './components/SaveChatModal';
+import { TrashIcon } from './components/icons/TrashIcon';
 
 // Placeholder for Explore view
 const ExploreView: React.FC = () => (
@@ -22,16 +29,68 @@ const ExploreView: React.FC = () => (
   </div>
 );
 
-// Placeholder for Chat History view
-const HistoryView: React.FC = () => (
-  <div className="flex items-center justify-center h-full">
-    <div className="text-center">
-      <HistoryIcon className="mx-auto h-12 w-12 text-zinc-400 dark:text-zinc-600 mb-4" />
-      <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200">Chat History</h2>
-      <p className="text-zinc-500 dark:text-zinc-400 mt-1">This feature is coming soon.</p>
+// Functional Chat History view
+const HistoryView: React.FC<{ 
+  chats: SavedChat[]; 
+  onLoad: (chatId: string) => void;
+  onDelete: (chatId: string) => void;
+  onCloseSidebar: () => void;
+}> = ({ chats, onLoad, onDelete, onCloseSidebar }) => {
+  if (chats.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <HistoryIcon className="mx-auto h-12 w-12 text-zinc-400 dark:text-zinc-600 mb-4" />
+          <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200">No Saved Chats</h2>
+          <p className="text-zinc-500 dark:text-zinc-400 mt-1 max-w-xs mx-auto">Start a conversation and create a new chat to save it here for later.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const formatTimestamp = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+  
+  return (
+    <div className="flex flex-col h-full">
+      <header className="p-4 md:px-10 border-b border-zinc-200 dark:border-zinc-900">
+        <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200">Chat History</h2>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Load or delete your saved conversations.</p>
+      </header>
+      <div className="flex-grow overflow-y-auto p-4 md:p-10">
+        <ul className="space-y-3">
+          {chats.sort((a, b) => b.timestamp - a.timestamp).map(chat => (
+            <li key={chat.id} className="group flex items-center justify-between p-4 rounded-xl bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 transition-all hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-800">
+              <button 
+                onClick={() => { onLoad(chat.id); onCloseSidebar(); }} 
+                className="flex-grow text-left overflow-hidden"
+                aria-label={`Load chat: ${chat.name}`}
+              >
+                <p className="font-semibold text-zinc-800 dark:text-zinc-200 truncate">{chat.name}</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{formatTimestamp(chat.timestamp)}</p>
+              </button>
+              <button
+                onClick={() => onDelete(chat.id)}
+                aria-label={`Delete chat: ${chat.name}`}
+                title="Delete chat"
+                className="ml-4 p-2 flex-shrink-0 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/50 dark:hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+              >
+                <TrashIcon className="h-5 w-5" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const SUGGESTED_PROMPTS = [
   { title: "Explain a concept", prompt: "Explain quantum computing in simple terms." },
@@ -71,34 +130,76 @@ const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void }> = ({ on
     </div>
 );
 
+const getInitialTheme = (): Theme => {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const storedPrefs = window.localStorage.getItem('app-theme');
+    if (storedPrefs === 'light' || storedPrefs === 'dark') {
+      return storedPrefs;
+    }
+    const userMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    if (userMedia.matches) {
+      return 'dark';
+    }
+  }
+  return 'light'; // Default to light theme
+};
+
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [highlightTheme, setHighlightTheme] = useState<HighlightTheme>('atom-one-dark');
   const [currentView, setCurrentView] = useState<AppView>('chat');
   
+  const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+
   const chatSessionRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
 
+  // Effect to manage theme changes
   useEffect(() => {
-    // Set theme from localStorage or system preference
-    const savedAppTheme = localStorage.getItem('app-theme') as Theme;
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = savedAppTheme || (systemPrefersDark ? 'dark' : 'light');
-    setTheme(initialTheme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('app-theme', theme);
+  }, [theme]);
+
+  useEffect(() => {
+    // Load saved chats from local storage on mount
+    try {
+        const saved = localStorage.getItem('saved-chats');
+        if (saved) {
+            setSavedChats(JSON.parse(saved));
+        }
+    } catch (error) {
+        console.error("Failed to load chats from localStorage", error);
+        setSavedChats([]);
+    }
 
     const savedTheme = localStorage.getItem('hljs-theme') as HighlightTheme;
     if (savedTheme) {
       setHighlightTheme(savedTheme);
     }
     chatSessionRef.current = createChatSession();
-    inputRef.current?.focus();
   }, []);
+
+  // Effect to focus chat input when the chat view becomes active
+  useEffect(() => {
+    if (currentView === 'chat') {
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [currentView]);
 
   // Effect for code highlight theme
   useEffect(() => {
@@ -140,6 +241,11 @@ const App: React.FC = () => {
     const messageContent = (content || input).trim();
     if (isLoading || !messageContent) return;
 
+    // When user sends a message in a saved chat, it's now a new "unsaved" version.
+    if (currentChatId) {
+        setCurrentChatId(null);
+    }
+
     const userMessage: Message = { role: MessageRole.USER, content: messageContent };
     
     setMessages(prev => [...prev, userMessage]);
@@ -177,12 +283,54 @@ const App: React.FC = () => {
       setIsLoading(false);
       inputRef.current?.focus();
     }
-  }, [input, isLoading]);
+  }, [input, isLoading, currentChatId]);
+
+  const handleSaveChat = useCallback((name: string) => {
+    const newChat: SavedChat = {
+        id: `chat-${Date.now()}`,
+        name,
+        timestamp: Date.now(),
+        messages,
+    };
+    const updatedChats = [...savedChats, newChat];
+    setSavedChats(updatedChats);
+    localStorage.setItem('saved-chats', JSON.stringify(updatedChats));
+    setCurrentChatId(newChat.id);
+  }, [messages, savedChats]);
+
+  const handleLoadChat = useCallback((chatId: string) => {
+    const chatToLoad = savedChats.find(chat => chat.id === chatId);
+    if (chatToLoad) {
+        setMessages(chatToLoad.messages);
+        setCurrentChatId(chatToLoad.id);
+        chatSessionRef.current = createChatSession(chatToLoad.messages);
+        setCurrentView('chat');
+    }
+  }, [savedChats]);
+
+  const handleDeleteChat = useCallback((chatId: string) => {
+    if (window.confirm('Are you sure you want to delete this chat history? This action cannot be undone.')) {
+        const newSavedChats = savedChats.filter(chat => chat.id !== chatId);
+        setSavedChats(newSavedChats);
+        localStorage.setItem('saved-chats', JSON.stringify(newSavedChats));
+
+        if (currentChatId === chatId) {
+            setMessages([]);
+            setCurrentChatId(null);
+            chatSessionRef.current = createChatSession();
+        }
+    }
+  }, [savedChats, currentChatId]);
 
   const handleNewChat = useCallback(() => {
-    setMessages([]);
-    chatSessionRef.current = createChatSession();
-  }, []);
+    if (messages.length > 0 && currentChatId === null) {
+      setIsSaveModalOpen(true);
+    } else {
+      setMessages([]);
+      setCurrentChatId(null);
+      chatSessionRef.current = createChatSession();
+    }
+  }, [messages, currentChatId]);
 
   const handlePromptClick = useCallback((prompt: string) => {
     handleSend(prompt);
@@ -190,6 +338,24 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300 ease-in-out">
+      {isSaveModalOpen && (
+        <SaveChatModal
+            onClose={() => setIsSaveModalOpen(false)}
+            onSave={(name) => {
+                handleSaveChat(name);
+                setMessages([]);
+                setCurrentChatId(null);
+                chatSessionRef.current = createChatSession();
+                setIsSaveModalOpen(false);
+            }}
+            onDiscard={() => {
+                setMessages([]);
+                setCurrentChatId(null);
+                chatSessionRef.current = createChatSession();
+                setIsSaveModalOpen(false);
+            }}
+        />
+      )}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/60 z-30 md:hidden"
@@ -226,20 +392,44 @@ const App: React.FC = () => {
               <ChatWelcome onPromptClick={handlePromptClick} />
             ) : (
               <div className="max-w-4xl mx-auto w-full pt-4">
-                {messages.map((msg, index) => (
-                  <ChatMessage
-                    key={index}
-                    message={msg}
-                    isLoading={isLoading}
-                    isLastMessage={index === messages.length - 1}
-                  />
-                ))}
+                {messages.map((msg, index) => {
+                  const isTypingPlaceholder = isLoading && index === messages.length - 1 && msg.role === MessageRole.MODEL && msg.content === '';
+                  if (isTypingPlaceholder) return null;
+
+                  return (
+                    <ChatMessage
+                      key={index}
+                      message={msg}
+                      isLoading={isLoading}
+                      isLastMessage={index === messages.length - 1}
+                    />
+                  );
+                })}
+
+                {isLoading && messages.length > 0 && messages[messages.length - 1].content === '' && (
+                    <div className="py-6 px-2">
+                        <div className="flex items-start gap-4">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-900 flex items-center justify-center">
+                                <AJStudiozIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-300"/>
+                            </div>
+                            <div className="flex items-center gap-2 pt-1.5">
+                                <SpinnerIcon className="h-5 w-5 animate-spin text-zinc-500 dark:text-zinc-400" />
+                                <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">AJ is thinking...</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
               </div>
             )
           ) : currentView === 'explore' ? (
             <ExploreView />
           ) : (
-            <HistoryView />
+            <HistoryView 
+              chats={savedChats}
+              onLoad={handleLoadChat}
+              onDelete={handleDeleteChat}
+              onCloseSidebar={toggleSidebar}
+            />
           )}
         </main>
         {currentView === 'chat' && (

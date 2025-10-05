@@ -1,4 +1,5 @@
 
+
 export enum MessageRole {
   USER = 'user',
   MODEL = 'model',
@@ -7,6 +8,13 @@ export enum MessageRole {
 export interface Message {
   role: MessageRole;
   content: string;
+}
+
+export interface SavedChat {
+  id: string;
+  name: string;
+  timestamp: number;
+  messages: Message[];
 }
 
 export type HighlightTheme = 'atom-one-dark' | 'github-dark' | 'dracula' | 'monokai' | 'nord';

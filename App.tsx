@@ -336,16 +336,18 @@ const App: React.FC = () => {
   return (
     <div className={`flex h-screen font-sans transition-all duration-500 ease-in-out ${
       theme === 'dark' 
-        ? 'bg-gradient-to-br from-slate-950 via-zinc-950 to-slate-950 text-zinc-100' 
+        ? 'bg-black text-zinc-100' 
         : 'bg-gradient-to-br from-white via-zinc-50 to-white text-zinc-900'
     }`}>
-      {/* Premium dark mode background effects */}
+      {/* Grok-style premium dark mode background effects */}
       {theme === 'dark' && (
         <>
-          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent pointer-events-none"></div>
-          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent pointer-events-none"></div>
-          <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="fixed inset-0 bg-gradient-to-br from-black via-zinc-950 to-black"></div>
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent"></div>
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent"></div>
+          <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl"></div>
+          <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl"></div>
+          <div className="fixed inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
         </>
       )}
       
@@ -388,7 +390,7 @@ const App: React.FC = () => {
       <div className="flex flex-col flex-grow h-screen relative">
         <header className={`flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-xl z-10 transition-all duration-500 ${
           theme === 'dark'
-            ? 'bg-slate-950/80 border-zinc-800/50 text-zinc-100 shadow-lg shadow-black/20'
+            ? 'bg-black/80 border-zinc-800/50 text-zinc-100 shadow-lg shadow-black/30'
             : 'bg-white/80 border-zinc-200/50 text-zinc-900 shadow-lg shadow-zinc-200/20'
         }`}>
             <button onClick={toggleSidebar} className={`p-2 -ml-2 rounded-lg transition-all ${
@@ -411,7 +413,7 @@ const App: React.FC = () => {
             <div className="w-6"></div>
         </header>
 
-        <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 md:px-10 flex flex-col">
+        <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 md:px-10 flex flex-col relative z-10">
           {currentView === 'chat' ? (
             messages.length === 0 ? (
               <ChatWelcome onPromptClick={handlePromptClick} />
@@ -436,7 +438,7 @@ const App: React.FC = () => {
                         <div className="flex items-start gap-4">
                             <div className={`flex-shrink-0 w-8 h-8 rounded-lg border flex items-center justify-center ${
                               theme === 'dark'
-                                ? 'bg-gradient-to-br from-zinc-900 to-zinc-800 border-zinc-700/50 shadow-lg shadow-black/30'
+                                ? 'bg-zinc-900/50 border-zinc-700/50 backdrop-blur-sm'
                                 : 'bg-gradient-to-br from-zinc-200 to-zinc-100 border-zinc-300'
                             }`}>
                                 <AJStudiozIcon className={`h-5 w-5 ${
@@ -468,9 +470,9 @@ const App: React.FC = () => {
           )}
         </main>
         {currentView === 'chat' && (
-            <footer className={`w-full border-t transition-all duration-500 ${
+            <footer className={`w-full border-t transition-all duration-500 relative z-10 ${
               theme === 'dark'
-                ? 'bg-slate-950/90 border-zinc-800/50 backdrop-blur-xl shadow-lg shadow-black/20'
+                ? 'bg-black/90 border-zinc-800/50 backdrop-blur-xl shadow-lg shadow-black/30'
                 : 'bg-white/90 border-zinc-200/50 backdrop-blur-xl shadow-lg shadow-zinc-200/20'
             }`}>
               <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />

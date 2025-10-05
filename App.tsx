@@ -334,11 +334,21 @@ const App: React.FC = () => {
   }, [handleSend]);
 
   return (
-    <div className={`flex h-screen font-sans transition-colors duration-300 ease-in-out ${
+    <div className={`flex h-screen font-sans transition-all duration-500 ease-in-out ${
       theme === 'dark' 
-        ? 'bg-gradient-to-br from-zinc-950 via-black to-zinc-950 text-zinc-100' 
-        : 'bg-white text-zinc-900'
+        ? 'bg-gradient-to-br from-slate-950 via-zinc-950 to-slate-950 text-zinc-100' 
+        : 'bg-gradient-to-br from-white via-zinc-50 to-white text-zinc-900'
     }`}>
+      {/* Premium dark mode background effects */}
+      {theme === 'dark' && (
+        <>
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent pointer-events-none"></div>
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent pointer-events-none"></div>
+          <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        </>
+      )}
+      
       {isSaveModalOpen && (
         <SaveChatModal
             onClose={() => setIsSaveModalOpen(false)}
@@ -359,7 +369,7 @@ const App: React.FC = () => {
       )}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 z-30 md:hidden"
+          className="fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-sm"
           onClick={toggleSidebar}
           aria-hidden="true"
         />
@@ -375,21 +385,27 @@ const App: React.FC = () => {
         currentView={currentView}
         onViewChange={setCurrentView}
       />
-      <div className="flex flex-col flex-grow h-screen">
-        <header className={`flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-sm z-10 transition-colors duration-300 ease-in-out ${
+      <div className="flex flex-col flex-grow h-screen relative">
+        <header className={`flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-xl z-10 transition-all duration-500 ${
           theme === 'dark'
-            ? 'bg-zinc-950/80 border-zinc-900 text-zinc-100'
-            : 'bg-white/80 border-zinc-200 text-zinc-900'
+            ? 'bg-slate-950/80 border-zinc-800/50 text-zinc-100 shadow-lg shadow-black/20'
+            : 'bg-white/80 border-zinc-200/50 text-zinc-900 shadow-lg shadow-zinc-200/20'
         }`}>
-            <button onClick={toggleSidebar} className={`p-2 -ml-2 ${
-              theme === 'dark' ? 'text-zinc-100' : 'text-zinc-800'
+            <button onClick={toggleSidebar} className={`p-2 -ml-2 rounded-lg transition-all ${
+              theme === 'dark' 
+                ? 'text-zinc-100 hover:bg-zinc-800/50' 
+                : 'text-zinc-800 hover:bg-zinc-100'
             }`}>
               <MenuIcon className="h-6 w-6"/>
             </button>
             <div className="flex items-center gap-2">
-                <AJStudiozIcon className={`h-5 w-5 ${
-                  theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'
-                }`}/>
+                <div className={`p-1.5 rounded-lg ${
+                  theme === 'dark' ? 'bg-zinc-900/50' : 'bg-zinc-100'
+                }`}>
+                  <AJStudiozIcon className={`h-5 w-5 ${
+                    theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'
+                  }`}/>
+                </div>
                 <h1 className="text-base font-semibold tracking-wide">AJ STUDIOZ</h1>
             </div>
             <div className="w-6"></div>
@@ -420,8 +436,8 @@ const App: React.FC = () => {
                         <div className="flex items-start gap-4">
                             <div className={`flex-shrink-0 w-8 h-8 rounded-lg border flex items-center justify-center ${
                               theme === 'dark'
-                                ? 'bg-zinc-900 border-zinc-800'
-                                : 'bg-zinc-200 border-zinc-300'
+                                ? 'bg-gradient-to-br from-zinc-900 to-zinc-800 border-zinc-700/50 shadow-lg shadow-black/30'
+                                : 'bg-gradient-to-br from-zinc-200 to-zinc-100 border-zinc-300'
                             }`}>
                                 <AJStudiozIcon className={`h-5 w-5 ${
                                   theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'
@@ -452,10 +468,10 @@ const App: React.FC = () => {
           )}
         </main>
         {currentView === 'chat' && (
-            <footer className={`w-full border-t transition-colors duration-300 ease-in-out ${
+            <footer className={`w-full border-t transition-all duration-500 ${
               theme === 'dark'
-                ? 'bg-zinc-950 border-zinc-900'
-                : 'bg-white border-zinc-200'
+                ? 'bg-slate-950/90 border-zinc-800/50 backdrop-blur-xl shadow-lg shadow-black/20'
+                : 'bg-white/90 border-zinc-200/50 backdrop-blur-xl shadow-lg shadow-zinc-200/20'
             }`}>
               <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
             </footer>

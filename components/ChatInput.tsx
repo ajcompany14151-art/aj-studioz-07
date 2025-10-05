@@ -34,15 +34,16 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 bg-white dark:bg-black">
+    <div className="w-full max-w-4xl mx-auto p-4">
       <div 
         className="
           relative flex items-end gap-2 p-2
-          bg-zinc-100 dark:bg-zinc-950
-          border border-zinc-300 dark:border-zinc-900
+          bg-zinc-100 dark:bg-black/50
+          border border-zinc-300 dark:border-zinc-700/50
           rounded-2xl
           transition-all duration-200
-          focus-within:border-zinc-500 dark:focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-zinc-500/50 dark:focus-within:ring-zinc-700/50
+          focus-within:border-purple-500/50 dark:focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/30 dark:focus-within:ring-purple-500/30
+          backdrop-blur-sm
         "
       >
         <button
@@ -62,10 +63,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           rows={1}
           placeholder="How can I help?"
           className="
-            w-full bg-transparent text-zinc-900 dark:text-white resize-none 
+            w-full bg-transparent text-zinc-900 dark:text-zinc-100 resize-none 
             focus:outline-none 
             disabled:cursor-not-allowed
-            placeholder-zinc-500 text-base
+            placeholder-zinc-500 dark:placeholder-zinc-500 text-base
             py-2.5 px-2
           "
           disabled={isLoading}
@@ -88,7 +89,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             p-2 rounded-xl transition-all duration-200 transform flex-shrink-0
             ${isDisabled
               ? 'text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
-              : 'bg-zinc-900 text-white dark:bg-white dark:text-black hover:bg-zinc-700 dark:hover:bg-zinc-200 hover:scale-105 active:scale-95 dark:hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]'
+              : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/30'
             }`
           }
         >

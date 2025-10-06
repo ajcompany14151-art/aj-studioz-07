@@ -1,3 +1,4 @@
+// components/ChatInput.tsx
 import React, { useEffect, KeyboardEvent, forwardRef } from 'react';
 import { SendIcon } from './icons/SendIcon';
 import { PaperclipIcon } from './icons/PaperclipIcon';
@@ -33,6 +34,19 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     }
   };
 
+  // Mobile enhancement: Prevent zoom on focus
+  useEffect(() => {
+    const textarea = (ref as React.RefObject<HTMLTextAreaElement>)?.current;
+    if (textarea) {
+      textarea.addEventListener('focus', () => {
+        document.body.style.zoom = '0.99'; // Anti-zoom hack for iOS
+      });
+      textarea.addEventListener('blur', () => {
+        document.body.style.zoom = '';
+      });
+    }
+  }, [ref]);
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
       <div 
@@ -44,14 +58,16 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           transition-all duration-200
           focus-within:border-purple-500/50 dark:focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/30 dark:focus-within:ring-purple-500/30
           backdrop-blur-sm
+          shadow-sm hover:shadow-md transition-shadow
         "
       >
         <button
             aria-label="Attach file"
             title="Attach file (coming soon)"
-            className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50"
+            className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50 group"
+            onTouchStart={(e) => e.preventDefault()} // Mobile: Prevent double-tap zoom
         >
-            <PaperclipIcon className="h-5 w-5" />
+            <PaperclipIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
         </button>
 
         <textarea
@@ -68,17 +84,23 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             disabled:cursor-not-allowed
             placeholder-zinc-500 dark:placeholder-zinc-400 text-base
             py-2.5 px-2
+            min-h-[20px]
           "
           disabled={isLoading}
           aria-label="Chat input"
+          maxLength={5000} // Enhancement: Limit input length
+          spellCheck={true}
+          autoCapitalize="sentences"
+          autoCorrect="on"
         />
 
         <button
             aria-label="Use microphone"
             title="Use microphone (coming soon)"
-            className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50"
+            className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50 group"
+            onTouchStart={(e) => e.preventDefault()}
         >
-            <MicIcon className="h-5 w-5" />
+            <MicIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
         </button>
 
         <button
@@ -88,12 +110,13 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           className={`
             p-2 rounded-xl transition-all duration-200 transform flex-shrink-0
             ${isDisabled
-              ? 'text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
-              : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/30'
-            }`
-          }
+              ? 'text-zinc-400 dark:text-zinc-600 cursor-not-allowed opacity-70'
+              : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/30 group'
+            } ${!isDisabled && 'group-hover:shadow-xl group-hover:shadow-purple-500/40'}
+          `}
+          onTouchStart={(e) => !isDisabled && e.preventDefault()} // Mobile haptic feedback prep
         >
-          <SendIcon className="h-5 w-5" />
+          <SendIcon className="h-5 w-5 group-hover:rotate-12 transition-transform duration-200" />
         </button>
       </div>
     </div>

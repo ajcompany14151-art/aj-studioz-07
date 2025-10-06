@@ -46,7 +46,7 @@ interface SidebarNavItemProps {
 const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, isActive, premium = false }) => (
   <button
     onClick={onClick}
-    className={`group relative flex items-center w-full gap-3 p-4 rounded-2xl text-sm font-bold transition-all duration-500 ease-out overflow-hidden touch-manipulation ${
+    className={`group relative flex items-center w-full gap-3 p-4 rounded-2xl text-sm font-bold transition-all duration-500 ease-out overflow-hidden touch-manipulation min-h-[48px] ${
       isActive
         ? 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 shadow-lg shadow-purple-500/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/30 before:to-blue-500/30 before:opacity-0 before:animate-pulse animate-float-glow'
         : 'text-zinc-400 hover:bg-gradient-to-r hover:from-zinc-900/50 hover:to-black/50 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:rounded-2xl before:opacity-0 before:transition-all before:group-hover:opacity-100 active:scale-[0.98]'
@@ -106,7 +106,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen}
                 aria-controls="profile-settings-content"
-                className="group flex items-center justify-between w-full p-3 rounded-2xl transition-all duration-500 ease-out overflow-hidden touch-manipulation hover:bg-zinc-900/30 hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/5 before:to-blue-500/5 before:opacity-0 before:transition-opacity before:group-hover:opacity-100 active:scale-[0.98] animate-float-glow"
+                className="group flex items-center justify-between w-full p-3 rounded-2xl transition-all duration-500 ease-out overflow-hidden touch-manipulation min-h-[48px] hover:bg-zinc-900/30 hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/5 before:to-blue-500/5 before:opacity-0 before:transition-opacity before:group-hover:opacity-100 active:scale-[0.98] animate-float-glow"
             >
                 <div className="relative z-10 flex items-center gap-3">
                     <div className="relative flex-shrink-0 w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500 shadow-lg touch-manipulation bg-gradient-to-br from-black to-zinc-950 border-zinc-700/30 before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-br before:from-purple-500/20 before:to-blue-500/20 before:opacity-0 before:animate-pulse animate-float-glow">
@@ -131,7 +131,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                         <div className="p-1.5 flex items-center gap-1.5 rounded-full shadow-inner transition-all duration-500 backdrop-blur-xl bg-gradient-to-r from-black/50 to-zinc-950/50">
                             <button 
                                 onClick={() => setTheme('light')}
-                                className={`relative overflow-hidden flex items-center justify-center gap-2 w-full px-4 py-2 rounded-full text-sm font-bold transition-all duration-500 touch-manipulation ${
+                                className={`relative overflow-hidden flex items-center justify-center gap-2 w-full px-4 py-2 rounded-full text-sm font-bold transition-all duration-500 touch-manipulation min-h-[44px] ${
                                     theme === 'light' 
                                     ? 'bg-gradient-to-r from-white to-zinc-50 text-zinc-800 shadow-lg shadow-zinc-200/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-100' 
                                     : 'text-zinc-400 hover:text-zinc-200 hover:shadow-md hover:shadow-zinc-700/20 active:scale-[0.98]'
@@ -142,7 +142,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                             </button>
                             <button 
                                 onClick={() => setTheme('dark')}
-                                className={`relative overflow-hidden flex items-center justify-center gap-2 w-full px-4 py-2 rounded-full text-sm font-bold transition-all duration-500 touch-manipulation ${
+                                className={`relative overflow-hidden flex items-center justify-center gap-2 w-full px-4 py-2 rounded-full text-sm font-bold transition-all duration-500 touch-manipulation min-h-[44px] ${
                                     theme === 'dark' 
                                     ? 'bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 text-white shadow-lg shadow-purple-500/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-100 animate-float-glow' 
                                     : 'text-zinc-400 hover:text-white hover:shadow-md hover:shadow-zinc-200/20 active:scale-[0.98]'
@@ -161,7 +161,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                                 id="theme-select"
                                 value={highlightTheme}
                                 onChange={(e) => setHighlightTheme(e.target.value as HighlightTheme)}
-                                className="w-full appearance-none rounded-2xl p-3 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/30 cursor-pointer transition-all duration-500 shadow-lg touch-manipulation bg-gradient-to-r from-black/70 to-zinc-950/70 border-zinc-700/30 text-white focus:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 animate-float-glow"
+                                className="w-full appearance-none rounded-2xl p-3 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/30 cursor-pointer transition-all duration-500 shadow-lg touch-manipulation min-h-[44px] bg-gradient-to-r from-black/70 to-zinc-950/70 border-zinc-700/30 text-white focus:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 animate-float-glow"
                                 aria-label="Select code block theme"
                             >
                             {themes.map(theme => (<option key={theme.id} value={theme.id}>{theme.name}</option>))}
@@ -176,7 +176,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                         </label>
                         <button 
                           onClick={toggleNotifications}
-                          className="relative w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 touch-manipulation bg-black/50 border border-zinc-700/30 text-zinc-300 hover:bg-zinc-900/50 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98] animate-float-glow"
+                          className="relative w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 touch-manipulation min-h-[44px] bg-black/50 border border-zinc-700/30 text-zinc-300 hover:bg-zinc-900/50 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98] animate-float-glow"
                           aria-pressed={notifications}
                         >
                           {notifications ? 'Enabled' : 'Disabled'}
@@ -186,24 +186,24 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                         <div className="space-y-3 pt-2 animate-in slide-in-from-bottom-1 duration-300">
                              <div className="space-y-1">
                                 <label htmlFor="edit-name" className="text-xs font-bold px-1 block text-zinc-400">NAME</label>
-                                <input id="edit-name" type="text" value={editName} onChange={(e) => setEditName(e.target.value)} className="mt-1 w-full rounded-2xl p-3 text-sm focus:ring-2 transition-all duration-500 shadow-lg touch-manipulation bg-gradient-to-r from-black/70 to-zinc-950/70 border-zinc-700/30 focus:ring-purple-400/30 text-white hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98] animate-float-glow" aria-label="User name"/>
+                                <input id="edit-name" type="text" value={editName} onChange={(e) => setEditName(e.target.value)} className="mt-1 w-full rounded-2xl p-3 text-sm focus:ring-2 transition-all duration-500 shadow-lg touch-manipulation min-h-[44px] bg-gradient-to-r from-black/70 to-zinc-950/70 border-zinc-700/30 focus:ring-purple-400/30 text-white hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98] animate-float-glow" aria-label="User name"/>
                             </div>
                             <div className="space-y-1">
                                 <label htmlFor="edit-email" className="text-xs font-bold px-1 block text-zinc-400">EMAIL</label>
-                                <input id="edit-email" type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className="mt-1 w-full rounded-2xl p-3 text-sm focus:ring-2 transition-all duration-500 shadow-lg touch-manipulation bg-gradient-to-r from-black/70 to-zinc-950/70 border-zinc-700/30 focus:ring-purple-400/30 text-white hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98] animate-float-glow" aria-label="User email"/>
+                                <input id="edit-email" type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className="mt-1 w-full rounded-2xl p-3 text-sm focus:ring-2 transition-all duration-500 shadow-lg touch-manipulation min-h-[44px] bg-gradient-to-r from-black/70 to-zinc-950/70 border-zinc-700/30 focus:ring-purple-400/30 text-white hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98] animate-float-glow" aria-label="User email"/>
                             </div>
-                            <div className="flex items-center justify-end gap-2 pt-2">
-                                <button onClick={handleCancel} className="relative overflow-hidden flex items-center justify-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-bold transition-all duration-500 touch-manipulation text-zinc-300 hover:bg-zinc-900/30 hover:shadow-md hover:shadow-zinc-700/20 active:scale-[0.98]">
+                            <div className="flex flex-col sm:flex-row items-center justify-end gap-2 pt-2">
+                                <button onClick={handleCancel} className="relative overflow-hidden flex items-center justify-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-bold transition-all duration-500 touch-manipulation min-h-[44px] w-full sm:w-auto text-zinc-300 hover:bg-zinc-900/30 hover:shadow-md hover:shadow-zinc-700/20 active:scale-[0.98]">
                                     <XIcon className="h-4 w-4" /> <span>Cancel</span>
                                 </button>
-                                <button onClick={handleSave} className="relative overflow-hidden flex items-center justify-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-bold transition-all duration-500 shadow-lg touch-manipulation active:scale-[0.98] bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-purple-500/30 hover:shadow-purple-500/40 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:opacity-0 before:transition-opacity before:hover:opacity-100 animate-float-glow">
+                                <button onClick={handleSave} className="relative overflow-hidden flex items-center justify-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-bold transition-all duration-500 shadow-lg touch-manipulation active:scale-[0.98] min-h-[44px] w-full sm:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-purple-500/30 hover:shadow-purple-500/40 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:opacity-0 before:transition-opacity before:hover:opacity-100 animate-float-glow">
                                     <CheckIcon className="h-4 w-4" /> <span>Save Changes</span>
                                 </button>
                             </div>
                         </div>
                     ) : (
                         <div className="pt-2 animate-in slide-in-from-bottom-1 duration-300">
-                             <button onClick={() => { setEditName(userName); setEditEmail(userEmail); setIsEditing(true); }} className="group relative flex items-center justify-center w-full gap-2 p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] text-zinc-300 hover:bg-zinc-900/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
+                             <button onClick={() => { setEditName(userName); setEditEmail(userEmail); setIsEditing(true); }} className="group relative flex items-center justify-center w-full gap-2 p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] text-zinc-300 hover:bg-zinc-900/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
                                 <SettingsIcon className="h-4 w-4 relative z-10 group-hover:rotate-12 transition-transform"/>
                                 <span className="relative z-10">Edit Profile</span>
                             </button>
@@ -242,14 +242,14 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
           </div>
           <h1 className="text-xl font-bold tracking-wide transition-all duration-700 relative z-10 text-white">AJ STUDIOZ</h1>
         </div>
-        <button onClick={onClose} className="md:hidden group relative transition-all duration-500 p-2 rounded-2xl touch-manipulation active:scale-[0.95] text-zinc-400 hover:text-white hover:bg-zinc-900/50 hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
+        <button onClick={onClose} className="md:hidden group relative transition-all duration-500 p-2 rounded-2xl touch-manipulation active:scale-[0.95] min-h-[44px] min-w-[44px] text-zinc-400 hover:text-white hover:bg-zinc-900/50 hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
           <XIcon className="h-6 w-6 relative z-10" />
         </button>
       </div>
 
       <button 
         onClick={handleNewChatClick}
-        className="group relative flex items-center justify-between w-full gap-3 p-4 mb-6 rounded-2xl text-sm font-bold border-2 transition-all duration-500 shadow-xl touch-manipulation active:scale-[0.98] text-white bg-gradient-to-r from-black/70 to-zinc-950/70 hover:from-zinc-900/70 hover:to-black/70 border-zinc-700/30 shadow-black/30 hover:shadow-purple-500/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/20 before:to-blue-500/20 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow"
+        className="group relative flex items-center justify-between w-full gap-3 p-4 mb-6 rounded-2xl text-sm font-bold border-2 transition-all duration-500 shadow-xl touch-manipulation active:scale-[0.98] min-h-[48px] text-white bg-gradient-to-r from-black/70 to-zinc-950/70 hover:from-zinc-900/70 hover:to-black/70 border-zinc-700/30 shadow-black/30 hover:shadow-purple-500/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/20 before:to-blue-500/20 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow"
       >
         <span className="relative z-10">New Chat</span>
         <div className="relative z-10">

@@ -17,8 +17,8 @@ import { ErrorBoundary } from './components/ErrorBoundary'; // Assume added for 
 
 // Placeholder for Explore view with enhancement
 const ExploreView: React.FC = () => (
-  <div className="flex items-center justify-center h-full p-4">
-    <div className="text-center max-w-md bg-black/90 backdrop-blur-xl rounded-3xl p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 animate-float-glow">
+  <div className="flex items-center justify-center h-full p-4 sm:p-6">
+    <div className="text-center max-w-md bg-black/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 animate-float-glow w-full">
       <SearchIcon className="mx-auto h-12 w-12 text-purple-400 mb-4 animate-pulse" />
       <h2 className="text-xl font-bold text-white mb-2">Explore</h2>
       <p className="text-zinc-400">Discover prompts, templates, and more. Coming soon with advanced search.</p>
@@ -38,8 +38,8 @@ const HistoryView: React.FC<{
 
   if (chats.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full p-4">
-        <div className="text-center bg-black/90 backdrop-blur-xl rounded-3xl p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 animate-float-glow">
+      <div className="flex items-center justify-center h-full p-4 sm:p-6">
+        <div className="text-center bg-black/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 animate-float-glow w-full">
           <HistoryIcon className="mx-auto h-12 w-12 text-purple-400 mb-4" />
           <h2 className="text-xl font-bold text-white">No Saved Chats</h2>
           <p className="text-zinc-400 mt-1 max-w-xs mx-auto">Start a conversation and create a new chat to save it here for later.</p>
@@ -60,7 +60,7 @@ const HistoryView: React.FC<{
   
   return (
     <div className="flex flex-col h-full bg-black">
-      <header className="p-4 md:px-10 border-b border-zinc-700/30 sticky top-0 bg-black/90 backdrop-blur-xl z-10">
+      <header className="p-4 sm:px-10 border-b border-zinc-700/30 sticky top-0 bg-black/90 backdrop-blur-xl z-10">
         <h2 className="text-xl font-bold text-white mb-2">Chat History</h2>
         <p className="text-zinc-400 mb-4">Load or delete your saved conversations.</p>
         <div className="relative mb-4">
@@ -70,17 +70,17 @@ const HistoryView: React.FC<{
             placeholder="Search chats..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-2xl bg-black/70 border border-zinc-700/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/30 transition-all placeholder-zinc-500"
+            className="w-full pl-10 pr-4 py-3 rounded-2xl bg-black/70 border border-zinc-700/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/30 transition-all placeholder-zinc-500 text-base"
           />
         </div>
       </header>
-      <div className="flex-grow overflow-y-auto p-4 md:p-10">
+      <div className="flex-grow overflow-y-auto p-4 sm:p-10">
         <ul className="space-y-3">
           {filteredChats.sort((a, b) => b.timestamp - a.timestamp).map(chat => (
-            <li key={chat.id} className="group flex items-center justify-between p-4 rounded-2xl bg-black/70 border border-zinc-700/30 transition-all hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-xl">
+            <li key={chat.id} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-black/70 border border-zinc-700/30 transition-all hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-xl">
               <button 
                 onClick={() => { onLoad(chat.id); onCloseSidebar(); }} 
-                className="flex-grow text-left overflow-hidden touch-manipulation active:scale-[0.98]"
+                className="flex-grow text-left overflow-hidden touch-manipulation active:scale-[0.98] w-full sm:w-auto mb-2 sm:mb-0"
                 aria-label={`Load chat: ${chat.name}`}
               >
                 <p className="font-bold text-white truncate">{chat.name}</p>
@@ -90,7 +90,7 @@ const HistoryView: React.FC<{
                 onClick={() => onDelete(chat.id)}
                 aria-label={`Delete chat: ${chat.name}`}
                 title="Delete chat"
-                className="ml-4 p-2 flex-shrink-0 rounded-xl text-zinc-500 hover:bg-red-900/50 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 active:scale-95"
+                className="self-start sm:self-auto ml-0 sm:ml-4 p-3 flex-shrink-0 rounded-xl text-zinc-500 hover:bg-red-900/50 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 active:scale-95 min-w-[44px] h-[44px] flex items-center justify-center"
               >
                 <TrashIcon className="h-5 w-5" />
               </button>
@@ -118,7 +118,7 @@ const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void }> = 
       <button
         key={title}
         onClick={() => onPromptClick(prompt)}
-        className="p-6 bg-black/70 border border-zinc-700/30 rounded-2xl text-left hover:bg-zinc-900/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] animate-float-glow"
+        className="p-6 bg-black/70 border border-zinc-700/30 rounded-2xl text-left hover:bg-zinc-900/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] animate-float-glow min-h-[120px]"
       >
         <p className="font-bold text-white text-sm mb-2">{title}</p>
         <p className="text-zinc-400 leading-relaxed">{prompt}</p>
@@ -173,6 +173,17 @@ const App: React.FC = () => {
   useEffect(() => {
     document.documentElement.classList.add('dark', 'premium-dark');
     localStorage.setItem('app-theme', 'dark');
+
+    // Mobile: Add viewport meta if not present (via dynamic script for SSR safety)
+    if (typeof document !== 'undefined') {
+      let viewport = document.querySelector('meta[name="viewport"]');
+      if (!viewport) {
+        viewport = document.createElement('meta');
+        viewport.name = 'viewport';
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+        document.head.appendChild(viewport);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -213,7 +224,7 @@ const App: React.FC = () => {
     if (currentView === 'chat') {
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-      }, 100);
+      }, 150); // Slightly longer for mobile keyboard
       return () => clearTimeout(timer);
     }
   }, [currentView]);
@@ -254,11 +265,46 @@ const App: React.FC = () => {
   useEffect(() => {
     if (isSidebarOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     } else {
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     }
-    return () => { document.body.style.overflow = ''; };
+    return () => { 
+      document.body.style.overflow = ''; 
+      document.body.style.position = ''; 
+      document.body.style.width = ''; 
+    };
   }, [isSidebarOpen]);
+
+  // Mobile: Handle keyboard avoidance - adjust padding when input focused
+  useEffect(() => {
+    const handleFocus = () => {
+      if (window.innerWidth < 768) { // Mobile
+        document.body.style.paddingBottom = '200px'; // Space for keyboard
+      }
+    };
+    const handleBlur = () => {
+      if (window.innerWidth < 768) {
+        document.body.style.paddingBottom = '';
+      }
+    };
+
+    const textarea = inputRef.current;
+    if (textarea) {
+      textarea.addEventListener('focus', handleFocus);
+      textarea.addEventListener('blur', handleBlur);
+    }
+
+    return () => {
+      if (textarea) {
+        textarea.removeEventListener('focus', handleFocus);
+        textarea.removeEventListener('blur', handleBlur);
+      }
+    };
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -401,6 +447,17 @@ const App: React.FC = () => {
       .animate-float-glow:focus-within {
         animation-play-state: paused;
       }
+      /* Mobile: Prevent horizontal scroll */
+      @media (max-width: 768px) {
+        body {
+          overflow-x: hidden;
+        }
+      }
+      /* Mobile: Touch target min size */
+      button, [role="button"] {
+        min-height: 44px;
+        min-width: 44px;
+      }
     `}</style>
   );
 
@@ -468,7 +525,7 @@ const App: React.FC = () => {
               <div className="w-6"></div>
           </header>
 
-          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 md:px-10 flex flex-col relative z-10 scrollbar-thin scrollbar-thumb-zinc-700">
+          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 sm:px-10 flex flex-col relative z-10 scrollbar-thin scrollbar-thumb-zinc-700">
             {currentView === 'chat' ? (
               messages.length === 0 ? (
                 <ChatWelcome onPromptClick={handlePromptClick} />

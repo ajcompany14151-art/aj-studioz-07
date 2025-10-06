@@ -163,7 +163,7 @@ const getInitialTheme = (): Theme => {
       return 'dark';
     }
   }
-  return 'light'; // Default to light theme
+  return 'dark'; // Default to premium dark theme
 };
 
 const App: React.FC = () => {
@@ -171,8 +171,8 @@ const App: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-  const [highlightTheme, setHighlightTheme] = useState<HighlightTheme>('atom-one-dark');
+  const [theme, setTheme] = useState<Theme>('dark'); // Force premium dark
+  const [highlightTheme, setHighlightTheme] = useState<HighlightTheme>('atom-one-dark'); // Dark code theme
   const [currentView, setCurrentView] = useState<AppView>('chat');
   
   const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
@@ -185,17 +185,12 @@ const App: React.FC = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
 
-  // Effect to manage theme changes
+  // Effect to manage theme changes - Premium dark only
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.add('premium-dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.remove('premium-dark');
-    }
-    localStorage.setItem('app-theme', theme);
-  }, [theme]);
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.add('premium-dark');
+    localStorage.setItem('app-theme', 'dark');
+  }, []);
 
   useEffect(() => {
     // Load saved chats from local storage on mount
@@ -407,21 +402,17 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary> {/* Enhancement: Error boundary for stability */}
       <div className={`flex h-screen font-sans transition-all duration-500 ease-in-out overflow-hidden ${
-        theme === 'dark' 
-          ? 'bg-black text-white' 
-          : 'bg-gradient-to-br from-white via-zinc-50 to-white text-zinc-900'
+        'bg-black text-white' // Premium black theme
       }`}>
-        {/* Grok-style premium dark mode background effects */}
-        {theme === 'dark' && (
-          <>
-            <div className="fixed inset-0 bg-black"></div>
-            <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent"></div>
-            <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent"></div>
-            <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl"></div>
-            <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl"></div>
-            <div className="fixed inset-0 opacity-20" style={{ backgroundImage: `url('${patternUrl}')` }}></div>
-          </>
-        )}
+        {/* Premium dark mode background effects */}
+        <>
+          <div className="fixed inset-0 bg-black"></div>
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent"></div>
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent"></div>
+          <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl"></div>
+          <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl"></div>
+          <div className="fixed inset-0 opacity-20" style={{ backgroundImage: `url('${patternUrl}')` }}></div>
+        </>
         
         <ErrorToast />
         
@@ -463,26 +454,22 @@ const App: React.FC = () => {
         />
         <div className="flex flex-col flex-grow h-screen relative">
           <header className={`flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-xl z-10 transition-all duration-500 ${
-            theme === 'dark'
-              ? 'bg-black/80 border-zinc-800/50 text-white shadow-lg shadow-black/30'
-              : 'bg-white/80 border-zinc-200/50 text-zinc-900 shadow-lg shadow-zinc-200/20'
+            'bg-black/80 border-zinc-800/50 text-white shadow-lg shadow-black/30' // Premium black
           }`}>
               <button onClick={toggleSidebar} className={`p-2 -ml-2 rounded-lg transition-all touch-manipulation active:scale-[0.95] ${
-                theme === 'dark' 
-                  ? 'text-white hover:bg-zinc-800/50' 
-                  : 'text-zinc-800 hover:bg-zinc-100'
+                'text-white hover:bg-zinc-800/50' // Premium white text
               }`}>
                 <MenuIcon className="h-6 w-6"/>
               </button>
               <div className="flex items-center gap-2">
                   <div className={`p-1.5 rounded-lg ${
-                    theme === 'dark' ? 'bg-zinc-900/50' : 'bg-zinc-100'
+                    'bg-zinc-900/50' // Premium black
                   }`}>
                     <AJStudiozIcon className={`h-5 w-5 ${
-                      theme === 'dark' ? 'text-white' : 'text-zinc-900'
+                      'text-white' // Premium white
                     }`}/>
                   </div>
-                  <h1 className="text-base font-semibold tracking-wide">AJ STUDIOZ</h1>
+                  <h1 className="text-base font-semibold tracking-wide text-white">AJ STUDIOZ</h1> {/* Premium white */}
               </div>
               <div className="w-6"></div>
           </header>
@@ -511,21 +498,17 @@ const App: React.FC = () => {
                       <div className="py-6 px-2">
                           <div className="flex items-start gap-4">
                               <div className={`flex-shrink-0 w-8 h-8 rounded-lg border flex items-center justify-center backdrop-blur-sm ${
-                                theme === 'dark'
-                                  ? 'bg-zinc-900/50 border-zinc-700/50'
-                                  : 'bg-gradient-to-br from-zinc-200 to-zinc-100 border-zinc-300'
+                                'bg-zinc-900/50 border-zinc-700/50' // Premium black
                               }`}>
                                   <AJStudiozIcon className={`h-5 w-5 ${
-                                    theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'
+                                    'text-white' // Premium white
                                   }`}/>
                               </div>
                               <div className="flex items-center gap-2 pt-1.5">
                                   <SpinnerIcon className={`h-5 w-5 animate-spin ${
-                                    theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'
+                                    'text-white' // Premium white
                                   }`} />
-                                  <span className={`text-sm font-medium ${
-                                    theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'
-                                  }`}>AJ is thinking...</span>
+                                  <span className={`text-sm font-medium text-white`}>AJ is thinking...</span> {/* Premium white */}
                               </div>
                           </div>
                       </div>
@@ -545,9 +528,7 @@ const App: React.FC = () => {
           </main>
           {currentView === 'chat' && (
               <footer className={`w-full border-t transition-all duration-500 relative z-10 ${
-                theme === 'dark'
-                  ? 'bg-zinc-900/90 border-zinc-700/50 backdrop-blur-xl shadow-lg shadow-black/30'
-                  : 'bg-white/90 border-zinc-200/50 backdrop-blur-xl shadow-lg shadow-zinc-200/20'
+                'bg-black/90 border-zinc-700/50 backdrop-blur-xl shadow-lg shadow-black/30' // Premium black
               }`}>
                 <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
               </footer>

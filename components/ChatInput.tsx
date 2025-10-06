@@ -1,138 +1,155 @@
-// components/ChatMessage.tsx
-import React, { useMemo } from 'react';
-import { Message, MessageRole } from '../types';
-import { UserIcon } from './icons/UserIcon';
-import { AJStudiozIcon } from './icons/AJStudiozIcon';
-import { CodeBlock } from './CodeBlock';
-import { WandIcon } from './icons/WandIcon';
-import { XIcon } from './icons/XIcon';
-import { TypingIndicator } from './TypingIndicator';
+// components/ChatInput.tsx
+import React, { useEffect, KeyboardEvent, forwardRef } from 'react';
+import { SendIcon } from './icons/SendIcon';
+import { PaperclipIcon } from './icons/PaperclipIcon';
+import { MicIcon } from './icons/MicIcon';
 
-// This informs TypeScript that 'marked' is a global variable provided by the script in index.html
-declare var marked: any;
-
-// Configure marked to handle line breaks and GitHub Flavored Markdown.
-if (typeof marked !== 'undefined') {
-  marked.setOptions({
-    gfm: true,
-    breaks: true,
-    sanitize: true, // Enhancement: Basic sanitization
-  });
-}
-
-interface ChatMessageProps {
-  message: Message;
+interface ChatInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  onSend: () => void;
   isLoading: boolean;
-  isLastMessage: boolean;
 }
 
-const parseContent = (content: string) => {
-  // Split content by code blocks, keeping the delimiters
-  const parts = content.split(/(```[\s\S]*?```)/g);
-  return parts.map((part, index) => {
-    // Check if the part is a code block
-    const match = part.match(/^```(\w+)?\n([\s\S]+)```$/);
-    if (match) {
-      const language = match[1] || 'plaintext';
-      const code = match[2].trim();
-      return { type: 'code', content: code, language, key: `code-${index}` };
-    } else {
-      // Treat as text if it's not a code block and not empty
-      if(part.trim() === '') return null;
-      return { type: 'text', content: part, key: `text-${index}` };
+const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ value, onChange, onSend, isLoading }, ref) => {
+  const isDisabled = isLoading || !value.trim();
+
+  useEffect(() => {
+    const textarea = (ref as React.RefObject<HTMLTextAreaElement>)?.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      const scrollHeight = textarea.scrollHeight;
+      const maxHeight = 200; // max height of 200px
+      textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+      textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
-  }).filter(Boolean); // Remove any null entries
-};
+  }, [value, ref]);
 
-const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, isLastMessage }) => {
-  const isUser = message.role === MessageRole.USER;
-  const isModelTyping = message.role === MessageRole.MODEL && message.content === '';
-  const showStreamingCursor = isLastMessage && isLoading && message.role === MessageRole.MODEL && message.content !== '';
-  
-  const parsedParts = useMemo(() => {
-    return !isModelTyping ? parseContent(message.content) : [];
-  }, [message.content, isModelTyping]);
+  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      if (!isDisabled) {
+        onSend();
+      }
+    }
+  };
 
-  // Enhancement: Add timestamp to messages
-  const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  if (isUser) {
-    return (
-      <div className="py-6 px-2 animate-in slide-in-from-right-2 duration-500">
-        <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-zinc-900/50 border border-zinc-700/30 flex items-center justify-center shadow-lg shadow-black/30 animate-float-glow">
-                <UserIcon className="h-5 w-5 text-white" />
-            </div>
-            <div className="flex-grow bg-black/50 backdrop-blur-xl rounded-2xl p-4 border border-zinc-700/30">
-              <p className="pt-1 text-white font-medium text-base leading-relaxed">
-                  {message.content}
-              </p>
-              <p className="text-xs text-zinc-500 mt-2 opacity-70">{timestamp}</p>
-            </div>
-        </div>
-      </div>
-    );
-  }
+  // Mobile enhancement: Prevent zoom on focus
+  useEffect(() => {
+    const textarea = (ref as React.RefObject<HTMLTextAreaElement>)?.current;
+    if (textarea) {
+      textarea.addEventListener('focus', () => {
+        document.body.style.zoom = '0.99'; // Anti-zoom hack for iOS
+      });
+      textarea.addEventListener('blur', () => {
+        document.body.style.zoom = '';
+      });
+    }
+  }, [ref]);
 
   return (
-    <div className={`py-6 px-2 animate-in slide-in-from-left-2 duration-500 ${showStreamingCursor ? 'pr-4' : ''}`}>
-      <div className="flex items-start gap-4">
-        <div className="relative flex-shrink-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse"></div>
-          <div className="relative w-8 h-8 bg-black rounded-full border border-zinc-700/30 flex items-center justify-center animate-float-glow">
-            <img 
-              src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
-              alt="AJ Studioz Logo" 
-              className="h-5 w-5 rounded-full object-cover"
-            />
-          </div>
-        </div>
-        <div className="flex-grow pt-0.5 w-full overflow-hidden">
-          <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-4 border border-zinc-700/30">
-            <div className="text-white w-full leading-relaxed">
-              {isModelTyping ? (
-                <TypingIndicator />
-              ) : (
-                <>
-                  {parsedParts.map(part => {
-                    if (!part) return null;
-                    if (part.type === 'code') {
-                      return <CodeBlock key={part.key} language={part.language} code={part.content} />;
-                    }
-                    // For text parts, parse markdown and render as HTML
-                    const html = marked.parse(part.content);
-                    return (
-                       <div
-                          key={part.key}
-                          className="prose prose-invert max-w-none prose-p:my-2 prose-pre:my-0 prose-a:text-sky-400 hover:prose-a:underline prose-ul:my-3 prose-ol:my-3 prose-code:text-zinc-200 prose-code:bg-zinc-900/50 prose-code:rounded-md prose-code:px-1.5 prose-code:py-1 prose-code:font-semibold prose-headings:text-white prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-blockquote:border-l-4 prose-blockquote:border-purple-500/50 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-zinc-300 prose-table:border-collapse prose-table:border prose-table:border-zinc-700 prose-th:bg-zinc-900 prose-th:font-semibold prose-td:border prose-td:border-zinc-700 prose-td:px-2 prose-td:py-1 selection:bg-purple-500/30 animate-fade-in"
-                          dangerouslySetInnerHTML={{ __html: html }}
-                        />
-                    );
-                  })}
-                  {showStreamingCursor && <span className="inline-block w-1 h-5 ml-1 bg-gradient-to-b from-purple-600 to-blue-600 rounded-full animate-pulse align-[-3px]"></span>}
-                </>
-              )}
-              {!isModelTyping && <p className="text-xs text-zinc-500 mt-2 opacity-70">{timestamp}</p>}
-            </div>
-            {!isLoading && !isModelTyping && message.content.length > 0 && (
-              <div className="mt-4 flex gap-2">
-                <button className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-zinc-900/50 text-zinc-300 border border-zinc-700/30 rounded-full hover:bg-zinc-800/50 hover:text-white transition-all animate-float-glow">
-                  <WandIcon className="h-3.5 w-3.5 rotate-0 hover:rotate-12 transition-transform" />
-                  Think Harder
-                  <XIcon className="h-3.5 w-3.5 text-zinc-500" />
-                </button>
-                {/* Enhancement: Add regenerate button */}
-                <button className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-purple-900/50 to-blue-900/50 text-purple-300 border border-purple-700/30 rounded-full hover:from-purple-800/50 hover:to-blue-800/50 hover:text-purple-200 transition-all animate-float-glow">
-                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                  Regenerate
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <div 
+        className="
+          relative flex items-end gap-2 p-3
+          bg-black/90 backdrop-blur-2xl
+          border border-zinc-700/30
+          rounded-3xl
+          transition-all duration-500
+          focus-within:border-purple-400/50 focus-within:ring-2 focus-within:ring-purple-400/30
+          shadow-2xl shadow-black/60 hover:shadow-3xl hover:shadow-purple-500/20
+          z-50
+          translate-y-0 hover:-translate-y-0.5
+          animate-float-glow
+        "
+        style={{
+          // Exact Grok-like floating glow: subtle, infinite pulse with lift
+          animation: 'float-glow 4s ease-in-out infinite alternate',
+          transform: 'translateY(0px)',
+        }}
+      >
+        {/* Custom floating glow animation - scoped like Grok's ethereal input */}
+        <style jsx>{`
+          @keyframes float-glow {
+            0% { 
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.05); 
+              transform: translateY(0px);
+            }
+            100% { 
+              box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 92, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.1); 
+              transform: translateY(-2px);
+            }
+          }
+          .animate-float-glow:hover {
+            animation-duration: 2.5s;
+          }
+          .animate-float-glow:focus-within {
+            animation-play-state: paused;
+          }
+        `}</style>
+        <button
+            aria-label="Attach file"
+            title="Attach file (coming soon)"
+            className="p-2 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100"
+            onTouchStart={(e) => e.preventDefault()} // Mobile: Prevent double-tap zoom
+        >
+            <PaperclipIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
+        </button>
+
+        <textarea
+          ref={ref}
+          id="chat-input"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          rows={1}
+          placeholder="Ask me anything..."
+          className="
+            flex-1 bg-transparent text-white resize-none 
+            focus:outline-none focus:placeholder-transparent
+            disabled:cursor-not-allowed
+            placeholder-zinc-500 text-base leading-relaxed
+            py-3 px-4
+            min-h-[20px]
+          "
+          disabled={isLoading}
+          aria-label="Chat input"
+          maxLength={5000} // Enhancement: Limit input length
+          spellCheck={true}
+          autoCapitalize="sentences"
+          autoCorrect="on"
+        />
+
+        <button
+            aria-label="Use microphone"
+            title="Use microphone (coming soon)"
+            className="p-2 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100"
+            onTouchStart={(e) => e.preventDefault()}
+        >
+            <MicIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
+        </button>
+
+        <button
+          onClick={onSend}
+          disabled={isDisabled}
+          aria-label={isLoading ? "Sending..." : "Send message"}
+          className={`
+            p-3 rounded-2xl transition-all duration-500 transform flex-shrink-0 relative overflow-hidden group
+            ${isDisabled
+              ? 'text-zinc-600 cursor-not-allowed opacity-50'
+              : 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 text-white hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 hover:scale-110 active:scale-95 shadow-lg shadow-purple-500/40'
+            }
+            ${!isDisabled && 'before:absolute before:inset-0 before:bg-white/20 before:opacity-0 before:transition-opacity before:group-hover:opacity-100 after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/10 after:to-transparent after:opacity-0 after:transition-opacity after:group-hover:opacity-100'}
+          `}
+          onTouchStart={(e) => !isDisabled && e.preventDefault()} // Mobile haptic feedback prep
+        >
+          <SendIcon className="h-5 w-5 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
+        </button>
       </div>
     </div>
   );
-};
+});
 
-export const ChatMessage = React.memo(ChatMessageComponent);
+ChatInputComponent.displayName = 'ChatInput';
+
+export { ChatInput };

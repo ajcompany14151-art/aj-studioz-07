@@ -23,8 +23,8 @@ const CodeActionButton: React.FC<{ onClick?: () => void; disabled?: boolean; chi
         disabled={disabled}
         aria-label={label}
         title={label}
-        className={`flex items-center gap-1.5 p-1.5 rounded-md transition-colors duration-200 ease-in-out text-zinc-500 dark:text-zinc-400 min-w-[36px] h-[32px]
-        ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-zinc-700/50 hover:text-white active:scale-95'}`}
+        className={`flex items-center gap-1.5 p-1.5 rounded-xl transition-all duration-300 ease-in-out text-zinc-500 min-w-[36px] h-[32px]
+        ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-zinc-900/50 hover:text-white active:scale-95'}`}
         onTouchStart={(e) => !disabled && e.preventDefault()} // Mobile enhancement
     >
         {children}
@@ -36,10 +36,10 @@ const CopyCodeButton: React.FC<{ isCopied: boolean; onCopy: () => void }> = ({ i
         onClick={onCopy} 
         aria-label={isCopied ? "Copied to clipboard" : "Copy code"}
         title={isCopied ? "Copied to clipboard" : "Copy code"}
-        className={`flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md transition-all duration-200 ease-in-out text-sm w-[88px] h-[32px] ${
+        className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-300 ease-in-out text-sm w-[88px] h-[32px] ${
             isCopied
-            ? 'bg-emerald-900/50 text-emerald-400 shadow-md shadow-emerald-700/50'
-            : 'text-zinc-500 hover:bg-zinc-700/50 hover:text-white'
+            ? 'bg-emerald-900/50 text-emerald-400 shadow-lg shadow-emerald-700/30 animate-float-glow'
+            : 'text-zinc-500 hover:bg-zinc-900/50 hover:text-white'
         }`}
         onTouchStart={(e) => e.preventDefault()}
     >
@@ -96,9 +96,9 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
   const toggleLineNumbers = () => setShowLineNumbers(!showLineNumbers);
 
   return (
-    <div className={`rounded-xl my-4 overflow-hidden bg-gradient-to-b from-black to-zinc-950 border border-zinc-800/60 shadow-sm hover:shadow-md transition-shadow`}>
-      <div className="flex justify-between items-center px-4 py-2 bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 text-zinc-400 text-xs font-sans">
-        <span className="font-mono tracking-tight text-zinc-300 font-semibold flex items-center gap-2">
+    <div className="rounded-2xl my-4 overflow-hidden bg-gradient-to-b from-black to-zinc-950 border border-zinc-700/30 shadow-2xl shadow-black/40 hover:shadow-3xl hover:shadow-purple-500/20 transition-all duration-500 animate-float-glow">
+      <div className="flex justify-between items-center px-4 py-3 bg-black/80 backdrop-blur-2xl border-b border-zinc-700/30 text-zinc-400 text-xs font-mono">
+        <span className="tracking-tight text-zinc-300 font-semibold flex items-center gap-2">
           <span>{language.toLowerCase()}</span>
           {isCollapsible && (
             <span className="text-xs opacity-60">({lines.length} lines)</span>
@@ -120,20 +120,19 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
       
       <div className="relative">
         <div className={`
-          overflow-auto transition-all duration-300 ease-in-out
+          overflow-auto transition-all duration-500 ease-in-out
           [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2
-          [&::-webkit-scrollbar-track]:bg-zinc-900/30
-          [&::-webkit-scrollbar-thumb]:rounded-full
-          [&::-webkit-scrollbar-thumb]:bg-zinc-700/40
+          [&::-webkit-scrollbar-track]:bg-black/50
+          [&::-webkit-scrollbar-thumb]:rounded-full bg-zinc-700/40
           [&::-webkit-scrollbar-thumb]:transition-colors
           hover:[&::-webkit-scrollbar-thumb]:bg-zinc-600/60
           ${isExpanded ? 'max-h-[60vh]' : 'max-h-[280px]'}
         `}>
           <div className="p-4 text-sm font-mono flex min-h-[20px]">
             {showLineNumbers && (
-              <div aria-hidden={!showLineNumbers} className="select-none text-right text-zinc-500 pr-4 leading-relaxed mr-2 border-r border-zinc-800/50">
+              <div aria-hidden={!showLineNumbers} className="select-none text-right text-zinc-500 pr-4 leading-relaxed mr-2 border-r border-zinc-700/30 min-w-[3rem]">
                 {lines.map((_, i) => (
-                  <div key={i} className="min-w-[3rem]">{i + 1}</div>
+                  <div key={i}>{i + 1}</div>
                 ))}
               </div>
             )}
@@ -151,11 +150,11 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
       </div>
 
       {isCollapsible && (
-        <div className="bg-zinc-900/80 backdrop-blur-sm border-t border-zinc-800 px-4 py-2 flex justify-center">
+        <div className="bg-black/80 backdrop-blur-2xl border-t border-zinc-700/30 px-4 py-3 flex justify-center">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             aria-expanded={isExpanded}
-            className="flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors group"
+            className="flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-all duration-300 group"
           >
             {isExpanded ? (
               <>

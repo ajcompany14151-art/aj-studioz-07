@@ -18,10 +18,10 @@ import { ErrorBoundary } from './components/ErrorBoundary'; // Assume added for 
 // Placeholder for Explore view with enhancement
 const ExploreView: React.FC = () => (
   <div className="flex items-center justify-center h-full p-4">
-    <div className="text-center max-w-md">
-      <SearchIcon className="mx-auto h-12 w-12 text-zinc-400 dark:text-zinc-600 mb-4 animate-bounce" />
-      <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200 mb-2">Explore</h2>
-      <p className="text-zinc-500 dark:text-zinc-400">Discover prompts, templates, and more. Coming soon with advanced search.</p>
+    <div className="text-center max-w-md bg-black/90 backdrop-blur-xl rounded-3xl p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 animate-float-glow">
+      <SearchIcon className="mx-auto h-12 w-12 text-purple-400 mb-4 animate-pulse" />
+      <h2 className="text-xl font-bold text-white mb-2">Explore</h2>
+      <p className="text-zinc-400">Discover prompts, templates, and more. Coming soon with advanced search.</p>
     </div>
   </div>
 );
@@ -39,10 +39,10 @@ const HistoryView: React.FC<{
   if (chats.length === 0) {
     return (
       <div className="flex items-center justify-center h-full p-4">
-        <div className="text-center">
-          <HistoryIcon className="mx-auto h-12 w-12 text-zinc-400 dark:text-zinc-600 mb-4" />
-          <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200">No Saved Chats</h2>
-          <p className="text-zinc-500 dark:text-zinc-400 mt-1 max-w-xs mx-auto">Start a conversation and create a new chat to save it here for later.</p>
+        <div className="text-center bg-black/90 backdrop-blur-xl rounded-3xl p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 animate-float-glow">
+          <HistoryIcon className="mx-auto h-12 w-12 text-purple-400 mb-4" />
+          <h2 className="text-xl font-bold text-white">No Saved Chats</h2>
+          <p className="text-zinc-400 mt-1 max-w-xs mx-auto">Start a conversation and create a new chat to save it here for later.</p>
         </div>
       </div>
     );
@@ -59,45 +59,45 @@ const HistoryView: React.FC<{
   };
   
   return (
-    <div className="flex flex-col h-full">
-      <header className="p-4 md:px-10 border-b border-zinc-200 dark:border-zinc-900 sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-10">
-        <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200 mb-2">Chat History</h2>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">Load or delete your saved conversations.</p>
+    <div className="flex flex-col h-full bg-black">
+      <header className="p-4 md:px-10 border-b border-zinc-700/30 sticky top-0 bg-black/90 backdrop-blur-xl z-10">
+        <h2 className="text-xl font-bold text-white mb-2">Chat History</h2>
+        <p className="text-zinc-400 mb-4">Load or delete your saved conversations.</p>
         <div className="relative mb-4">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
           <input
             type="text"
             placeholder="Search chats..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white/50 dark:bg-black/50 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all"
+            className="w-full pl-10 pr-4 py-3 rounded-2xl bg-black/70 border border-zinc-700/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/30 transition-all placeholder-zinc-500"
           />
         </div>
       </header>
       <div className="flex-grow overflow-y-auto p-4 md:p-10">
         <ul className="space-y-3">
           {filteredChats.sort((a, b) => b.timestamp - a.timestamp).map(chat => (
-            <li key={chat.id} className="group flex items-center justify-between p-4 rounded-xl bg-zinc-100/80 dark:bg-zinc-950/80 border border-zinc-200/50 dark:border-zinc-900/50 transition-all hover:shadow-md hover:border-zinc-300/50 dark:hover:border-zinc-800/50 backdrop-blur-sm">
+            <li key={chat.id} className="group flex items-center justify-between p-4 rounded-2xl bg-black/70 border border-zinc-700/30 transition-all hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-xl">
               <button 
                 onClick={() => { onLoad(chat.id); onCloseSidebar(); }} 
                 className="flex-grow text-left overflow-hidden touch-manipulation active:scale-[0.98]"
                 aria-label={`Load chat: ${chat.name}`}
               >
-                <p className="font-semibold text-zinc-800 dark:text-zinc-200 truncate">{chat.name}</p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{formatTimestamp(chat.timestamp)}</p>
+                <p className="font-bold text-white truncate">{chat.name}</p>
+                <p className="text-xs text-zinc-400 mt-1">{formatTimestamp(chat.timestamp)}</p>
               </button>
               <button
                 onClick={() => onDelete(chat.id)}
                 aria-label={`Delete chat: ${chat.name}`}
                 title="Delete chat"
-                className="ml-4 p-2 flex-shrink-0 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/50 dark:hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 active:scale-95"
+                className="ml-4 p-2 flex-shrink-0 rounded-xl text-zinc-500 hover:bg-red-900/50 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 active:scale-95"
               >
                 <TrashIcon className="h-5 w-5" />
               </button>
             </li>
           ))}
           {searchTerm && filteredChats.length === 0 && (
-            <li className="text-center py-8 text-zinc-500 dark:text-zinc-400">No chats found.</li>
+            <li className="text-center py-8 text-zinc-400">No chats found.</li>
           )}
         </ul>
       </div>
@@ -113,28 +113,26 @@ const SUGGESTED_PROMPTS = [
 ];
 
 const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void }> = ({ onPromptClick }) => (
-  <div className="max-w-4xl mx-auto w-full">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {SUGGESTED_PROMPTS.map(({ title, prompt }) => (
-        <button
-          key={title}
-          onClick={() => onPromptClick(prompt)}
-          className="p-6 bg-zinc-100/80 dark:bg-zinc-950/80 border border-zinc-200/50 dark:border-zinc-900/50 rounded-2xl text-left hover:bg-zinc-200/80 dark:hover:bg-zinc-900/80 transition-all hover:shadow-lg hover:shadow-zinc-200/50 dark:hover:shadow-zinc-800/50 backdrop-blur-sm touch-manipulation active:scale-[0.98]"
-        >
-          <p className="font-semibold text-sm text-zinc-800 dark:text-zinc-200 mb-2">{title}</p>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">{prompt}</p>
-        </button>
-      ))}
-    </div>
+  <div className="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+    {SUGGESTED_PROMPTS.map(({ title, prompt }) => (
+      <button
+        key={title}
+        onClick={() => onPromptClick(prompt)}
+        className="p-6 bg-black/70 border border-zinc-700/30 rounded-2xl text-left hover:bg-zinc-900/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] animate-float-glow"
+      >
+        <p className="font-bold text-white text-sm mb-2">{title}</p>
+        <p className="text-zinc-400 leading-relaxed">{prompt}</p>
+      </button>
+    ))}
   </div>
 );
 
 const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void }> = ({ onPromptClick }) => (
     <div className="flex-grow flex items-center justify-center px-4">
         <div className="text-center">
-            <div className="inline-block p-4 bg-zinc-100/80 dark:bg-zinc-950/80 border border-zinc-200/50 dark:border-zinc-900/50 rounded-2xl mb-6 backdrop-blur-sm shadow-lg shadow-zinc-200/30 dark:shadow-zinc-800/30">
-                <div className="relative p-0.5 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse">
-                    <div className="p-1.5 bg-white dark:bg-black rounded-full">
+            <div className="inline-block p-6 bg-black/90 border border-zinc-700/30 rounded-3xl mb-6 backdrop-blur-xl shadow-2xl shadow-black/50 animate-float-glow">
+                <div className="relative p-1 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse">
+                    <div className="p-2 bg-black rounded-full">
                         <img 
                             src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
                             alt="AJ Studioz Logo" 
@@ -143,52 +141,37 @@ const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void }> = ({ on
                     </div>
                 </div>
             </div>
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2 tracking-tight animate-in fade-in duration-500">How can I help you today?</h1>
-            <p className="text-zinc-500 dark:text-zinc-400 mb-8 max-w-md mx-auto">Try one of these prompts to get started.</p>
-            <div className="mt-8">
-                <SuggestedPrompts onPromptClick={onPromptClick} />
-            </div>
+            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight animate-in fade-in duration-500">How can I help you today?</h1>
+            <p className="text-zinc-400 mb-8 max-w-md mx-auto">Try one of these prompts to get started.</p>
+            <SuggestedPrompts onPromptClick={onPromptClick} />
         </div>
     </div>
 );
 
-const getInitialTheme = (): Theme => {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    const storedPrefs = window.localStorage.getItem('app-theme');
-    if (storedPrefs === 'light' || storedPrefs === 'dark') {
-      return storedPrefs;
-    }
-    const userMedia = window.matchMedia('(prefers-color-scheme: dark)');
-    if (userMedia.matches) {
-      return 'dark';
-    }
-  }
-  return 'dark'; // Default to premium dark theme
-};
+const getInitialTheme = (): Theme => 'dark'; // Always premium dark
 
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>('dark'); // Force premium dark
-  const [highlightTheme, setHighlightTheme] = useState<HighlightTheme>('atom-one-dark'); // Dark code theme
+  const [theme, setTheme] = useState<Theme>('dark'); // Locked to dark
+  const [highlightTheme, setHighlightTheme] = useState<HighlightTheme>('atom-one-dark');
   const [currentView, setCurrentView] = useState<AppView>('chat');
   
   const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null); // Enhancement: Global error state
+  const [error, setError] = useState<string | null>(null);
 
   const chatSessionRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
 
-  // Effect to manage theme changes - Premium dark only
+  // Effect to lock premium dark theme
   useEffect(() => {
-    document.documentElement.classList.add('dark');
-    document.documentElement.classList.add('premium-dark');
+    document.documentElement.classList.add('dark', 'premium-dark');
     localStorage.setItem('app-theme', 'dark');
   }, []);
 
@@ -211,7 +194,7 @@ const App: React.FC = () => {
     chatSessionRef.current = createChatSession();
   }, []);
 
-  // Enhancement: Handle online/offline status
+  // Handle online/offline status
   useEffect(() => {
     const handleOnline = () => setError(null);
     const handleOffline = () => setError('You are offline. Some features may be limited.');
@@ -230,7 +213,7 @@ const App: React.FC = () => {
     if (currentView === 'chat') {
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-      }, 100); // Increased delay for mobile
+      }, 100);
       return () => clearTimeout(timer);
     }
   }, [currentView]);
@@ -267,7 +250,7 @@ const App: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [scrollToBottom]);
 
-  // Enhancement: Prevent body scroll when sidebar open on mobile
+  // Prevent body scroll when sidebar open on mobile
   useEffect(() => {
     if (isSidebarOpen) {
       document.body.style.overflow = 'hidden';
@@ -285,7 +268,6 @@ const App: React.FC = () => {
     const messageContent = (content || input).trim();
     if (isLoading || !messageContent) return;
 
-    // When user sends a message in a saved chat, it's now a new "unsaved" version.
     if (currentChatId) {
         setCurrentChatId(null);
     }
@@ -389,30 +371,50 @@ const App: React.FC = () => {
 
   // Enhancement: Error toast
   const ErrorToast = () => error ? (
-    <div className={`fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 ${
-      theme === 'dark' ? 'bg-red-900/80 text-white border border-red-700/50' : 'bg-red-100 text-red-800 border border-red-200'
-    }`}>
+    <div className="fixed top-4 right-4 z-50 p-4 rounded-2xl shadow-2xl max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 bg-red-900/90 text-white border border-red-700/50 backdrop-blur-xl animate-float-glow">
       {error}
-      <button onClick={() => setError(null)} className="absolute top-2 right-2 p-1 rounded-full hover:bg-opacity-20">
+      <button onClick={() => setError(null)} className="absolute top-2 right-2 p-1 rounded-full hover:bg-white/10">
         <XIcon className="h-4 w-4" />
       </button>
     </div>
   ) : null;
 
+  // Global floating glow animation
+  const GlobalStyles = () => (
+    <style jsx global>{`
+      @keyframes float-glow {
+        0% { 
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.05); 
+          transform: translateY(0px);
+        }
+        100% { 
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 92, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.1); 
+          transform: translateY(-2px);
+        }
+      }
+      .animate-float-glow {
+        animation: float-glow 4s ease-in-out infinite alternate;
+      }
+      .animate-float-glow:hover {
+        animation-duration: 2.5s;
+      }
+      .animate-float-glow:focus-within {
+        animation-play-state: paused;
+      }
+    `}</style>
+  );
+
   return (
-    <ErrorBoundary> {/* Enhancement: Error boundary for stability */}
-      <div className={`flex h-screen font-sans transition-all duration-500 ease-in-out overflow-hidden ${
-        'bg-black text-white' // Premium black theme
-      }`}>
-        {/* Premium dark mode background effects */}
-        <>
-          <div className="fixed inset-0 bg-black"></div>
-          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent"></div>
-          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent"></div>
-          <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl"></div>
-          <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl"></div>
-          <div className="fixed inset-0 opacity-20" style={{ backgroundImage: `url('${patternUrl}')` }}></div>
-        </>
+    <ErrorBoundary>
+      <GlobalStyles />
+      <div className="flex h-screen font-sans transition-all duration-500 ease-in-out overflow-hidden bg-black text-white">
+        {/* Grok-clone premium dark mode background effects */}
+        <div className="fixed inset-0 bg-black"></div>
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/5 via-transparent to-transparent"></div>
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/5 via-transparent to-transparent"></div>
+        <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-600/3 rounded-full blur-3xl animate-pulse"></div>
+        <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-600/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="fixed inset-0 opacity-10" style={{ backgroundImage: `url('${patternUrl}')` }}></div>
         
         <ErrorToast />
         
@@ -436,7 +438,7 @@ const App: React.FC = () => {
         )}
         {isSidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-2xl"
             onClick={toggleSidebar}
             aria-hidden="true"
           />
@@ -453,28 +455,20 @@ const App: React.FC = () => {
           onViewChange={setCurrentView}
         />
         <div className="flex flex-col flex-grow h-screen relative">
-          <header className={`flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-xl z-10 transition-all duration-500 ${
-            'bg-black/80 border-zinc-800/50 text-white shadow-lg shadow-black/30' // Premium black
-          }`}>
-              <button onClick={toggleSidebar} className={`p-2 -ml-2 rounded-lg transition-all touch-manipulation active:scale-[0.95] ${
-                'text-white hover:bg-zinc-800/50' // Premium white text
-              }`}>
+          <header className="flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-2xl z-10 transition-all duration-500 bg-black/95 border-zinc-700/30">
+              <button onClick={toggleSidebar} className="p-2 -ml-2 rounded-2xl transition-all touch-manipulation active:scale-[0.95] text-white hover:bg-zinc-900/50">
                 <MenuIcon className="h-6 w-6"/>
               </button>
               <div className="flex items-center gap-2">
-                  <div className={`p-1.5 rounded-lg ${
-                    'bg-zinc-900/50' // Premium black
-                  }`}>
-                    <AJStudiozIcon className={`h-5 w-5 ${
-                      'text-white' // Premium white
-                    }`}/>
+                  <div className="p-1.5 rounded-2xl bg-zinc-900/50">
+                    <AJStudiozIcon className="h-5 w-5 text-white"/>
                   </div>
-                  <h1 className="text-base font-semibold tracking-wide text-white">AJ STUDIOZ</h1> {/* Premium white */}
+                  <h1 className="text-base font-bold tracking-wide text-white">AJ STUDIOZ</h1>
               </div>
               <div className="w-6"></div>
           </header>
 
-          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 md:px-10 flex flex-col relative z-10 scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700">
+          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 md:px-10 flex flex-col relative z-10 scrollbar-thin scrollbar-thumb-zinc-700">
             {currentView === 'chat' ? (
               messages.length === 0 ? (
                 <ChatWelcome onPromptClick={handlePromptClick} />
@@ -497,18 +491,12 @@ const App: React.FC = () => {
                   {isLoading && messages.length > 0 && messages[messages.length - 1].content === '' && (
                       <div className="py-6 px-2">
                           <div className="flex items-start gap-4">
-                              <div className={`flex-shrink-0 w-8 h-8 rounded-lg border flex items-center justify-center backdrop-blur-sm ${
-                                'bg-zinc-900/50 border-zinc-700/50' // Premium black
-                              }`}>
-                                  <AJStudiozIcon className={`h-5 w-5 ${
-                                    'text-white' // Premium white
-                                  }`}/>
+                              <div className="flex-shrink-0 w-8 h-8 rounded-full border border-zinc-700/30 flex items-center justify-center backdrop-blur-xl bg-black/50 animate-float-glow">
+                                  <AJStudiozIcon className="h-5 w-5 text-white"/>
                               </div>
                               <div className="flex items-center gap-2 pt-1.5">
-                                  <SpinnerIcon className={`h-5 w-5 animate-spin ${
-                                    'text-white' // Premium white
-                                  }`} />
-                                  <span className={`text-sm font-medium text-white`}>AJ is thinking...</span> {/* Premium white */}
+                                  <SpinnerIcon className="h-5 w-5 animate-spin text-purple-400" />
+                                  <span className="text-sm font-medium text-white">AJ is thinking...</span>
                               </div>
                           </div>
                       </div>
@@ -527,9 +515,7 @@ const App: React.FC = () => {
             )}
           </main>
           {currentView === 'chat' && (
-              <footer className={`w-full border-t transition-all duration-500 relative z-10 ${
-                'bg-black/90 border-zinc-700/50 backdrop-blur-xl shadow-lg shadow-black/30' // Premium black
-              }`}>
+              <footer className="w-full border-t transition-all duration-500 relative z-10 bg-black/95 border-zinc-700/30 backdrop-blur-2xl">
                 <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
               </footer>
           )}

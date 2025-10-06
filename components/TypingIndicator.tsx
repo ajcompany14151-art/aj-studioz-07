@@ -3,10 +3,10 @@ import React from 'react';
 
 const TypingIndicatorComponent: React.FC = () => {
   return (
-    <div className="flex items-center gap-2 py-2 animate-in fade-in duration-300">
+    <div className="flex items-center gap-2 py-3 animate-in fade-in duration-500 animate-float-glow">
       <div className="relative w-6 h-6">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse"></div>
-        <div className="relative w-6 h-6 bg-black rounded-full border border-zinc-700/50 flex items-center justify-center">
+        <div className="relative w-6 h-6 bg-black rounded-full border border-zinc-700/30 flex items-center justify-center">
           <img 
             src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
             alt="AJ Studioz Logo" 
@@ -15,11 +15,11 @@ const TypingIndicatorComponent: React.FC = () => {
         </div>
       </div>
       <div className="flex items-center gap-1.5">
-        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-        <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce"></span>
+        <span className="h-2 w-2 bg-purple-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+        <span className="h-2 w-2 bg-purple-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+        <span className="h-2 w-2 bg-purple-500 rounded-full animate-bounce"></span>
       </div>
-      <span className="text-sm text-zinc-400 italic">AJ is thinking...</span> {/* Premium white-ish */}
+      <span className="text-sm text-zinc-400 italic">AJ is thinking...</span>
     </div>
   );
 };

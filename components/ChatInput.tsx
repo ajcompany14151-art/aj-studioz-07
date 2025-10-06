@@ -51,20 +51,35 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     <div className="w-full max-w-4xl mx-auto p-4">
       <div 
         className="
-          relative flex items-end gap-2 p-2
-          bg-zinc-900/50 dark:bg-gradient-to-r dark:from-zinc-900 dark:to-black
-          border border-zinc-700/50 dark:border-zinc-700
-          rounded-2xl
-          transition-all duration-200
-          focus-within:border-purple-500/50 dark:focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/30 dark:focus-within:ring-purple-500/30
-          backdrop-blur-sm
-          shadow-sm hover:shadow-md transition-shadow
+          relative flex items-end gap-2 p-3
+          bg-black/80 backdrop-blur-xl
+          border border-zinc-700/50
+          rounded-3xl
+          transition-all duration-300
+          focus-within:border-purple-500/50 focus-within:ring-2 focus-within:ring-purple-500/30
+          shadow-2xl shadow-black/50 hover:shadow-3xl hover:shadow-purple-500/20
+          z-50
+          animate-subtle-glow
         "
+        style={{
+          // Subtle glow animation via CSS-in-JS for premium feel
+          animation: 'subtle-glow 3s ease-in-out infinite alternate',
+        }}
       >
+        {/* Custom glow animation - add to global CSS or inline */}
+        <style jsx>{`
+          @keyframes subtle-glow {
+            0% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
+            100% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.2), 0 0 40px rgba(59, 130, 246, 0.1); }
+          }
+          .animate-subtle-glow:hover {
+            animation-duration: 2s;
+          }
+        `}</style>
         <button
             aria-label="Attach file"
             title="Attach file (coming soon)"
-            className="p-2 text-zinc-400 dark:text-zinc-500 hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50 group"
+            className="p-2 text-zinc-400 hover:text-white transition-colors rounded-2xl flex-shrink-0 cursor-not-allowed opacity-50 group"
             onTouchStart={(e) => e.preventDefault()} // Mobile: Prevent double-tap zoom
         >
             <PaperclipIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -77,13 +92,13 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={1}
-          placeholder="How can I help?"
+          placeholder="Type your message..."
           className="
             w-full bg-transparent text-white resize-none 
             focus:outline-none 
             disabled:cursor-not-allowed
-            placeholder-zinc-500 dark:placeholder-zinc-400 text-base
-            py-2.5 px-2
+            placeholder-zinc-500 text-base
+            py-3 px-3
             min-h-[20px]
           "
           disabled={isLoading}
@@ -97,7 +112,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         <button
             aria-label="Use microphone"
             title="Use microphone (coming soon)"
-            className="p-2 text-zinc-400 dark:text-zinc-500 hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50 group"
+            className="p-2 text-zinc-400 hover:text-white transition-colors rounded-2xl flex-shrink-0 cursor-not-allowed opacity-50 group"
             onTouchStart={(e) => e.preventDefault()}
         >
             <MicIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -108,15 +123,15 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           disabled={isDisabled}
           aria-label={isLoading ? "Sending..." : "Send message"}
           className={`
-            p-2 rounded-xl transition-all duration-200 transform flex-shrink-0
+            p-2 rounded-2xl transition-all duration-300 transform flex-shrink-0 relative overflow-hidden
             ${isDisabled
-              ? 'text-zinc-600 dark:text-zinc-500 cursor-not-allowed opacity-70'
+              ? 'text-zinc-600 cursor-not-allowed opacity-70'
               : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/30 group'
-            } ${!isDisabled && 'group-hover:shadow-xl group-hover:shadow-purple-500/40'}
+            } ${!isDisabled && 'group-hover:shadow-xl group-hover:shadow-purple-500/40 before:absolute before:inset-0 before:bg-white/10 before:opacity-0 before:transition-opacity before:group-hover:opacity-100'}
           `}
           onTouchStart={(e) => !isDisabled && e.preventDefault()} // Mobile haptic feedback prep
         >
-          <SendIcon className="h-5 w-5 group-hover:rotate-12 transition-transform duration-200" />
+          <SendIcon className="h-5 w-5 group-hover:rotate-12 transition-transform duration-200 relative z-10" />
         </button>
       </div>
     </div>

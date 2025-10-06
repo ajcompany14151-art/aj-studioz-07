@@ -152,4 +152,6 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
 
 ChatInputComponent.displayName = 'ChatInput';
 
+const ChatInput = React.memo(ChatInputComponent);
+
 export { ChatInput };

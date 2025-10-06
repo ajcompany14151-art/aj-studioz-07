@@ -52,37 +52,48 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       <div 
         className="
           relative flex items-end gap-2 p-3
-          bg-black/80 backdrop-blur-xl
-          border border-zinc-700/50
+          bg-black/90 backdrop-blur-2xl
+          border border-zinc-700/30
           rounded-3xl
-          transition-all duration-300
-          focus-within:border-purple-500/50 focus-within:ring-2 focus-within:ring-purple-500/30
-          shadow-2xl shadow-black/50 hover:shadow-3xl hover:shadow-purple-500/20
+          transition-all duration-500
+          focus-within:border-purple-400/50 focus-within:ring-2 focus-within:ring-purple-400/30
+          shadow-2xl shadow-black/60 hover:shadow-3xl hover:shadow-purple-500/20
           z-50
-          animate-subtle-glow
+          translate-y-0 hover:-translate-y-0.5
+          animate-float-glow
         "
         style={{
-          // Subtle glow animation via CSS-in-JS for premium feel
-          animation: 'subtle-glow 3s ease-in-out infinite alternate',
+          // Exact Grok-like floating glow: subtle, infinite pulse with lift
+          animation: 'float-glow 4s ease-in-out infinite alternate',
+          transform: 'translateY(0px)',
         }}
       >
-        {/* Custom glow animation - add to global CSS or inline */}
+        {/* Custom floating glow animation - scoped like Grok's ethereal input */}
         <style jsx>{`
-          @keyframes subtle-glow {
-            0% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
-            100% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.2), 0 0 40px rgba(59, 130, 246, 0.1); }
+          @keyframes float-glow {
+            0% { 
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.05); 
+              transform: translateY(0px);
+            }
+            100% { 
+              box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 92, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.1); 
+              transform: translateY(-2px);
+            }
           }
-          .animate-subtle-glow:hover {
-            animation-duration: 2s;
+          .animate-float-glow:hover {
+            animation-duration: 2.5s;
+          }
+          .animate-float-glow:focus-within {
+            animation-play-state: paused;
           }
         `}</style>
         <button
             aria-label="Attach file"
             title="Attach file (coming soon)"
-            className="p-2 text-zinc-400 hover:text-white transition-colors rounded-2xl flex-shrink-0 cursor-not-allowed opacity-50 group"
+            className="p-2 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100"
             onTouchStart={(e) => e.preventDefault()} // Mobile: Prevent double-tap zoom
         >
-            <PaperclipIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+            <PaperclipIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
         </button>
 
         <textarea
@@ -92,13 +103,13 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={1}
-          placeholder="Type your message..."
+          placeholder="Ask me anything..."
           className="
-            w-full bg-transparent text-white resize-none 
-            focus:outline-none 
+            flex-1 bg-transparent text-white resize-none 
+            focus:outline-none focus:placeholder-transparent
             disabled:cursor-not-allowed
-            placeholder-zinc-500 text-base
-            py-3 px-3
+            placeholder-zinc-500 text-base leading-relaxed
+            py-3 px-4
             min-h-[20px]
           "
           disabled={isLoading}
@@ -112,10 +123,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         <button
             aria-label="Use microphone"
             title="Use microphone (coming soon)"
-            className="p-2 text-zinc-400 hover:text-white transition-colors rounded-2xl flex-shrink-0 cursor-not-allowed opacity-50 group"
+            className="p-2 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100"
             onTouchStart={(e) => e.preventDefault()}
         >
-            <MicIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+            <MicIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
         </button>
 
         <button
@@ -123,15 +134,16 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           disabled={isDisabled}
           aria-label={isLoading ? "Sending..." : "Send message"}
           className={`
-            p-2 rounded-2xl transition-all duration-300 transform flex-shrink-0 relative overflow-hidden
+            p-3 rounded-2xl transition-all duration-500 transform flex-shrink-0 relative overflow-hidden group
             ${isDisabled
-              ? 'text-zinc-600 cursor-not-allowed opacity-70'
-              : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/30 group'
-            } ${!isDisabled && 'group-hover:shadow-xl group-hover:shadow-purple-500/40 before:absolute before:inset-0 before:bg-white/10 before:opacity-0 before:transition-opacity before:group-hover:opacity-100'}
+              ? 'text-zinc-600 cursor-not-allowed opacity-50'
+              : 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 text-white hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 hover:scale-110 active:scale-95 shadow-lg shadow-purple-500/40'
+            }
+            ${!isDisabled && 'before:absolute before:inset-0 before:bg-white/20 before:opacity-0 before:transition-opacity before:group-hover:opacity-100 after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/10 after:to-transparent after:opacity-0 after:transition-opacity after:group-hover:opacity-100'}
           `}
           onTouchStart={(e) => !isDisabled && e.preventDefault()} // Mobile haptic feedback prep
         >
-          <SendIcon className="h-5 w-5 group-hover:rotate-12 transition-transform duration-200 relative z-10" />
+          <SendIcon className="h-5 w-5 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
         </button>
       </div>
     </div>

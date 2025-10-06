@@ -19,7 +19,7 @@ const TypingIndicatorComponent: React.FC = () => {
         <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
         <span className="h-2 w-2 bg-zinc-500 rounded-full animate-bounce"></span>
       </div>
-      <span className="text-sm text-zinc-600 dark:text-zinc-400 italic">AJ is thinking...</span>
+      <span className="text-sm text-zinc-400 italic">AJ is thinking...</span> {/* Premium white-ish */}
     </div>
   );
 };

@@ -1,3 +1,4 @@
+// components/CodeBlock.tsx
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { CopyIcon } from './icons/CopyIcon';
 import { CheckIcon } from './icons/CheckIcon';
@@ -5,6 +6,8 @@ import { RunIcon } from './icons/RunIcon';
 import { WrapIcon } from './icons/WrapIcon';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 import { ChevronUpIcon } from './icons/ChevronUpIcon';
+import { EyeIcon } from './icons/EyeIcon';
+import { EyeOffIcon } from './icons/EyeOffIcon'; // Assume this icon exists or add it
 
 // This informs TypeScript that 'hljs' is a global variable provided by the script in index.html
 declare var hljs: any;
@@ -20,8 +23,9 @@ const CodeActionButton: React.FC<{ onClick?: () => void; disabled?: boolean; chi
         disabled={disabled}
         aria-label={label}
         title={label}
-        className={`flex items-center gap-1.5 p-1.5 rounded-md transition-colors duration-200 ease-in-out text-zinc-500 dark:text-zinc-400 
-        ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 hover:text-zinc-900 dark:hover:text-white'}`}
+        className={`flex items-center gap-1.5 p-1.5 rounded-md transition-colors duration-200 ease-in-out text-zinc-500 dark:text-zinc-400 min-w-[36px] h-[32px]
+        ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 hover:text-zinc-900 dark:hover:text-white active:scale-95'}`}
+        onTouchStart={(e) => !disabled && e.preventDefault()} // Mobile enhancement
     >
         {children}
     </button>
@@ -32,11 +36,12 @@ const CopyCodeButton: React.FC<{ isCopied: boolean; onCopy: () => void }> = ({ i
         onClick={onCopy} 
         aria-label={isCopied ? "Copied to clipboard" : "Copy code"}
         title={isCopied ? "Copied to clipboard" : "Copy code"}
-        className={`flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md transition-all duration-200 ease-in-out text-sm w-[88px] ${
+        className={`flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md transition-all duration-200 ease-in-out text-sm w-[88px] h-[32px] ${
             isCopied
-            ? 'text-emerald-500 dark:text-emerald-400'
+            ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 shadow-md shadow-emerald-200/50'
             : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 hover:text-zinc-900 dark:hover:text-white'
         }`}
+        onTouchStart={(e) => e.preventDefault()}
     >
         <div className="relative h-4 w-4" aria-hidden="true">
             <CopyIcon className={`h-full w-full transition-all duration-300 ease-in-out transform ${isCopied ? 'opacity-0 scale-75' : 'opacity-100 scale-100'}`} />
@@ -57,15 +62,25 @@ const COLLAPSE_THRESHOLD = 15; // Lines
 
 const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
   const [isCopied, setIsCopied] = useState(false);
+  const [showLineNumbers, setShowLineNumbers] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(!code.split('\n').length > COLLAPSE_THRESHOLD);
   const codeRef = useRef<HTMLElement>(null);
 
   const lines = useMemo(() => code.trimEnd().split('\n'), [code]);
   const isCollapsible = useMemo(() => lines.length > COLLAPSE_THRESHOLD, [lines.length]);
   
-  const [isExpanded, setIsExpanded] = useState(!isCollapsible);
-
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = code;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     });
@@ -77,16 +92,27 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
     }
   }, [code, language]);
 
+  // Enhancement: Toggle line numbers
+  const toggleLineNumbers = () => setShowLineNumbers(!showLineNumbers);
+
   return (
-    <div className={`rounded-xl my-4 overflow-hidden bg-gradient-to-b from-zinc-50 to-white dark:from-black dark:to-zinc-950 border border-zinc-300/60 dark:border-zinc-800/60`}>
-      <div className="flex justify-between items-center px-4 py-1.5 bg-zinc-100/70 dark:bg-zinc-900/70 backdrop-blur-sm border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 text-xs font-sans">
-        <span className="font-mono tracking-tight text-zinc-700 dark:text-zinc-300 font-semibold">{language.toLowerCase()}</span>
+    <div className={`rounded-xl my-4 overflow-hidden bg-gradient-to-b from-zinc-50 to-white dark:from-black dark:to-zinc-950 border border-zinc-300/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md transition-shadow`}>
+      <div className="flex justify-between items-center px-4 py-2 bg-zinc-100/80 dark:bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 text-xs font-sans">
+        <span className="font-mono tracking-tight text-zinc-700 dark:text-zinc-300 font-semibold flex items-center gap-2">
+          <span>{language.toLowerCase()}</span>
+          {isCollapsible && (
+            <span className="text-xs opacity-60">({lines.length} lines)</span>
+          )}
+        </span>
         <div className="flex items-center gap-1">
             <CodeActionButton label="Wrap code (coming soon)" disabled>
                 <WrapIcon className="h-4 w-4" />
             </CodeActionButton>
             <CodeActionButton label="Run code (coming soon)" disabled>
                 <RunIcon className="h-4 w-4" />
+            </CodeActionButton>
+            <CodeActionButton onClick={toggleLineNumbers} label={showLineNumbers ? "Hide line numbers" : "Show line numbers"}>
+              {showLineNumbers ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
             </CodeActionButton>
             <CopyCodeButton isCopied={isCopied} onCopy={handleCopy} />
         </div>
@@ -95,7 +121,7 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
       <div className="relative">
         <div className={`
           overflow-auto transition-all duration-300 ease-in-out
-          [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2
           [&::-webkit-scrollbar-track]:bg-zinc-200/30 dark:[&::-webkit-scrollbar-track]:bg-zinc-800/30
           [&::-webkit-scrollbar-thumb]:rounded-full
           [&::-webkit-scrollbar-thumb]:bg-zinc-300/40 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-700/40
@@ -103,14 +129,16 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
           hover:[&::-webkit-scrollbar-thumb]:bg-zinc-400/60 dark:hover:[&::-webkit-scrollbar-thumb]:bg-zinc-600/60
           ${isExpanded ? 'max-h-[60vh]' : 'max-h-[280px]'}
         `}>
-          <div className="p-4 text-sm font-mono flex">
-            <div aria-hidden="true" className="select-none text-right text-zinc-400 dark:text-zinc-500 pr-6 leading-relaxed">
-              {lines.map((_, i) => (
-                <div key={i}>{i + 1}</div>
-              ))}
-            </div>
-            <pre className="p-0 m-0 leading-relaxed flex-1">
-              <code ref={codeRef} className={`language-${language.toLowerCase()} [&.hljs]:bg-transparent`}>
+          <div className="p-4 text-sm font-mono flex min-h-[20px]">
+            {showLineNumbers && (
+              <div aria-hidden={!showLineNumbers} className="select-none text-right text-zinc-400 dark:text-zinc-500 pr-4 leading-relaxed mr-2 border-r border-zinc-200/50 dark:border-zinc-700/50">
+                {lines.map((_, i) => (
+                  <div key={i} className="min-w-[3rem]">{i + 1}</div>
+                ))}
+              </div>
+            )}
+            <pre className="p-0 m-0 leading-relaxed flex-1 overflow-visible">
+              <code ref={codeRef} className={`language-${language.toLowerCase()} [&.hljs]:bg-transparent break-words`}>
                 {code.trimEnd()}
               </code>
             </pre>
@@ -123,21 +151,21 @@ const CodeBlockComponent: React.FC<CodeBlockProps> = ({ language, code }) => {
       </div>
 
       {isCollapsible && (
-        <div className="bg-zinc-100/70 dark:bg-zinc-900/70 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800 px-4 py-1.5 flex justify-center">
+        <div className="bg-zinc-100/80 dark:bg-zinc-900/80 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800 px-4 py-2 flex justify-center">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             aria-expanded={isExpanded}
-            className="flex items-center gap-1.5 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors group"
           >
             {isExpanded ? (
               <>
                 <span>Show Less</span>
-                <ChevronUpIcon className="h-4 w-4" />
+                <ChevronUpIcon className="h-4 w-4 group-hover:rotate-180 transition-transform" />
               </>
             ) : (
               <>
                 <span>Show More</span>
-                <ChevronDownIcon className="h-4 w-4" />
+                <ChevronDownIcon className="h-4 w-4 group-hover:rotate-180 transition-transform" />
               </>
             )}
           </button>

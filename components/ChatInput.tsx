@@ -52,8 +52,8 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       <div 
         className="
           relative flex items-end gap-2 p-2
-          bg-zinc-100 dark:bg-gradient-to-r dark:from-zinc-800 dark:to-zinc-900
-          border border-zinc-300 dark:border-zinc-700
+          bg-zinc-900/50 dark:bg-gradient-to-r dark:from-zinc-900 dark:to-black
+          border border-zinc-700/50 dark:border-zinc-700
           rounded-2xl
           transition-all duration-200
           focus-within:border-purple-500/50 dark:focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/30 dark:focus-within:ring-purple-500/30
@@ -64,7 +64,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         <button
             aria-label="Attach file"
             title="Attach file (coming soon)"
-            className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50 group"
+            className="p-2 text-zinc-400 dark:text-zinc-500 hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50 group"
             onTouchStart={(e) => e.preventDefault()} // Mobile: Prevent double-tap zoom
         >
             <PaperclipIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -79,7 +79,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           rows={1}
           placeholder="How can I help?"
           className="
-            w-full bg-transparent text-zinc-900 dark:text-white resize-none 
+            w-full bg-transparent text-white resize-none 
             focus:outline-none 
             disabled:cursor-not-allowed
             placeholder-zinc-500 dark:placeholder-zinc-400 text-base
@@ -97,7 +97,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         <button
             aria-label="Use microphone"
             title="Use microphone (coming soon)"
-            className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50 group"
+            className="p-2 text-zinc-400 dark:text-zinc-500 hover:text-white transition-colors rounded-xl flex-shrink-0 cursor-not-allowed opacity-50 group"
             onTouchStart={(e) => e.preventDefault()}
         >
             <MicIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -110,7 +110,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           className={`
             p-2 rounded-xl transition-all duration-200 transform flex-shrink-0
             ${isDisabled
-              ? 'text-zinc-400 dark:text-zinc-600 cursor-not-allowed opacity-70'
+              ? 'text-zinc-600 dark:text-zinc-500 cursor-not-allowed opacity-70'
               : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/30 group'
             } ${!isDisabled && 'group-hover:shadow-xl group-hover:shadow-purple-500/40'}
           `}

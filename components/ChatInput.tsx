@@ -33,6 +33,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const isDisabled = isLoading || !value.trim();
   const maxChars = 5000;
   const inputContainerRef = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
   // Mobile detection
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
     };
     
     checkMobile();
@@ -48,6 +49,25 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Enhanced keyboard height detection for mobile
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const handleVisualViewportChange = () => {
+      const viewport = (window as any).visualViewport;
+      if (viewport) {
+        const heightDiff = window.innerHeight - viewport.height;
+        setKeyboardHeight(heightDiff > 150 ? heightDiff : 0);
+      }
+    };
+    
+    const viewport = (window as any).visualViewport;
+    if (viewport) {
+      viewport.addEventListener('resize', handleVisualViewportChange);
+      return () => viewport.removeEventListener('resize', handleVisualViewportChange);
+    }
+  }, [isMobile]);
 
   useEffect(() => {
     setCharCount(value.length);
@@ -142,6 +162,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           relative mx-auto max-w-4xl pointer-events-auto transition-all duration-300 ease-out
           ${isFocused ? 'scale-[1.02]' : 'scale-100'}
         `}
+        style={{
+          marginBottom: isMobile ? `${keyboardHeight}px` : '0',
+          paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 0px)' : '0'
+        }}
       >
         {/* Glassmorphism floating input container with Grok-inspired AJ flair */}
         <div 

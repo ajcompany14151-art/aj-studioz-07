@@ -1,9 +1,10 @@
 // components/ChatInput.tsx
-import React, { useEffect, KeyboardEvent, forwardRef, useState } from 'react';
+import React, { useEffect, KeyboardEvent, forwardRef, useState, useRef } from 'react';
 import { SendIcon } from './icons/SendIcon';
 import { PaperclipIcon } from './icons/PaperclipIcon';
 import { MicIcon } from './icons/MicIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
+import { PlusIcon } from './icons/PlusIcon';
 
 // Simple ShareIcon component
 const ShareIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -23,8 +24,11 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
   const [isFocused, setIsFocused] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const isDisabled = isLoading || !value.trim();
   const maxChars = 5000;
+  const inputContainerRef = useRef<HTMLDivElement>(null);
 
   // Mobile detection
   useEffect(() => {
@@ -46,11 +50,11 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       textarea.style.height = 'auto';
       const scrollHeight = textarea.scrollHeight;
       // Responsive max height
-      const maxHeight = isMobile ? 120 : 200;
+      const maxHeight = isExpanded ? (isMobile ? 200 : 300) : (isMobile ? 120 : 200);
       textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
       textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
-  }, [value, ref, isMobile]);
+  }, [value, ref, isMobile, isExpanded]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -58,6 +62,11 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       if (!isDisabled) {
         onSend();
       }
+    }
+    
+    // Expand on shift+enter
+    if (event.key === 'Enter' && event.shiftKey) {
+      setIsExpanded(true);
     }
   };
 
@@ -67,6 +76,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     if (textarea) {
       const handleFocus = () => {
         setIsFocused(true);
+        setShowSuggestions(true);
         // Only apply zoom fix on iOS
         if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
           document.body.style.zoom = '0.99';
@@ -74,6 +84,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       };
       const handleBlur = () => {
         setIsFocused(false);
+        // Only hide suggestions if input is empty
+        if (value.length === 0) {
+          setShowSuggestions(false);
+        }
         if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
           document.body.style.zoom = '';
         }
@@ -87,125 +101,143 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         textarea.removeEventListener('blur', handleBlur);
       };
     }
-  }, [ref]);
+  }, [ref, value]);
+
+  // Handle clicks outside to collapse
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (inputContainerRef.current && !inputContainerRef.current.contains(event.target as Node)) {
+        if (value.length === 0) {
+          setIsExpanded(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [value]);
+
+  const suggestions = [
+    { text: "Explain quantum computing", icon: "🧠" },
+    { text: "Write a Python script", icon: "💻" },
+    { text: "Draft an email", icon: "📧" },
+    { text: "Brainstorm ideas", icon: "💡" },
+  ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 relative">
-      {/* Character count indicator - only show on desktop */}
-      {!isMobile && (
-        <div className={`absolute right-6 bottom-6 text-xs transition-all duration-300 ${
-          charCount > maxChars * 0.9 ? 'text-red-400' : 'text-zinc-500'
-        } ${isFocused ? 'opacity-100' : 'opacity-0'}`}>
-          {charCount}/{maxChars}
-        </div>
-      )}
-      
+    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 pointer-events-none">
       <div 
+        ref={inputContainerRef}
         className={`
-          relative flex items-end gap-2 p-3
-          bg-black/90 backdrop-blur-2xl
-          border border-zinc-700/30
-          rounded-3xl
-          transition-all duration-500
-          focus-within:border-purple-400/50 focus-within:ring-2 focus-within:ring-purple-400/30
-          shadow-2xl shadow-black/60
-          z-50
-          ${isFocused ? 'shadow-3xl shadow-purple-500/20 -translate-y-1' : 'hover:shadow-3xl hover:shadow-purple-500/10 hover:-translate-y-0.5'}
-          animate-float-glow
+          relative mx-auto max-w-4xl pointer-events-auto transition-all duration-300 ease-out
+          ${isFocused ? 'scale-[1.02]' : 'scale-100'}
         `}
       >
-        {/* Enhanced floating glow animation */}
-        <style jsx>{`
-          @keyframes float-glow {
-            0% { 
-              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.05); 
-              transform: translateY(0px);
+        {/* Glassmorphism floating input container */}
+        <div 
+          className={`
+            relative flex items-end gap-2 p-4
+            bg-black/40 backdrop-blur-xl
+            border border-white/10
+            rounded-3xl
+            shadow-2xl
+            transition-all duration-300
+            ${isFocused 
+              ? 'bg-black/60 border-white/20 shadow-[0_0_30px_rgba(139,92,246,0.3)]' 
+              : 'hover:bg-black/50 hover:border-white/15 hover:shadow-[0_0_20px_rgba(139,92,246,0.2)]'
             }
-            100% { 
-              box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 92, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.1); 
-              transform: translateY(-2px);
-            }
-          }
-          .animate-float-glow:hover {
-            animation-duration: 2.5s;
-          }
-          .animate-float-glow:focus-within {
-            animation-play-state: paused;
-          }
-        `}</style>
-        
-        {/* Enhanced attachment button with ripple effect */}
-        <div className="relative">
+            ${isExpanded ? 'rounded-t-3xl' : 'rounded-3xl'}
+          `}
+          style={{
+            background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+          }}
+        >
+          {/* Animated gradient border */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 opacity-0 transition-opacity duration-300" 
+               style={{
+                 background: isFocused 
+                   ? 'linear-gradient(90deg, rgba(139,92,246,0.3) 0%, rgba(59,130,246,0.3) 50%, rgba(139,92,246,0.3) 100%)' 
+                   : 'linear-gradient(90deg, rgba(139,92,246,0.1) 0%, rgba(59,130,246,0.1) 50%, rgba(139,92,246,0.1) 100%)',
+                 filter: 'blur(1px)',
+                 zIndex: -1,
+               }}
+          />
+          
+          {/* Enhanced attachment button */}
           <button
               aria-label="Attach file"
               title="Attach file (coming soon)"
-              className="p-2 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
+              className="p-2.5 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
               onTouchStart={(e) => e.preventDefault()}
           >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-2xl"></div>
               <PaperclipIcon className="h-5 w-5 relative z-10 group-hover:scale-110 transition-transform duration-200" />
           </button>
-        </div>
 
-        <div className="relative flex-1">
-          <textarea
-            ref={ref}
-            id="chat-input"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            rows={1}
-            placeholder="Ask me anything..."
-            className={`
-              flex-1 bg-transparent text-white resize-none 
-              focus:outline-none focus:placeholder-transparent
-              disabled:cursor-not-allowed
-              placeholder-zinc-500 text-base leading-relaxed
-              py-3 px-4
-              min-h-[20px]
-              ${isFocused ? 'text-white' : 'text-zinc-100'}
-              ${isMobile ? 'text-lg' : ''}
-            `}
-            disabled={isLoading}
-            aria-label="Chat input"
-            maxLength={maxChars}
-            spellCheck={true}
-            autoCapitalize="sentences"
-            autoCorrect="on"
-            style={{ fontSize: isMobile ? '16px' : 'inherit' }} // Prevent zoom on iOS
-          />
-          
-          {/* Enhanced focus indicator */}
-          {isFocused && (
-            <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full animate-pulse w-full"></div>
-          )}
-        </div>
+          <div className="relative flex-1 min-w-0">
+            <textarea
+              ref={ref}
+              id="chat-input"
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              rows={1}
+              placeholder="Ask me anything..."
+              className={`
+                flex-1 bg-transparent text-white resize-none 
+                focus:outline-none focus:placeholder-transparent
+                disabled:cursor-not-allowed
+                placeholder-zinc-400 text-base leading-relaxed
+                py-2.5 px-4
+                min-h-[24px]
+                ${isFocused ? 'text-white' : 'text-zinc-100'}
+                ${isMobile ? 'text-lg' : ''}
+              `}
+              disabled={isLoading}
+              aria-label="Chat input"
+              maxLength={maxChars}
+              spellCheck={true}
+              autoCapitalize="sentences"
+              autoCorrect="on"
+              style={{ fontSize: isMobile ? '16px' : 'inherit' }} // Prevent zoom on iOS
+            />
+            
+            {/* Character count indicator - only show when approaching limit */}
+            {charCount > maxChars * 0.8 && (
+              <div className={`absolute bottom-2 right-2 text-xs transition-all duration-300 ${
+                charCount > maxChars * 0.9 ? 'text-red-400' : 'text-zinc-500'
+              }`}>
+                {charCount}/{maxChars}
+              </div>
+            )}
+          </div>
 
-        {/* Enhanced microphone button with pulse effect */}
-        <div className="relative">
+          {/* Enhanced microphone button */}
           <button
               aria-label="Use microphone"
               title="Use microphone (coming soon)"
-              className="p-2 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
+              className="p-2.5 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
               onTouchStart={(e) => e.preventDefault()}
           >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-2xl"></div>
               <MicIcon className="h-5 w-5 relative z-10 group-hover:scale-110 transition-transform duration-200" />
               <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
           </button>
-        </div>
 
-        {/* Enhanced send button with ripple effect */}
-        <div className="relative">
+          {/* Enhanced send button */}
           <button
             onClick={onSend}
             disabled={isDisabled}
             aria-label={isLoading ? "Sending..." : "Send message"}
             className={`
-              p-3 rounded-2xl transition-all duration-500 transform flex-shrink-0 relative overflow-hidden group
+              p-2.5 rounded-2xl transition-all duration-300 transform flex-shrink-0 relative overflow-hidden group
               ${isDisabled
                 ? 'text-zinc-600 cursor-not-allowed opacity-50'
-                : 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 text-white hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 hover:scale-110 active:scale-95 shadow-lg shadow-purple-500/40'
+                : 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 text-white hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 hover:scale-110 active:scale-95 shadow-lg'
               }
             `}
             onTouchStart={(e) => !isDisabled && e.preventDefault()}
@@ -228,22 +260,60 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             </div>
           </button>
         </div>
+        
+        {/* Floating suggestions */}
+        {showSuggestions && !isMobile && value.length === 0 && !isLoading && (
+          <div className="absolute bottom-full left-0 right-0 mb-3 p-4 animate-in slide-in-from-bottom-2 duration-300">
+            <div className="mx-auto max-w-4xl bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-xl">
+              <div className="flex items-center gap-2 mb-2">
+                <PlusIcon className="h-4 w-4 text-zinc-400" />
+                <span className="text-xs text-zinc-400">Try these prompts</span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {suggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      onChange(suggestion.text);
+                      setShowSuggestions(false);
+                    }}
+                    className="flex items-center gap-2 p-2 rounded-xl bg-black/40 hover:bg-black/60 transition-all duration-200 text-left group"
+                  >
+                    <span className="text-lg">{suggestion.icon}</span>
+                    <span className="text-xs text-zinc-300 group-hover:text-white truncate">{suggestion.text}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Expand button */}
+        {!isExpanded && (
+          <button
+            onClick={() => setIsExpanded(true)}
+            className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-xl border border-white/10 rounded-full p-1.5 text-zinc-400 hover:text-white transition-all duration-200"
+            aria-label="Expand input"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        )}
+        
+        {/* Collapse button */}
+        {isExpanded && (
+          <button
+            onClick={() => setIsExpanded(false)}
+            className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-xl border border-white/10 rounded-full p-1.5 text-zinc-400 hover:text-white transition-all duration-200"
+            aria-label="Collapse input"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+          </button>
+        )}
       </div>
-      
-      {/* Enhanced suggestion pills - only show on desktop */}
-      {!isMobile && value.length === 0 && !isLoading && (
-        <div className="flex flex-wrap gap-2 mt-3 px-2">
-          {["Summarize", "Explain", "Code", "Write"].map((suggestion) => (
-            <button
-              key={suggestion}
-              onClick={() => onChange(suggestion)}
-              className="px-3 py-1 text-xs bg-zinc-800/50 text-zinc-300 rounded-full hover:bg-zinc-700/50 hover:text-white transition-all duration-300 border border-zinc-700/30"
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 });

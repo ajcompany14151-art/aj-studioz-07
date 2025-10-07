@@ -6,15 +6,15 @@ import { AJStudiozIcon } from './icons/AJStudiozIcon';
 import { CodeBlock } from './CodeBlock';
 import { WandIcon } from './icons/WandIcon';
 import { XIcon } from './icons/XIcon';
-import TypingIndicator from './TypingIndicator'; // Changed from named to default import
+import TypingIndicator from './TypingIndicator';
 import { CopyIcon } from './icons/CopyIcon';
 import { CheckIcon } from './icons/CheckIcon';
 
 // Theme configurations
 const themeConfigs = {
   dark: {
-    userBg: 'bg-zinc-800',
-    userBorder: 'border-zinc-700',
+    userBg: 'bg-purple-600',
+    userBorder: 'border-purple-500',
     aiBg: 'bg-zinc-900/60',
     aiBorder: 'border-zinc-800/50',
     text: 'text-white',
@@ -22,8 +22,8 @@ const themeConfigs = {
     codeTheme: 'atom-one-dark'
   },
   light: {
-    userBg: 'bg-gray-100',
-    userBorder: 'border-gray-200',
+    userBg: 'bg-purple-600',
+    userBorder: 'border-purple-500',
     aiBg: 'bg-white',
     aiBorder: 'border-gray-200',
     text: 'text-gray-900',
@@ -31,8 +31,8 @@ const themeConfigs = {
     codeTheme: 'atom-one-light'
   },
   'z-ai': {
-    userBg: 'bg-slate-800',
-    userBorder: 'border-slate-700',
+    userBg: 'bg-indigo-600',
+    userBorder: 'border-indigo-500',
     aiBg: 'bg-slate-900/60',
     aiBorder: 'border-slate-800/50',
     text: 'text-white',
@@ -40,8 +40,8 @@ const themeConfigs = {
     codeTheme: 'vs2015'
   },
   'chatgpt': {
-    userBg: 'bg-gray-800',
-    userBorder: 'border-gray-700',
+    userBg: 'bg-green-600',
+    userBorder: 'border-green-500',
     aiBg: 'bg-gray-900/60',
     aiBorder: 'border-gray-800/50',
     text: 'text-white',
@@ -152,14 +152,14 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
 
   if (isUser) {
     return (
-      <div className="py-6 px-2 animate-in slide-in-from-right-2 duration-300">
-        <div className="flex items-start gap-4 max-w-4xl ml-auto">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-md">
-              <UserIcon className="h-5 w-5 text-white" />
+      <div className="py-4 px-2 animate-in slide-in-from-right-2 duration-300">
+        <div className="flex items-start gap-3 max-w-3xl ml-auto">
+            <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
+              <UserIcon className="h-4 w-4 text-white" />
             </div>
             <div className="flex-grow min-w-0">
-              <div className={`p-4 rounded-2xl ${currentThemeConfig.userBg} border ${currentThemeConfig.userBorder} shadow-sm`}>
-                <p className={`${currentThemeConfig.text} whitespace-pre-wrap break-words`}>
+              <div className={`p-3 rounded-2xl ${currentThemeConfig.userBg} shadow-sm`}>
+                <p className={`${currentThemeConfig.text} whitespace-pre-wrap break-words text-sm`}>
                   {message.content}
                 </p>
               </div>
@@ -171,15 +171,15 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
   }
 
   return (
-    <div className={`py-6 px-2 animate-in slide-in-from-left-2 duration-300 ${showStreamingCursor ? 'pr-4' : ''}`}>
-      <div className="flex items-start gap-4 max-w-4xl">
+    <div className={`py-4 px-2 animate-in slide-in-from-left-2 duration-300 ${showStreamingCursor ? 'pr-4' : ''}`}>
+      <div className="flex items-start gap-3 max-w-3xl">
         <div className="relative flex-shrink-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse"></div>
-          <div className={`relative w-8 h-8 ${theme === 'light' ? 'bg-white' : 'bg-black'} rounded-full border ${currentThemeConfig.aiBorder} flex items-center justify-center overflow-hidden group`}>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg animate-pulse"></div>
+          <div className={`relative w-7 h-7 ${theme === 'light' ? 'bg-white' : 'bg-black'} rounded-full border ${currentThemeConfig.aiBorder} flex items-center justify-center overflow-hidden group`}>
             <img 
               src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
               alt="AJ Studioz Logo" 
-              className="h-5 w-5 rounded-full object-cover transition-transform duration-300 group-hover:scale-110"
+              className="h-4 w-4 rounded-full object-cover transition-transform duration-300 group-hover:scale-110"
             />
           </div>
         </div>
@@ -212,21 +212,21 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
           
           {/* Enhanced action buttons */}
           {!isLoading && !isModelTyping && message.content.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.userBorder} rounded-full hover:opacity-80 transition-all duration-300 group`}>
-                <WandIcon className="h-3.5 w-3.5 group-hover:rotate-12 transition-transform duration-300" />
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} rounded-full hover:opacity-80 transition-all duration-200 group`}>
+                <WandIcon className="h-3.5 w-3.5 group-hover:rotate-12 transition-transform duration-200" />
                 Think Harder
                 <XIcon className="h-3.5 w-3.5 text-zinc-500" />
               </button>
               
-              <button className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-purple-600 to-blue-600 text-white border border-purple-700/50 rounded-full hover:opacity-90 transition-all duration-300 group`}>
+              <button className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full hover:opacity-90 transition-all duration-200 group`}>
                 <svg className="h-3.5 w-3.5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                 Regenerate
               </button>
               
               <button
                 onClick={handleCopy}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.userBorder} rounded-full hover:opacity-80 transition-all duration-300 group`}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} rounded-full hover:opacity-80 transition-all duration-200 group`}
               >
                 {isCopied ? <CheckIcon className="h-3.5 w-3.5 text-green-400" /> : <CopyIcon className="h-3.5 w-3.5" />}
                 {isCopied ? 'Copied' : 'Copy'}
@@ -234,23 +234,23 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
               
               <button
                 onClick={handleShare}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.userBorder} rounded-full hover:opacity-80 transition-all duration-300 group`}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} rounded-full hover:opacity-80 transition-all duration-200 group`}
               >
-                <ShareIcon className="h-3.5 w-3.5 group-hover:scale-110 transition-transform duration-300" />
+                <ShareIcon className="h-3.5 w-3.5 group-hover:scale-110 transition-transform duration-200" />
                 Share
               </button>
               
               <div className="flex items-center gap-1 border-l border-zinc-700/50 pl-2 ml-1">
                 <button
                   onClick={() => handleFeedback('up')}
-                  className={`p-1.5 rounded-lg transition-all duration-300 ${feedback === 'up' ? 'bg-green-900/30 text-green-400' : `${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} hover:${currentThemeConfig.userBg}`}`}
+                  className={`p-1.5 rounded-lg transition-all duration-200 ${feedback === 'up' ? 'bg-green-900/30 text-green-400' : `${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} hover:${currentThemeConfig.userBg}`}`}
                   aria-label="Good response"
                 >
                   <ThumbsUpIcon className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => handleFeedback('down')}
-                  className={`p-1.5 rounded-lg transition-all duration-300 ${feedback === 'down' ? 'bg-red-900/30 text-red-400' : `${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} hover:${currentThemeConfig.userBg}`}`}
+                  className={`p-1.5 rounded-lg transition-all duration-200 ${feedback === 'down' ? 'bg-red-900/30 text-red-400' : `${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} hover:${currentThemeConfig.userBg}`}`}
                   aria-label="Bad response"
                 >
                   <ThumbsDownIcon className="h-4 w-4" />

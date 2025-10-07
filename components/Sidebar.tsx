@@ -14,7 +14,13 @@ import { SettingsIcon } from './icons/SettingsIcon';
 import { CheckIcon } from './icons/CheckIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { ChevronUpIcon } from './icons/ChevronUpIcon';
-import { BellIcon } from './icons/BellIcon'; // Assume added
+import { BellIcon } from './icons/BellIcon';
+import { MoonIcon } from './icons/MoonIcon';
+import { ZapIcon } from './icons/ZapIcon';
+import { ShieldIcon } from './icons/ShieldIcon';
+import { CreditCardIcon } from './icons/CreditCardIcon';
+import { HelpCircleIcon } from './icons/HelpCircleIcon';
+import { LogOutIcon } from './icons/LogOutIcon';
 
 // Simple CrownIcon component to replace the missing import
 const CrownIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -41,9 +47,10 @@ interface SidebarNavItemProps {
   onClick: () => void;
   isActive: boolean;
   premium?: boolean;
+  badge?: string;
 }
 
-const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, isActive, premium = false }) => (
+const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, isActive, premium = false, badge }) => (
   <button
     onClick={onClick}
     className={`group relative flex items-center w-full gap-3 p-4 rounded-2xl text-sm font-bold transition-all duration-500 ease-out overflow-hidden touch-manipulation min-h-[48px] ${
@@ -56,6 +63,11 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, i
     <div className="relative z-10 flex items-center gap-3">
       {icon}
       <span className="relative z-10">{label}</span>
+      {badge && (
+        <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full animate-pulse">
+          {badge}
+        </span>
+      )}
     </div>
     {premium && (
       <div className="absolute right-2 top-1/2 -translate-y-1/2">
@@ -64,7 +76,6 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, i
     )}
   </button>
 );
-
 
 const themes: { id: HighlightTheme; name: string }[] = [
     { id: 'atom-one-dark', name: 'Atom One Dark' },
@@ -79,13 +90,13 @@ const themes: { id: HighlightTheme; name: string }[] = [
     { id: 'ir-black', name: 'IR Black' },
 ];
 
-
 const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highlightTheme' | 'setHighlightTheme'>> = ({ theme, setTheme, highlightTheme, setHighlightTheme }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [userName, setUserName] = useState('Alex Jordan');
     const [userEmail, setUserEmail] = useState('alex.jordan@ajstudioz.com');
     const [isEditing, setIsEditing] = useState(false);
-    const [notifications, setNotifications] = useState(true); // Enhancement: Add notifications toggle
+    const [notifications, setNotifications] = useState(true);
+    const [isPremium, setIsPremium] = useState(true); // Enhancement: Add premium status
     
     const [editName, setEditName] = useState(userName);
     const [editEmail, setEditEmail] = useState(userEmail);
@@ -110,10 +121,18 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
             >
                 <div className="relative z-10 flex items-center gap-3">
                     <div className="relative flex-shrink-0 w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500 shadow-lg touch-manipulation bg-gradient-to-br from-black to-zinc-950 border-zinc-700/30 before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-br before:from-purple-500/20 before:to-blue-500/20 before:opacity-0 before:animate-pulse animate-float-glow">
+                        {isPremium && (
+                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                            <CrownIcon className="h-2.5 w-2.5 text-black" />
+                          </div>
+                        )}
                         <UserIcon className="h-5 w-5 relative z-10 text-white" />
                     </div>
                     <div className="overflow-hidden text-left">
-                        <p className="text-sm font-bold truncate text-white">{userName}</p>
+                        <p className="text-sm font-bold truncate text-white flex items-center gap-1">
+                          {userName}
+                          {isPremium && <SparklesIcon className="h-3 w-3 text-yellow-400" />}
+                        </p>
                         <p className="text-xs truncate text-zinc-400">{userEmail}</p>
                     </div>
                 </div>
@@ -149,7 +168,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                                 }`}
                                 aria-pressed={theme === 'dark'}
                             >
-                                <SparklesIcon className="h-4 w-4" /> <span>Premium Dark</span>
+                                <MoonIcon className="h-4 w-4" /> <span>Dark</span>
                             </button>
                         </div>
                     </div>
@@ -169,19 +188,70 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                             <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none transition-transform duration-300 text-zinc-400" />
                         </div>
                     </div>
-                    {/* Enhancement: Add notifications toggle */}
                     <div className="space-y-2">
                         <label className="text-xs font-bold px-1 block flex items-center gap-2 text-zinc-400">
                           <BellIcon className="h-4 w-4" /> NOTIFICATIONS
                         </label>
                         <button 
                           onClick={toggleNotifications}
-                          className="relative w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 touch-manipulation min-h-[44px] bg-black/50 border border-zinc-700/30 text-zinc-300 hover:bg-zinc-900/50 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98] animate-float-glow"
+                          className={`relative w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 touch-manipulation min-h-[44px] border border-zinc-700/30 hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98] animate-float-glow ${
+                            notifications 
+                              ? 'bg-gradient-to-r from-purple-900/50 to-blue-900/50 text-purple-300' 
+                              : 'bg-black/50 text-zinc-300 hover:bg-zinc-900/50 hover:text-white'
+                          }`}
                           aria-pressed={notifications}
                         >
                           {notifications ? 'Enabled' : 'Disabled'}
                         </button>
                     </div>
+                    
+                    {/* Premium status section */}
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold px-1 block flex items-center gap-2 text-zinc-400">
+                          <CrownIcon className="h-4 w-4 text-yellow-400" /> PREMIUM
+                        </label>
+                        <div className="p-3 rounded-2xl bg-gradient-to-r from-yellow-900/20 to-yellow-800/20 border border-yellow-700/30">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-bold text-yellow-300">Premium Active</span>
+                                <span className="text-xs text-yellow-400">Unlimited</span>
+                            </div>
+                            <p className="text-xs text-zinc-400">Enjoy unlimited access to all features</p>
+                        </div>
+                    </div>
+                    
+                    {/* Additional settings */}
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold px-1 block text-zinc-400">ACCOUNT</label>
+                        <button className="group relative flex items-center justify-between w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] text-zinc-300 hover:bg-zinc-900/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
+                            <div className="flex items-center gap-3">
+                                <ShieldIcon className="h-4 w-4" />
+                                <span>Privacy & Security</span>
+                            </div>
+                            <ChevronDownIcon className="h-4 w-4 rotate-270" />
+                        </button>
+                        <button className="group relative flex items-center justify-between w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] text-zinc-300 hover:bg-zinc-900/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
+                            <div className="flex items-center gap-3">
+                                <CreditCardIcon className="h-4 w-4" />
+                                <span>Billing & Plans</span>
+                            </div>
+                            <ChevronDownIcon className="h-4 w-4 rotate-270" />
+                        </button>
+                        <button className="group relative flex items-center justify-between w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] text-zinc-300 hover:bg-zinc-900/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
+                            <div className="flex items-center gap-3">
+                                <HelpCircleIcon className="h-4 w-4" />
+                                <span>Help & Support</span>
+                            </div>
+                            <ChevronDownIcon className="h-4 w-4 rotate-270" />
+                        </button>
+                        <button className="group relative flex items-center justify-between w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] text-zinc-300 hover:bg-zinc-900/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
+                            <div className="flex items-center gap-3">
+                                <LogOutIcon className="h-4 w-4" />
+                                <span>Sign Out</span>
+                            </div>
+                            <ChevronDownIcon className="h-4 w-4 rotate-270" />
+                        </button>
+                    </div>
+                    
                     {isEditing ? (
                         <div className="space-y-3 pt-2 animate-in slide-in-from-bottom-1 duration-300">
                              <div className="space-y-1">
@@ -215,7 +285,6 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
     );
 };
 
-
 const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, theme, setTheme, highlightTheme, setHighlightTheme, currentView, onViewChange }) => {
   const handleNewChatClick = () => {
     onNewChat();
@@ -224,7 +293,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
   };
   
   return (
-    <aside className="p-4 flex flex-col h-full border-r transition-all duration-700 ease-out fixed w-80 top-0 left-0 z-40 md:flex md:static md:w-80 md:translate-x-0 bg-black border-zinc-700/30 shadow-2xl shadow-black/40 backdrop-blur-2xl before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] before:from-purple-900/10 before:to-transparent ${isOpen ? 'translate-x-0' : '-translate-x-full'} animate-float-glow">
+    <aside className={`p-4 flex flex-col h-full border-r transition-all duration-700 ease-out fixed w-80 top-0 left-0 z-40 md:flex md:static md:w-80 md:translate-x-0 bg-black border-zinc-700/30 shadow-2xl shadow-black/40 backdrop-blur-2xl before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] before:from-purple-900/10 before:to-transparent ${isOpen ? 'translate-x-0' : '-translate-x-full'} animate-float-glow`}>
       {/* Premium decorative elements */}
       <div className="absolute top-16 left-4 w-48 h-48 bg-purple-500/5 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
       <div className="absolute bottom-48 right-4 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl pointer-events-none animate-pulse delay-1000"></div>
@@ -251,9 +320,12 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
         onClick={handleNewChatClick}
         className="group relative flex items-center justify-between w-full gap-3 p-4 mb-6 rounded-2xl text-sm font-bold border-2 transition-all duration-500 shadow-xl touch-manipulation active:scale-[0.98] min-h-[48px] text-white bg-gradient-to-r from-black/70 to-zinc-950/70 hover:from-zinc-900/70 hover:to-black/70 border-zinc-700/30 shadow-black/30 hover:shadow-purple-500/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/20 before:to-blue-500/20 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow"
       >
-        <span className="relative z-10">New Chat</span>
-        <div className="relative z-10">
-          <PlusIcon className="h-5 w-5 transition-transform duration-300 group-hover:rotate-90 group-active:rotate-0" />
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <PlusIcon className="h-5 w-5 transition-transform duration-300 group-hover:rotate-90 group-active:rotate-0" />
+            <ZapIcon className="h-2.5 w-2.5 absolute -top-1 -right-1 text-yellow-400 animate-pulse" />
+          </div>
+          <span className="relative z-10">New Chat</span>
         </div>
       </button>
 
@@ -264,6 +336,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
             onClick={() => onViewChange('explore')}
             isActive={currentView === 'explore'}
             premium
+            badge="New"
         />
         <SidebarNavItem 
             icon={<HistoryIcon className="h-5 w-5" />} 

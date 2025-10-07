@@ -11,7 +11,7 @@ import { AJStudiozIcon } from './components/icons/AJStudiozIcon';
 import { SearchIcon } from './components/icons/SearchIcon';
 import { HistoryIcon } from './components/icons/HistoryIcon';
 import { SpinnerIcon } from './components/icons/SpinnerIcon';
-import SaveChatModal from './components/SaveChatModal'; // Changed from named to default import
+import SaveChatModal from './components/SaveChatModal';
 import { TrashIcon } from './components/icons/TrashIcon';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { XIcon } from './components/icons/XIcon';
@@ -21,14 +21,14 @@ import { GoogleIcon } from './components/icons/GoogleIcon';
 const themeConfigs = {
   dark: {
     bg: 'bg-zinc-950',
-    bgSecondary: 'bg-zinc-900/40',
-    border: 'border-zinc-800/50',
+    bgSecondary: 'bg-zinc-900/60',
+    border: 'border-zinc-800/30',
     text: 'text-white',
     textSecondary: 'text-zinc-400',
     input: 'bg-zinc-900/80',
     hover: 'hover:bg-zinc-800/40',
     gradient: 'from-purple-600 to-blue-600',
-    sidebar: 'bg-zinc-950 border-zinc-800/50'
+    sidebar: 'bg-zinc-950 border-zinc-800/30'
   },
   light: {
     bg: 'bg-white',
@@ -43,25 +43,25 @@ const themeConfigs = {
   },
   'z-ai': {
     bg: 'bg-slate-900',
-    bgSecondary: 'bg-slate-800/40',
-    border: 'border-slate-700/50',
+    bgSecondary: 'bg-slate-800/60',
+    border: 'border-slate-700/30',
     text: 'text-white',
     textSecondary: 'text-slate-400',
     input: 'bg-slate-800/80',
     hover: 'hover:bg-slate-700/40',
     gradient: 'from-indigo-600 to-cyan-600',
-    sidebar: 'bg-slate-900 border-slate-700/50'
+    sidebar: 'bg-slate-900 border-slate-700/30'
   },
   'chatgpt': {
     bg: 'bg-gray-900',
-    bgSecondary: 'bg-gray-800/40',
-    border: 'border-gray-700/50',
+    bgSecondary: 'bg-gray-800/60',
+    border: 'border-gray-700/30',
     text: 'text-white',
     textSecondary: 'text-gray-400',
     input: 'bg-gray-800/80',
     hover: 'hover:bg-gray-700/40',
     gradient: 'from-green-600 to-emerald-600',
-    sidebar: 'bg-gray-900 border-gray-700/50'
+    sidebar: 'bg-gray-900 border-gray-700/30'
   }
 };
 
@@ -283,7 +283,6 @@ const App: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false);
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const chatSessionRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -382,25 +381,6 @@ const App: React.FC = () => {
     }
     localStorage.setItem('hljs-theme', highlightTheme);
   }, [highlightTheme]);
-
-  // Enhanced keyboard height detection for mobile
-  useEffect(() => {
-    if (!isMobile) return;
-    
-    const handleVisualViewportChange = () => {
-      const viewport = (window as any).visualViewport;
-      if (viewport) {
-        const heightDiff = window.innerHeight - viewport.height;
-        setKeyboardHeight(heightDiff > 150 ? heightDiff : 0);
-      }
-    };
-    
-    const viewport = (window as any).visualViewport;
-    if (viewport) {
-      viewport.addEventListener('resize', handleVisualViewportChange);
-      return () => viewport.removeEventListener('resize', handleVisualViewportChange);
-    }
-  }, [isMobile]);
 
   const scrollToBottom = useCallback((behavior: 'smooth' | 'auto') => {
     if (chatContainerRef.current) {
@@ -823,11 +803,11 @@ const App: React.FC = () => {
         />
         <div className="flex flex-col flex-grow h-screen relative">
           <header className={`flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-xl z-10 transition-all duration-500 ${currentThemeConfig.bg}/95 ${currentThemeConfig.border}`}>
-              <button onClick={toggleSidebar} className={`p-3 -ml-2 rounded-xl transition-all touch-manipulation active:scale-[0.95] ${currentThemeConfig.text} ${currentThemeConfig.hover} min-w-[44px] h-[44px] flex items-center justify-center`}>
+              <button onClick={toggleSidebar} className={`p-3 -ml-2 rounded-lg transition-all touch-manipulation active:scale-[0.95] ${currentThemeConfig.text} ${currentThemeConfig.hover} min-w-[44px] h-[44px] flex items-center justify-center`}>
                 <MenuIcon className="h-6 w-6"/>
               </button>
               <div className="flex items-center gap-2">
-                  <div className={`p-1.5 rounded-xl ${currentThemeConfig.bgSecondary}`}>
+                  <div className={`p-1.5 rounded-lg ${currentThemeConfig.bgSecondary}`}>
                     <AJStudiozIcon className="h-5 w-5 text-white"/>
                   </div>
                   <h1 className="text-base font-bold tracking-wide text-white">AJ STUDIOZ</h1>
@@ -839,17 +819,12 @@ const App: React.FC = () => {
           <main 
             ref={chatContainerRef} 
             className="flex-grow overflow-y-auto px-4 sm:px-10 lg:px-20 flex flex-col relative z-10 transition-all duration-300" 
-            style={{ 
-              paddingBottom: isMobile 
-                ? `calc(28px + ${keyboardHeight}px + env(safe-area-inset-bottom, 0px))` 
-                : '0' 
-            }}
           >
             {currentView === 'chat' ? (
               messages.length === 0 ? (
                 <ChatWelcome onPromptClick={() => {}} isMobile={isMobile} theme={theme} />
               ) : (
-                <div className="max-w-4xl lg:max-w-5xl mx-auto w-full pt-4 space-y-0">
+                <div className="max-w-3xl lg:max-w-4xl mx-auto w-full pt-4 space-y-0">
                   {messages.map((msg, index) => {
                     const isTypingPlaceholder = isLoading && index === messages.length - 1 && msg.role === MessageRole.MODEL && msg.content === '';
                     if (isTypingPlaceholder) return null;
@@ -888,13 +863,7 @@ const App: React.FC = () => {
 
         {/* Floating Input - always visible in chat view */}
         {currentView === 'chat' && (
-          <div 
-            className="fixed bottom-0 left-0 right-0 z-40 transition-all duration-300"
-            style={{ 
-              marginBottom: isMobile ? `${keyboardHeight}px` : '0',
-              paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 0px)' : '0'
-            }}
-          >
+          <div className="fixed bottom-0 left-0 right-0 z-40 transition-all duration-300">
             <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} theme={theme} />
           </div>
         )}

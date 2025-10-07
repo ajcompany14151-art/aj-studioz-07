@@ -16,7 +16,6 @@ import { SparklesIcon } from './icons/SparklesIcon';
 import { ChevronUpIcon } from './icons/ChevronUpIcon';
 import { BellIcon } from './icons/BellIcon';
 import { MoonIcon } from './icons/MoonIcon';
-import { HelpCircleIcon } from './icons/HelpCircleIcon';
 import { LogOutIcon } from './icons/LogOutIcon';
 
 // Simple CrownIcon component to replace the missing import
@@ -44,6 +43,13 @@ const ShieldIcon: React.FC<{ className?: string }> = ({ className }) => (
 const CreditCardIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+  </svg>
+);
+
+// Simple HelpCircleIcon component to replace the missing import
+const HelpCircleIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 

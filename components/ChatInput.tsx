@@ -13,6 +13,13 @@ const ShareIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
+// AJ Studioz-inspired logo icon (simple SVG for creative design branding - pencil and palette)
+const AJIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+  </svg>
+);
+
 interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -119,11 +126,12 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     };
   }, [value]);
 
+  // AJ Studioz-specific suggestions (tailored to graphic design, post-production, branding)
   const suggestions = [
-    { text: "Explain quantum computing", icon: "🧠" },
-    { text: "Write a Python script", icon: "💻" },
-    { text: "Draft an email", icon: "📧" },
-    { text: "Brainstorm ideas", icon: "💡" },
+    { text: "Design a logo for my brand", icon: "🎨" },
+    { text: "Ideas for marketing video", icon: "📹" },
+    { text: "Edit this image concept", icon: "🖼️" },
+    { text: "Brainstorm branding strategy", icon: "💼" },
   ];
 
   return (
@@ -135,7 +143,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           ${isFocused ? 'scale-[1.02]' : 'scale-100'}
         `}
       >
-        {/* Glassmorphism floating input container */}
+        {/* Glassmorphism floating input container with AJ Studioz flair */}
         <div 
           className={`
             relative flex items-end gap-2 p-4
@@ -167,7 +175,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
                }}
           />
           
-          {/* Enhanced attachment button */}
+          {/* AJ Studioz branding icon in place of attachment */}
           <button
               aria-label="Attach file"
               title="Attach file (coming soon)"
@@ -186,7 +194,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={1}
-              placeholder="Ask me anything..."
+              placeholder="Design your vision with AJ Studioz..."
               className={`
                 flex-1 bg-transparent text-white resize-none 
                 focus:outline-none focus:placeholder-transparent
@@ -232,7 +240,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           <button
             onClick={onSend}
             disabled={isDisabled}
-            aria-label={isLoading ? "Sending..." : "Send message"}
+            aria-label={isLoading ? "Sending..." : "Send to AJ Studioz"}
             className={`
               p-2.5 rounded-2xl transition-all duration-300 transform flex-shrink-0 relative overflow-hidden group
               ${isDisabled
@@ -261,29 +269,27 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           </button>
         </div>
         
-        {/* Floating suggestions */}
+        {/* Floating suggestions with AJ Studioz theme */}
         {showSuggestions && !isMobile && value.length === 0 && !isLoading && (
           <div className="absolute bottom-full left-0 right-0 mb-3 p-4 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="mx-auto max-w-4xl bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-xl">
-              <div className="flex items-center gap-2 mb-2">
-                <PlusIcon className="h-4 w-4 text-zinc-400" />
-                <span className="text-xs text-zinc-400">Try these prompts</span>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {suggestions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      onChange(suggestion.text);
-                      setShowSuggestions(false);
-                    }}
-                    className="flex items-center gap-2 p-2 rounded-xl bg-black/40 hover:bg-black/60 transition-all duration-200 text-left group"
-                  >
-                    <span className="text-lg">{suggestion.icon}</span>
-                    <span className="text-xs text-zinc-300 group-hover:text-white truncate">{suggestion.text}</span>
-                  </button>
-                ))}
-              </div>
+            <div className="mx-auto max-w-4xl bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-xl flex items-center gap-2">
+              <AJIcon className="h-4 w-4 text-purple-400" />
+              <span className="text-xs text-zinc-400">Spark your creativity with AJ Studioz:</span>
+            </div>
+            <div className="mx-auto max-w-4xl mt-2 grid grid-cols-2 md:grid-cols-4 gap-2">
+              {suggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    onChange(suggestion.text);
+                    setShowSuggestions(false);
+                  }}
+                  className="flex items-center gap-2 p-2 rounded-xl bg-black/40 hover:bg-black/60 transition-all duration-200 text-left group border border-white/5"
+                >
+                  <span className="text-lg">{suggestion.icon}</span>
+                  <span className="text-xs text-zinc-300 group-hover:text-white truncate">{suggestion.text}</span>
+                </button>
+              ))}
             </div>
           </div>
         )}

@@ -55,22 +55,22 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
   const isDisabled = isLoading || !value.trim();
   const maxChars = 5000;
   const inputContainerRef = useRef<HTMLDivElement>(null);
-  
+
   const currentThemeConfig = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.dark;
   const charCount = value.length;
 
-  // Mobile detection
+  // Detect if mobile
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Handle Enter key
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -80,13 +80,12 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     }
   };
 
-  // Mobile enhancement: Prevent zoom on focus
+  // Prevent iOS zoom on focus
   useEffect(() => {
     const textarea = (ref as React.RefObject<HTMLTextAreaElement>)?.current;
     if (textarea) {
       const handleFocus = () => {
         setIsFocused(true);
-        // Only apply zoom fix on iOS
         if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
           document.body.style.zoom = '0.99';
         }
@@ -97,10 +96,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           document.body.style.zoom = '';
         }
       };
-      
+
       textarea.addEventListener('focus', handleFocus);
       textarea.addEventListener('blur', handleBlur);
-      
+
       return () => {
         textarea.removeEventListener('focus', handleFocus);
         textarea.removeEventListener('blur', handleBlur);
@@ -109,40 +108,44 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
   }, [ref]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4">
+    <div className="fixed bottom-4 left-0 right-0 z-50 px-4">
       <div 
         ref={inputContainerRef}
         className={`
           relative mx-auto transition-all duration-200 ease-out
-          ${isMobile ? 'max-w-full' : 'max-w-3xl'}
+          ${isMobile ? 'max-w-full' : 'max-w-4xl'}
           ${isFocused ? 'scale-[1.01]' : 'scale-100'}
         `}
       >
-        {/* Grok-inspired compact input container */}
+        {/* Optional top divider line like Grok */}
+        {!isMobile && (
+          <div className="absolute -top-4 left-0 w-full h-px bg-white/10"></div>
+        )}
+
         <div 
           className={`
-            relative flex items-center gap-2 px-3 py-2
-            ${currentThemeConfig.bg} 
+            relative flex items-center gap-2 px-4 py-1.5
+            ${currentThemeConfig.bg} bg-opacity-60 backdrop-blur-md
             border ${currentThemeConfig.border}
             rounded-full
-            shadow-sm
             transition-all duration-200
             ${isFocused 
-              ? `${currentThemeConfig.focusBorder} shadow-md` 
-              : ''
+              ? `${currentThemeConfig.focusBorder} ring-1 ring-white/10 shadow-lg`
+              : 'shadow-sm'
             }
           `}
         >
-          {/* AJ Studioz branding icon in place of attachment */}
+          {/* Attachment Icon */}
           <button
-              aria-label="Attach file"
-              title="Attach file (coming soon)"
-              className={`p-1.5 ${currentThemeConfig.text === 'text-white' ? 'text-zinc-500' : 'text-gray-500'} hover:text-white/90 transition-all duration-200 rounded-full flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100`}
-              onTouchStart={(e) => e.preventDefault()}
+            aria-label="Attach file"
+            title="Attach file (coming soon)"
+            className={`p-1.5 hover:scale-110 transition-transform duration-150 rounded-full text-zinc-500 opacity-60 group hover:opacity-100 cursor-not-allowed`}
+            onTouchStart={(e) => e.preventDefault()}
           >
-              <PaperclipIcon className="h-4 w-4" />
+            <PaperclipIcon className="h-4 w-4" />
           </button>
 
+          {/* Textarea */}
           <div className="relative flex-1 min-w-0">
             <textarea
               ref={ref}
@@ -157,8 +160,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
                 focus:outline-none focus:placeholder-transparent
                 disabled:cursor-not-allowed
                 ${currentThemeConfig.placeholder} text-sm leading-relaxed
-                py-1 px-2
-                min-h-[20px]
+                px-4 py-1 rounded-full
                 ${isMobile ? 'text-base' : ''}
               `}
               disabled={isLoading}
@@ -167,10 +169,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               spellCheck={true}
               autoCapitalize="sentences"
               autoCorrect="on"
-              style={{ fontSize: isMobile ? '16px' : 'inherit' }} // Prevent zoom on iOS
+              style={{ fontSize: isMobile ? '16px' : 'inherit' }}
             />
-            
-            {/* Character count indicator - only show when approaching limit */}
+
+            {/* Character counter */}
             {charCount > maxChars * 0.8 && (
               <div className={`absolute bottom-2 right-2 text-xs transition-all duration-300 ${
                 charCount > maxChars * 0.9 ? 'text-red-400' : 'text-zinc-500'
@@ -180,18 +182,18 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             )}
           </div>
 
-          {/* Enhanced microphone button with voice mode hint */}
+          {/* Mic Icon */}
           <button
-              aria-label="Use voice mode"
-              title="Voice mode (coming soon—whisper your ideas!)"
-              className={`p-1.5 ${currentThemeConfig.text === 'text-white' ? 'text-zinc-500' : 'text-gray-500'} hover:text-white/90 transition-all duration-200 rounded-full flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100`}
-              onTouchStart={(e) => e.preventDefault()}
+            aria-label="Use voice mode"
+            title="Voice mode (coming soon—whisper your ideas!)"
+            className={`p-1.5 hover:scale-110 transition-transform duration-150 rounded-full text-zinc-500 opacity-60 group hover:opacity-100 cursor-not-allowed`}
+            onTouchStart={(e) => e.preventDefault()}
           >
-              <MicIcon className="h-4 w-4" />
-              <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
+            <MicIcon className="h-4 w-4" />
+            <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
           </button>
 
-          {/* Enhanced send button with Grok sparkle */}
+          {/* Send Button */}
           <button
             onClick={onSend}
             disabled={isDisabled}

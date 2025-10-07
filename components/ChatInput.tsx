@@ -126,12 +126,12 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     };
   }, [value]);
 
-  // AJ Studioz-specific suggestions (tailored to graphic design, post-production, branding)
+  // Grok-like AJ Studioz suggestions: Witty, creative, with a dash of xAI curiosity
   const suggestions = [
-    { text: "Design a logo for my brand", icon: "🎨" },
-    { text: "Ideas for marketing video", icon: "📹" },
-    { text: "Edit this image concept", icon: "🖼️" },
-    { text: "Brainstorm branding strategy", icon: "💼" },
+    { text: "Design a logo for a sustainable fashion brand", icon: "🎨" },
+    { text: "Storyboard a 30-second promo video for a tech gadget", icon: "📹" },
+    { text: "Create a color palette and typography guide for a coffee shop", icon: "☕" },
+    { text: "Brainstorm 5 poster concepts for a music festival", icon: "🎶" },
   ];
 
   return (
@@ -143,7 +143,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           ${isFocused ? 'scale-[1.02]' : 'scale-100'}
         `}
       >
-        {/* Glassmorphism floating input container with AJ Studioz flair */}
+        {/* Glassmorphism floating input container with Grok-inspired AJ flair */}
         <div 
           className={`
             relative flex items-end gap-2 p-4
@@ -224,10 +224,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             )}
           </div>
 
-          {/* Enhanced microphone button */}
+          {/* Enhanced microphone button with voice mode hint */}
           <button
-              aria-label="Use microphone"
-              title="Use microphone (coming soon)"
+              aria-label="Use voice mode"
+              title="Voice mode (coming soon—whisper your ideas!)"
               className="p-2.5 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
               onTouchStart={(e) => e.preventDefault()}
           >
@@ -236,7 +236,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
           </button>
 
-          {/* Enhanced send button */}
+          {/* Enhanced send button with Grok sparkle */}
           <button
             onClick={onSend}
             disabled={isDisabled}
@@ -269,14 +269,14 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           </button>
         </div>
         
-        {/* Floating suggestions with AJ Studioz theme */}
+        {/* Floating suggestions with Grok-AJ theme: Witty header, smooth hovers */}
         {showSuggestions && !isMobile && value.length === 0 && !isLoading && (
           <div className="absolute bottom-full left-0 right-0 mb-3 p-4 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="mx-auto max-w-4xl bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-xl flex items-center gap-2">
+            <div className="mx-auto max-w-4xl bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-xl flex items-center gap-2 mb-2">
               <AJIcon className="h-4 w-4 text-purple-400" />
               <span className="text-xs text-zinc-400">Spark your creativity with AJ Studioz:</span>
             </div>
-            <div className="mx-auto max-w-4xl mt-2 grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div className="mx-auto max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-2">
               {suggestions.map((suggestion, index) => (
                 <button
                   key={index}
@@ -284,7 +284,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
                     onChange(suggestion.text);
                     setShowSuggestions(false);
                   }}
-                  className="flex items-center gap-2 p-2 rounded-xl bg-black/40 hover:bg-black/60 transition-all duration-200 text-left group border border-white/5"
+                  className="flex items-center gap-2 p-2 rounded-xl bg-black/40 hover:bg-black/60 transition-all duration-200 text-left group border border-white/5 hover:shadow-md hover:shadow-purple-500/20 transform hover:scale-[1.02]"
                 >
                   <span className="text-lg">{suggestion.icon}</span>
                   <span className="text-xs text-zinc-300 group-hover:text-white truncate">{suggestion.text}</span>

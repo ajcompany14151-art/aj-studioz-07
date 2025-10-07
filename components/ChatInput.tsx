@@ -57,12 +57,13 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
   const inputContainerRef = useRef<HTMLDivElement>(null);
   
   const currentThemeConfig = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.dark;
+  const charCount = value.length;
 
   // Mobile detection
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
-    });
+    };
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -147,7 +148,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               ref={ref}
               id="chat-input"
               value={value}
-              onChange={(e) => onChange(e) => onChange(e.target.value)}
+              onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={1}
               placeholder="Ask anything..."
@@ -156,7 +157,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
                 focus:outline-none focus:placeholder-transparent
                 disabled:cursor-not-allowed
                 ${currentThemeConfig.placeholder} text-sm leading-relaxed
-                py-2 px-2
+                py-1 px-2
                 min-h-[20px]
                 ${isMobile ? 'text-base' : ''}
               `}
@@ -167,7 +168,6 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               autoCapitalize="sentences"
               autoCorrect="on"
               style={{ fontSize: isMobile ? '16px' : 'inherit' }} // Prevent zoom on iOS
-            />
             />
             
             {/* Character count indicator - only show when approaching limit */}
@@ -222,7 +222,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       </div>
     </div>
   );
-};
+});
 
 ChatInputComponent.displayName = 'ChatInput';
 

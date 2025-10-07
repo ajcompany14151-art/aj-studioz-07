@@ -30,14 +30,13 @@ import {
 const themeConfigs = {
   dark: {
     bg: 'bg-zinc-950',
-    bgSecondary: 'bg-zinc-900/50',
-    border: 'border-zinc-800/50',
+    bgSecondary: 'bg-zinc-900/60',
+    border: 'border-zinc-800/30',
     text: 'text-white',
     textSecondary: 'text-zinc-400',
-    input: 'bg-zinc-900/50',
     hover: 'hover:bg-zinc-800/40',
     gradient: 'from-purple-600 to-blue-600',
-    sidebar: 'bg-zinc-950 border-zinc-800/50'
+    active: 'bg-zinc-800/60'
   },
   light: {
     bg: 'bg-white',
@@ -45,32 +44,29 @@ const themeConfigs = {
     border: 'border-gray-200',
     text: 'text-gray-900',
     textSecondary: 'text-gray-500',
-    input: 'bg-white',
     hover: 'hover:bg-gray-100',
     gradient: 'from-purple-600 to-blue-600',
-    sidebar: 'bg-white border-gray-200'
+    active: 'bg-gray-100'
   },
   'z-ai': {
     bg: 'bg-slate-900',
-    bgSecondary: 'bg-slate-800/50',
-    border: 'border-slate-700/50',
+    bgSecondary: 'bg-slate-800/60',
+    border: 'border-slate-700/30',
     text: 'text-white',
     textSecondary: 'text-slate-400',
-    input: 'bg-slate-800/50',
     hover: 'hover:bg-slate-700/40',
     gradient: 'from-indigo-600 to-cyan-600',
-    sidebar: 'bg-slate-900 border-slate-700/50'
+    active: 'bg-slate-800/60'
   },
   'chatgpt': {
     bg: 'bg-gray-900',
-    bgSecondary: 'bg-gray-800/50',
-    border: 'border-gray-700/50',
+    bgSecondary: 'bg-gray-800/60',
+    border: 'border-gray-700/30',
     text: 'text-white',
     textSecondary: 'text-gray-400',
-    input: 'bg-gray-800/50',
     hover: 'hover:bg-gray-700/40',
     gradient: 'from-green-600 to-emerald-600',
-    sidebar: 'bg-gray-900 border-gray-700/50'
+    active: 'bg-gray-800/60'
   }
 };
 
@@ -105,10 +101,10 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ icon, label, onClick, i
   return (
     <button
       onClick={onClick}
-      className={`group relative flex items-center w-full gap-3 p-3 rounded-xl text-sm font-medium transition-all duration-300 ease-out overflow-hidden touch-manipulation min-h-[44px] ${
+      className={`group relative flex items-center w-full gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ease-out overflow-hidden touch-manipulation min-h-[44px] ${
         isActive
-          ? `${currentThemeConfig.bgSecondary} ${currentThemeConfig.text} shadow-md shadow-purple-500/20`
-          : `${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text} hover:shadow-md hover:shadow-zinc-700/20 active:scale-[0.98]`
+          ? `${currentThemeConfig.active} ${currentThemeConfig.text}`
+          : `${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`
       }`}
       onTouchStart={(e) => e.preventDefault()} // Mobile: Prevent double-tap
     >
@@ -144,7 +140,7 @@ const themes: { id: HighlightTheme; name: string }[] = [
 ];
 
 const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highlightTheme' | 'setHighlightTheme' | 'user' | 'onSignOut'>> = ({ theme, setTheme, highlightTheme, setHighlightTheme, user, onSignOut }) => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [userName, setUserName] = useState(user?.name || 'Alex Jordan');
     const [userEmail, setUserEmail] = useState(user?.email || 'alex.jordan@ajstudioz.com');
     const [isEditing, setIsEditing] = useState(false);
@@ -167,24 +163,24 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
     const toggleNotifications = () => setNotifications(!notifications);
 
     return (
-        <div className={`mt-auto pt-4 border-t ${currentThemeConfig.border} transition-all duration-300`}>
+        <div className={`mt-auto pt-4 border-t ${currentThemeConfig.border} transition-all duration-200`}>
              <button
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen}
                 aria-controls="profile-settings-content"
-                className={`group flex items-center justify-between w-full p-3 rounded-xl transition-all duration-300 ease-out overflow-hidden touch-manipulation min-h-[44px] ${currentThemeConfig.hover} hover:shadow-md hover:shadow-zinc-700/20 active:scale-[0.98]`}
+                className={`group flex items-center justify-between w-full px-3 py-2 rounded-lg transition-all duration-200 ease-out overflow-hidden touch-manipulation min-h-[44px] ${currentThemeConfig.hover}`}
             >
                 <div className="relative z-10 flex items-center gap-3">
-                    <div className={`relative flex-shrink-0 w-9 h-9 rounded-full border ${currentThemeConfig.border} flex items-center justify-center transition-all duration-300 ${currentThemeConfig.bgSecondary}`}>
+                    <div className={`relative flex-shrink-0 w-8 h-8 rounded-full border ${currentThemeConfig.border} flex items-center justify-center transition-all duration-200 ${currentThemeConfig.bgSecondary}`}>
                         {isPremium && (
                           <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
                             <CrownIcon className="h-2 w-2 text-black" />
                           </div>
                         )}
                         {user?.photoUrl ? (
-                          <img src={user.photoUrl} alt={user.name} className="h-7 w-7 rounded-full object-cover" />
+                          <img src={user.photoUrl} alt={user.name} className="h-6 w-6 rounded-full object-cover" />
                         ) : (
-                          <UserIcon className="h-4.5 w-4.5 relative z-10 text-white" />
+                          <UserIcon className="h-4 w-4 relative z-10 text-white" />
                         )}
                     </div>
                     <div className="overflow-hidden text-left">
@@ -196,22 +192,22 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                     </div>
                 </div>
                 <div className="relative z-10">
-                  {isOpen ? <ChevronUpIcon className="h-4 w-4 transition-transform duration-300 text-zinc-400" /> : <ChevronDownIcon className="h-4 w-4 transition-transform duration-300 rotate-180 text-zinc-400" />}
+                  {isOpen ? <ChevronUpIcon className="h-4 w-4 transition-transform duration-200 text-zinc-400" /> : <ChevronDownIcon className="h-4 w-4 transition-transform duration-200 rotate-180 text-zinc-400" />}
                 </div>
             </button>
             <div
                 id="profile-settings-content"
-                className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}
+                className={`overflow-hidden transition-all duration-200 ${isOpen ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}
             >
-                <div className="pt-4 px-2 space-y-4 animate-in fade-in duration-300">
+                <div className="pt-4 px-2 space-y-4 animate-in fade-in duration-200">
                     <div className="space-y-2">
                         <label className={`text-xs font-medium px-1 block ${currentThemeConfig.textSecondary}`}>APPEARANCE</label>
                         <div className="grid grid-cols-2 gap-2">
                             <button 
                                 onClick={() => setTheme('dark')}
-                                className={`relative overflow-hidden flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 touch-manipulation min-h-[40px] ${
+                                className={`relative overflow-hidden flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation min-h-[40px] ${
                                     theme === 'dark' 
-                                    ? 'bg-zinc-900 text-white shadow-md border border-zinc-700' 
+                                    ? 'bg-zinc-800 text-white shadow-md border border-zinc-700' 
                                     : 'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:scale-[0.98]'
                                 }`}
                                 aria-pressed={theme === 'dark'}
@@ -220,7 +216,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                             </button>
                             <button 
                                 onClick={() => setTheme('light')}
-                                className={`relative overflow-hidden flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 touch-manipulation min-h-[40px] ${
+                                className={`relative overflow-hidden flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation min-h-[40px] ${
                                     theme === 'light' 
                                     ? 'bg-white text-gray-900 shadow-md border border-gray-300' 
                                     : 'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:scale-[0.98]'
@@ -231,7 +227,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                             </button>
                             <button 
                                 onClick={() => setTheme('z-ai')}
-                                className={`relative overflow-hidden flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 touch-manipulation min-h-[40px] ${
+                                className={`relative overflow-hidden flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation min-h-[40px] ${
                                     theme === 'z-ai' 
                                     ? 'bg-slate-800 text-white shadow-md border border-slate-600' 
                                     : 'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:scale-[0.98]'
@@ -242,7 +238,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                             </button>
                             <button 
                                 onClick={() => setTheme('chatgpt')}
-                                className={`relative overflow-hidden flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 touch-manipulation min-h-[40px] ${
+                                className={`relative overflow-hidden flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation min-h-[40px] ${
                                     theme === 'chatgpt' 
                                     ? 'bg-gray-800 text-white shadow-md border border-gray-600' 
                                     : 'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:scale-[0.98]'
@@ -256,17 +252,17 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                     <div className="space-y-2">
                         <label htmlFor="theme-select" className={`text-xs font-medium px-1 block ${currentThemeConfig.textSecondary}`}>CODE THEME</label>
                         <div className="relative">
-                            <PaletteIcon className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none transition-all duration-300 ${currentThemeConfig.textSecondary}`} />
+                            <PaletteIcon className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none transition-all duration-200 ${currentThemeConfig.textSecondary}`} />
                             <select
                                 id="theme-select"
                                 value={highlightTheme}
                                 onChange={(e) => setHighlightTheme(e.target.value as HighlightTheme)}
-                                className={`w-full appearance-none rounded-lg p-2.5 pl-9 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/30 cursor-pointer transition-all duration-300 touch-manipulation min-h-[40px] ${currentThemeConfig.input} border ${currentThemeConfig.border} ${currentThemeConfig.text} focus:border-purple-400/50`}
+                                className={`w-full appearance-none rounded-lg p-2.5 pl-9 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/30 cursor-pointer transition-all duration-200 touch-manipulation min-h-[40px] ${currentThemeConfig.bgSecondary} border ${currentThemeConfig.border} ${currentThemeConfig.text} focus:border-purple-400/50`}
                                 aria-label="Select code block theme"
                             >
                             {themes.map(theme => (<option key={theme.id} value={theme.id}>{theme.name}</option>))}
                             </select>
-                            <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 pointer-events-none transition-transform duration-300 text-zinc-400" />
+                            <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 pointer-events-none transition-transform duration-200 text-zinc-400" />
                         </div>
                     </div>
                     <div className="space-y-2">
@@ -275,9 +271,9 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                         </label>
                         <button 
                           onClick={toggleNotifications}
-                          className={`relative w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-300 touch-manipulation min-h-[40px] border ${currentThemeConfig.border} active:scale-[0.98] ${
+                          className={`relative w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation min-h-[40px] border ${currentThemeConfig.border} active:scale-[0.98] ${
                             notifications 
-                              ? `${currentThemeConfig.bgSecondary} ${currentThemeConfig.text}` 
+                              ? `${currentThemeConfig.active} ${currentThemeConfig.text}` 
                               : `${currentThemeConfig.bgSecondary} ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`
                           }`}
                           aria-pressed={notifications}
@@ -304,7 +300,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                     {!user ? (
                       <div className="space-y-2">
                         <label className={`text-xs font-medium px-1 block ${currentThemeConfig.textSecondary}`}>ACCOUNT</label>
-                        <button className="group relative flex items-center justify-center w-full gap-2 p-2.5 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] bg-white text-black hover:bg-zinc-100">
+                        <button className="group relative flex items-center justify-center w-full gap-2 p-2.5 rounded-lg text-sm font-medium transition-all duration-200 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] bg-white text-black hover:bg-zinc-100">
                           <GoogleIcon className="h-4 w-4" />
                           <span>Sign in with Google</span>
                         </button>
@@ -312,21 +308,21 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                     ) : (
                       <div className="space-y-2">
                         <label className={`text-xs font-medium px-1 block ${currentThemeConfig.textSecondary}`}>ACCOUNT</label>
-                        <button className={`group relative flex items-center justify-between w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
+                        <button className={`group relative flex items-center justify-between w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-200 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
                             <div className="flex items-center gap-3">
                                 <ShieldIcon className="h-3.5 w-3.5" />
                                 <span>Privacy & Security</span>
                             </div>
                             <ChevronDownIcon className="h-3.5 w-3.5 rotate-270" />
                         </button>
-                        <button className={`group relative flex items-center justify-between w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
+                        <button className={`group relative flex items-center justify-between w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-200 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
                             <div className="flex items-center gap-3">
                                 <CreditCardIcon className="h-3.5 w-3.5" />
                                 <span>Billing & Plans</span>
                             </div>
                             <ChevronDownIcon className="h-3.5 w-3.5 rotate-270" />
                         </button>
-                        <button className={`group relative flex items-center justify-between w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
+                        <button className={`group relative flex items-center justify-between w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-200 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
                             <div className="flex items-center gap-3">
                                 <HelpCircleIcon className="h-3.5 w-3.5" />
                                 <span>Help & Support</span>
@@ -335,7 +331,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                         </button>
                         <button 
                           onClick={onSignOut}
-                          className={`group relative flex items-center justify-between w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover === 'hover:bg-zinc-800/40' ? 'hover:bg-red-900/40' : currentThemeConfig.hover} hover:text-red-400`}
+                          className={`group relative flex items-center justify-between w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-200 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover === 'hover:bg-zinc-800/40' ? 'hover:bg-red-900/40' : currentThemeConfig.hover} hover:text-red-400`}
                         >
                             <div className="flex items-center gap-3">
                                 <LogOutIcon className="h-3.5 w-3.5" />
@@ -347,27 +343,27 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                     )}
                     
                     {isEditing ? (
-                        <div className="space-y-3 pt-2 animate-in slide-in-from-bottom-1 duration-300">
+                        <div className="space-y-3 pt-2 animate-in slide-in-from-bottom-1 duration-200">
                              <div className="space-y-1">
                                 <label htmlFor="edit-name" className={`text-xs font-medium px-1 block ${currentThemeConfig.textSecondary}`}>NAME</label>
-                                <input id="edit-name" type="text" value={editName} onChange={(e) => setEditName(e.target.value)} className={`mt-1 w-full rounded-lg p-2.5 text-sm focus:ring-2 transition-all duration-300 touch-manipulation min-h-[40px] ${currentThemeConfig.input} border ${currentThemeConfig.border} ${currentThemeConfig.text} focus:ring-purple-400/30`} aria-label="User name"/>
+                                <input id="edit-name" type="text" value={editName} onChange={(e) => setEditName(e.target.value)} className={`mt-1 w-full rounded-lg p-2.5 text-sm focus:ring-2 transition-all duration-200 touch-manipulation min-h-[40px] ${currentThemeConfig.bgSecondary} border ${currentThemeConfig.border} ${currentThemeConfig.text} focus:ring-purple-400/30`} aria-label="User name"/>
                             </div>
                             <div className="space-y-1">
                                 <label htmlFor="edit-email" className={`text-xs font-medium px-1 block ${currentThemeConfig.textSecondary}`}>EMAIL</label>
-                                <input id="edit-email" type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className={`mt-1 w-full rounded-lg p-2.5 text-sm focus:ring-2 transition-all duration-300 touch-manipulation min-h-[40px] ${currentThemeConfig.input} border ${currentThemeConfig.border} ${currentThemeConfig.text} focus:ring-purple-400/30`} aria-label="User email"/>
+                                <input id="edit-email" type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className={`mt-1 w-full rounded-lg p-2.5 text-sm focus:ring-2 transition-all duration-200 touch-manipulation min-h-[40px] ${currentThemeConfig.bgSecondary} border ${currentThemeConfig.border} ${currentThemeConfig.text} focus:ring-purple-400/30`} aria-label="User email"/>
                             </div>
                             <div className="flex flex-col sm:flex-row items-center justify-end gap-2 pt-2">
-                                <button onClick={handleCancel} className={`relative overflow-hidden flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 touch-manipulation min-h-[40px] w-full sm:w-auto ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text} active:scale-[0.98]`}>
+                                <button onClick={handleCancel} className={`relative overflow-hidden flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation min-h-[40px] w-full sm:w-auto ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text} active:scale-[0.98]`}>
                                     <XIcon className="h-3.5 w-3.5" /> <span>Cancel</span>
                                 </button>
-                                <button onClick={handleSave} className="relative overflow-hidden flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 touch-manipulation active:scale-[0.98] min-h-[40px] w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+                                <button onClick={handleSave} className="relative overflow-hidden flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation active:scale-[0.98] min-h-[40px] w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
                                     <CheckIcon className="h-3.5 w-3.5" /> <span>Save</span>
                                 </button>
                             </div>
                         </div>
                     ) : (
-                        <div className="pt-2 animate-in slide-in-from-bottom-1 duration-300">
-                             <button onClick={() => { setEditName(userName); setEditEmail(userEmail); setIsEditing(true); }} className={`group relative flex items-center justify-center w-full gap-2 p-2.5 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
+                        <div className="pt-2 animate-in slide-in-from-bottom-1 duration-200">
+                             <button onClick={() => { setEditName(userName); setEditEmail(userEmail); setIsEditing(true); }} className={`group relative flex items-center justify-center w-full gap-2 p-2.5 rounded-lg text-sm font-medium transition-all duration-200 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
                                 <SettingsIcon className="h-3.5 w-3.5 relative z-10 group-hover:rotate-12 transition-transform"/>
                                 <span className="relative z-10">Edit Profile</span>
                             </button>
@@ -389,39 +385,39 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
   const currentThemeConfig = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.dark;
   
   return (
-    <aside className={`p-4 flex flex-col h-full border-r transition-all duration-300 ease-out fixed w-72 top-0 left-0 z-40 md:flex md:static md:w-72 md:translate-x-0 ${currentThemeConfig.sidebar} shadow-xl ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+    <aside className={`p-4 flex flex-col h-full border-r transition-all duration-200 ease-out fixed w-64 top-0 left-0 z-40 md:flex md:static md:w-64 md:translate-x-0 ${currentThemeConfig.bg} ${currentThemeConfig.border} shadow-sm ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className="flex items-center justify-between mb-6 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="relative p-1 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-md shadow-purple-500/30">
+          <div className="relative p-1 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-sm">
             <div className={`p-1.5 ${theme === 'light' ? 'bg-white' : 'bg-zinc-950'} rounded-full`}>
               <img 
                 src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
                 alt="AJ Studioz Logo" 
-                className="h-5 w-5 rounded-full object-cover"
+                className="h-4 w-4 rounded-full object-cover"
               />
             </div>
           </div>
-          <h1 className="text-lg font-medium tracking-wide transition-all duration-300 relative z-10 text-white">AJ STUDIOZ</h1>
+          <h1 className="text-lg font-medium tracking-wide transition-all duration-200 relative z-10 text-white">AJ STUDIOZ</h1>
         </div>
-        <button onClick={onClose} className={`md:hidden group relative transition-all duration-300 p-2 rounded-lg touch-manipulation active:scale-[0.95] min-h-[40px] min-w-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
+        <button onClick={onClose} className={`md:hidden group relative transition-all duration-200 p-2 rounded-lg touch-manipulation active:scale-[0.95] min-h-[40px] min-w-[40px] ${currentThemeConfig.textSecondary} ${currentThemeConfig.hover} ${currentThemeConfig.text}`}>
           <XIcon className="h-5 w-5 relative z-10" />
         </button>
       </div>
 
       <button 
         onClick={handleNewChatClick}
-        className={`group relative flex items-center justify-between w-full gap-3 p-3 mb-6 rounded-lg text-sm font-medium transition-all duration-300 shadow-md touch-manipulation active:scale-[0.98] min-h-[44px] text-white ${currentThemeConfig.bgSecondary} ${currentThemeConfig.hover} border ${currentThemeConfig.border}`}
+        className={`group relative flex items-center justify-between w-full gap-3 px-3 py-2 mb-6 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm touch-manipulation active:scale-[0.98] min-h-[44px] text-white ${currentThemeConfig.bgSecondary} ${currentThemeConfig.border} ${currentThemeConfig.hover}`}
       >
         <div className="flex items-center gap-3">
           <div className="relative">
-            <PlusIcon className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90 group-active:rotate-0" />
+            <PlusIcon className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90 group-active:rotate-0" />
             <ZapIcon className="h-2 w-2 absolute -top-0.5 -right-0.5 text-yellow-400 animate-pulse" />
           </div>
           <span className="relative z-10">New Chat</span>
         </div>
       </button>
 
-      <nav className="flex-grow space-y-2 relative z-10">
+      <nav className="flex-grow space-y-1 relative z-10">
         <SidebarNavItem 
             icon={<SearchIcon className="h-4 w-4" />} 
             label="Explore" 

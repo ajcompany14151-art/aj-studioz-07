@@ -2,14 +2,7 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { CopyIcon } from './icons/CopyIcon';
 import { CheckIcon } from './icons/CheckIcon';
-import { RunIcon } from './icons/RunIcon';
-import { WrapIcon } from './icons/WrapIcon';
-import { ChevronDownIcon } from './icons/ChevronDownIcon';
-import { ChevronUpIcon } from './icons/ChevronUpIcon';
-import { EyeIcon } from './icons/EyeIcon';
-import { EyeOffIcon } from './icons/EyeOffIcon';
-import { DownloadIcon } from './icons/DownloadIcon';
-import { FullscreenIcon } from './icons/FullscreenIcon';
+import { WrapIcon, RunIcon, ChevronDownIcon, ChevronUpIcon, EyeIcon, EyeOffIcon, DownloadIcon, FullscreenIcon } from './icons/CustomIcons';
 
 // This informs TypeScript that 'hljs' is a global variable provided by the script in index.html
 declare var hljs: any;

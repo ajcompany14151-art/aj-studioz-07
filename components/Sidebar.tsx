@@ -16,7 +16,6 @@ import { SparklesIcon } from './icons/SparklesIcon';
 import { ChevronUpIcon } from './icons/ChevronUpIcon';
 import { BellIcon } from './icons/BellIcon';
 import { MoonIcon } from './icons/MoonIcon';
-import { ZapIcon } from './icons/ZapIcon';
 import { ShieldIcon } from './icons/ShieldIcon';
 import { CreditCardIcon } from './icons/CreditCardIcon';
 import { HelpCircleIcon } from './icons/HelpCircleIcon';
@@ -26,6 +25,13 @@ import { LogOutIcon } from './icons/LogOutIcon';
 const CrownIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 11l7-7 7 7M5 19l7-7 7 7M12 3v18" />
+  </svg>
+);
+
+// Simple ZapIcon component to replace the missing import
+const ZapIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
   </svg>
 );
 

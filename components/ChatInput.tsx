@@ -4,39 +4,66 @@ import { SendIcon } from './icons/SendIcon';
 import { PaperclipIcon } from './icons/PaperclipIcon';
 import { MicIcon } from './icons/MicIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
-import { PlusIcon } from './icons/PlusIcon';
-
-// Simple ShareIcon component
-const ShareIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a9.001 9.001 0 01-7.432 0m9.032-4.026A9.001 9.001 0 0112 3c-4.474 0-8.268 3.12-9.032 7.326m0 0A9.001 9.001 0 0012 21c4.474 0 8.268-3.12 9.032-7.326" />
-  </svg>
-);
-
-// AJ Studioz-inspired logo icon (simple SVG for creative design branding - pencil and palette)
-const AJIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-  </svg>
-);
 
 interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
   onSend: () => void;
   isLoading: boolean;
+  theme: string;
 }
 
-const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ value, onChange, onSend, isLoading }, ref) => {
+// Theme configurations
+const themeConfigs = {
+  dark: {
+    bg: 'bg-zinc-900/80',
+    border: 'border-zinc-800/50',
+    text: 'text-white',
+    placeholder: 'placeholder-zinc-500',
+    hover: 'hover:bg-zinc-900/85',
+    focus: 'focus:bg-zinc-900/90',
+    gradient: 'from-purple-600 to-blue-600'
+  },
+  light: {
+    bg: 'bg-white/80',
+    border: 'border-gray-200/50',
+    text: 'text-gray-900',
+    placeholder: 'placeholder-gray-500',
+    hover: 'hover:bg-white/85',
+    focus: 'focus:bg-white/90',
+    gradient: 'from-purple-600 to-blue-600'
+  },
+  'z-ai': {
+    bg: 'bg-slate-800/80',
+    border: 'border-slate-700/50',
+    text: 'text-white',
+    placeholder: 'placeholder-slate-400',
+    hover: 'hover:bg-slate-800/85',
+    focus: 'focus:bg-slate-800/90',
+    gradient: 'from-indigo-600 to-cyan-600'
+  },
+  'chatgpt': {
+    bg: 'bg-gray-800/80',
+    border: 'border-gray-700/50',
+    text: 'text-white',
+    placeholder: 'placeholder-gray-400',
+    hover: 'hover:bg-gray-800/85',
+    focus: 'focus:bg-gray-800/90',
+    gradient: 'from-green-600 to-emerald-600'
+  }
+};
+
+const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ value, onChange, onSend, isLoading, theme }, ref) => {
   const [isFocused, setIsFocused] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const isDisabled = isLoading || !value.trim();
   const maxChars = 5000;
   const inputContainerRef = useRef<HTMLDivElement>(null);
+  
+  const currentThemeConfig = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.dark;
 
   // Mobile detection
   useEffect(() => {
@@ -103,7 +130,6 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     if (textarea) {
       const handleFocus = () => {
         setIsFocused(true);
-        setShowSuggestions(true);
         // Only apply zoom fix on iOS
         if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
           document.body.style.zoom = '0.99';
@@ -111,10 +137,6 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       };
       const handleBlur = () => {
         setIsFocused(false);
-        // Only hide suggestions if input is empty
-        if (value.length === 0) {
-          setShowSuggestions(false);
-        }
         if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
           document.body.style.zoom = '';
         }
@@ -128,31 +150,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         textarea.removeEventListener('blur', handleBlur);
       };
     }
-  }, [ref, value]);
-
-  // Handle clicks outside to collapse
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (inputContainerRef.current && !inputContainerRef.current.contains(event.target as Node)) {
-        if (value.length === 0) {
-          setIsExpanded(false);
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [value]);
-
-  // Grok-like AJ Studioz suggestions: Witty, creative, with a dash of xAI curiosity
-  const suggestions = [
-    { text: "Design a logo for a sustainable fashion brand", icon: "🎨" },
-    { text: "Storyboard a 30-second promo video for a tech gadget", icon: "📹" },
-    { text: "Create a color palette and typography guide for a coffee shop", icon: "☕" },
-    { text: "Brainstorm 5 poster concepts for a music festival", icon: "🎶" },
-  ];
+  }, [ref]);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 pointer-events-none">
@@ -171,16 +169,15 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         <div 
           className={`
             relative flex items-center gap-2 p-3
-            bg-zinc-900/80 backdrop-blur-xl
-            border border-zinc-800/50
+            ${currentThemeConfig.bg} backdrop-blur-xl
+            border ${currentThemeConfig.border}
             rounded-xl
             shadow-lg
             transition-all duration-300
             ${isFocused 
-              ? 'bg-zinc-900/90 border-zinc-700/50 shadow-[0_0_20px_rgba(139,92,246,0.2)]' 
-              : 'hover:bg-zinc-900/85 hover:border-zinc-800/60 hover:shadow-md'
+              ? `${currentThemeConfig.focus} ${currentThemeConfig.border.replace('border-', 'border-')} shadow-[0_0_20px_rgba(139,92,246,0.2)]` 
+              : currentThemeConfig.hover
             }
-            ${isExpanded ? 'rounded-t-xl' : 'rounded-xl'}
           `}
         >
           {/* Animated gradient border */}
@@ -198,7 +195,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           <button
               aria-label="Attach file"
               title="Attach file (coming soon)"
-              className="p-2 text-zinc-500 hover:text-white/90 transition-all duration-300 rounded-lg flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
+              className={`p-2 ${currentThemeConfig.text === 'text-white' ? 'text-zinc-500' : 'text-gray-500'} hover:text-white/90 transition-all duration-300 rounded-lg flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden`}
               onTouchStart={(e) => e.preventDefault()}
           >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg"></div>
@@ -215,13 +212,13 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               rows={1}
               placeholder="Ask anything..."
               className={`
-                flex-1 bg-transparent text-white resize-none 
+                flex-1 bg-transparent ${currentThemeConfig.text} resize-none 
                 focus:outline-none focus:placeholder-transparent
                 disabled:cursor-not-allowed
-                placeholder-zinc-500 text-base leading-relaxed
+                ${currentThemeConfig.placeholder} text-base leading-relaxed
                 py-2 px-3
                 min-h-[20px]
-                ${isFocused ? 'text-white' : 'text-zinc-100'}
+                ${isFocused ? currentThemeConfig.text : currentThemeConfig.text}
                 ${isMobile ? 'text-base' : ''}
               `}
               disabled={isLoading}
@@ -247,7 +244,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           <button
               aria-label="Use voice mode"
               title="Voice mode (coming soon—whisper your ideas!)"
-              className="p-2 text-zinc-500 hover:text-white/90 transition-all duration-300 rounded-lg flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
+              className={`p-2 ${currentThemeConfig.text === 'text-white' ? 'text-zinc-500' : 'text-gray-500'} hover:text-white/90 transition-all duration-300 rounded-lg flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden`}
               onTouchStart={(e) => e.preventDefault()}
           >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg"></div>
@@ -264,7 +261,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               p-2 rounded-lg transition-all duration-300 transform flex-shrink-0 relative overflow-hidden group
               ${isDisabled
                 ? 'text-zinc-600 cursor-not-allowed opacity-50'
-                : 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 text-white hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 hover:scale-105 active:scale-95'
+                : `bg-gradient-to-r ${currentThemeConfig.gradient} text-white hover:scale-105 active:scale-95`
               }
             `}
             onTouchStart={(e) => !isDisabled && e.preventDefault()}
@@ -287,57 +284,6 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             </div>
           </button>
         </div>
-        
-        {/* Floating suggestions with Grok-AJ theme: Witty header, smooth hovers */}
-        {showSuggestions && !isMobile && value.length === 0 && !isLoading && (
-          <div className="absolute bottom-full left-0 right-0 mb-2 p-3 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="mx-auto max-w-4xl bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-xl p-2 shadow-lg flex items-center gap-2 mb-2">
-              <AJIcon className="h-3.5 w-3.5 text-purple-400" />
-              <span className="text-xs text-zinc-400">Spark your creativity with AJ Studioz:</span>
-            </div>
-            <div className="mx-auto max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-2">
-              {suggestions.map((suggestion, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    onChange(suggestion.text);
-                    setShowSuggestions(false);
-                  }}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-zinc-900/60 hover:bg-zinc-900/80 transition-all duration-200 text-left group border border-zinc-800/30 hover:shadow-md hover:shadow-purple-500/20 transform hover:scale-[1.02]"
-                >
-                  <span className="text-base">{suggestion.icon}</span>
-                  <span className="text-xs text-zinc-300 group-hover:text-white truncate">{suggestion.text}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* Expand button */}
-        {!isExpanded && (
-          <button
-            onClick={() => setIsExpanded(true)}
-            className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-full p-1 text-zinc-500 hover:text-white transition-all duration-200"
-            aria-label="Expand input"
-          >
-            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        )}
-        
-        {/* Collapse button */}
-        {isExpanded && (
-          <button
-            onClick={() => setIsExpanded(false)}
-            className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-full p-1 text-zinc-500 hover:text-white transition-all duration-200"
-            aria-label="Collapse input"
-          >
-            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-            </svg>
-          </button>
-        )}
       </div>
     </div>
   );

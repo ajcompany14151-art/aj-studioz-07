@@ -62,7 +62,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
-    };
+    });
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -113,7 +113,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         ref={inputContainerRef}
         className={`
           relative mx-auto transition-all duration-200 ease-out
-          ${isMobile ? 'max-w-full' : 'max-w-3xl'}
+          ${isMobile ? 'max-w-full' : 'max-w-3xl mr-8'}
           ${isFocused ? 'scale-[1.01]' : 'scale-100'}
         `}
       >
@@ -147,7 +147,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               ref={ref}
               id="chat-input"
               value={value}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e) => onChange(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={1}
               placeholder="Ask anything..."
@@ -156,7 +156,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
                 focus:outline-none focus:placeholder-transparent
                 disabled:cursor-not-allowed
                 ${currentThemeConfig.placeholder} text-sm leading-relaxed
-                py-1 px-2
+                py-2 px-2
                 min-h-[20px]
                 ${isMobile ? 'text-base' : ''}
               `}
@@ -168,6 +168,16 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               autoCorrect="on"
               style={{ fontSize: isMobile ? '16px' : 'inherit' }} // Prevent zoom on iOS
             />
+            />
+            
+            {/* Character count indicator - only show when approaching limit */}
+            {charCount > maxChars * 0.8 && (
+              <div className={`absolute bottom-2 right-2 text-xs transition-all duration-300 ${
+                charCount > maxChars * 0.9 ? 'text-red-400' : 'text-zinc-500'
+              }`}>
+                {charCount}/{maxChars}
+              </div>
+            )}
           </div>
 
           {/* Enhanced microphone button with voice mode hint */}
@@ -212,7 +222,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       </div>
     </div>
   );
-});
+};
 
 ChatInputComponent.displayName = 'ChatInput';
 

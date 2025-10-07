@@ -11,7 +11,7 @@ import { AJStudiozIcon } from './components/icons/AJStudiozIcon';
 import { SearchIcon } from './components/icons/SearchIcon';
 import { HistoryIcon } from './components/icons/HistoryIcon';
 import { SpinnerIcon } from './components/icons/SpinnerIcon';
-import { SaveChatModal } from './components/SaveChatModal';
+import SaveChatModal from './components/SaveChatModal'; // Changed from named to default import
 import { TrashIcon } from './components/icons/TrashIcon';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { XIcon } from './components/icons/XIcon';

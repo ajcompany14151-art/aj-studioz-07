@@ -4,7 +4,13 @@ import { SendIcon } from './icons/SendIcon';
 import { PaperclipIcon } from './icons/PaperclipIcon';
 import { MicIcon } from './icons/MicIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
-import { ShareIcon } from './icons/CustomIcons';
+
+// Simple ShareIcon component
+const ShareIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a9.001 9.001 0 01-7.432 0m9.032-4.026A9.001 9.001 0 0112 3c-4.474 0-8.268 3.12-9.032 7.326m0 0A9.001 9.001 0 0012 21c4.474 0 8.268-3.12 9.032-7.326" />
+  </svg>
+);
 
 interface ChatInputProps {
   value: string;
@@ -16,20 +22,35 @@ interface ChatInputProps {
 const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ value, onChange, onSend, isLoading }, ref) => {
   const [isFocused, setIsFocused] = useState(false);
   const [charCount, setCharCount] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const isDisabled = isLoading || !value.trim();
   const maxChars = 5000;
+
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     setCharCount(value.length);
     const textarea = (ref as React.RefObject<HTMLTextAreaElement>)?.current;
     if (textarea) {
+      // Reset height to auto to get the correct scrollHeight
       textarea.style.height = 'auto';
       const scrollHeight = textarea.scrollHeight;
-      const maxHeight = window.innerWidth < 768 ? 150 : 200; // Responsive max height
+      // Responsive max height
+      const maxHeight = isMobile ? 120 : 200;
       textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
       textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
-  }, [value, ref]);
+  }, [value, ref, isMobile]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -45,12 +66,17 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
     const textarea = (ref as React.RefObject<HTMLTextAreaElement>)?.current;
     if (textarea) {
       const handleFocus = () => {
-        document.body.style.zoom = '0.99'; // Anti-zoom hack for iOS
         setIsFocused(true);
+        // Only apply zoom fix on iOS
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+          document.body.style.zoom = '0.99';
+        }
       };
       const handleBlur = () => {
-        document.body.style.zoom = '';
         setIsFocused(false);
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+          document.body.style.zoom = '';
+        }
       };
       
       textarea.addEventListener('focus', handleFocus);
@@ -65,12 +91,14 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 relative">
-      {/* Character count indicator */}
-      <div className={`absolute right-6 bottom-6 text-xs transition-all duration-300 ${
-        charCount > maxChars * 0.9 ? 'text-red-400' : 'text-zinc-500'
-      } ${isFocused ? 'opacity-100' : 'opacity-0'}`}>
-        {charCount}/{maxChars}
-      </div>
+      {/* Character count indicator - only show on desktop */}
+      {!isMobile && (
+        <div className={`absolute right-6 bottom-6 text-xs transition-all duration-300 ${
+          charCount > maxChars * 0.9 ? 'text-red-400' : 'text-zinc-500'
+        } ${isFocused ? 'opacity-100' : 'opacity-0'}`}>
+          {charCount}/{maxChars}
+        </div>
+      )}
       
       <div 
         className={`
@@ -136,6 +164,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               py-3 px-4
               min-h-[20px]
               ${isFocused ? 'text-white' : 'text-zinc-100'}
+              ${isMobile ? 'text-lg' : ''}
             `}
             disabled={isLoading}
             aria-label="Chat input"
@@ -143,6 +172,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             spellCheck={true}
             autoCapitalize="sentences"
             autoCorrect="on"
+            style={{ fontSize: isMobile ? '16px' : 'inherit' }} // Prevent zoom on iOS
           />
           
           {/* Enhanced focus indicator */}
@@ -200,8 +230,8 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         </div>
       </div>
       
-      {/* Enhanced suggestion pills */}
-      {value.length === 0 && !isLoading && (
+      {/* Enhanced suggestion pills - only show on desktop */}
+      {!isMobile && value.length === 0 && !isLoading && (
         <div className="flex flex-wrap gap-2 mt-3 px-2">
           {["Summarize", "Explain", "Code", "Write"].map((suggestion) => (
             <button

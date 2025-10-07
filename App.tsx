@@ -17,18 +17,18 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { XIcon } from './components/icons/XIcon';
 import { GoogleIcon } from './components/icons/GoogleIcon';
 
-// Enhanced Explore view: Balanced for mobile (compact) and laptop (spacious, interactive)
+// Enhanced Explore view: Grok-inspired minimalist design
 const ExploreView: React.FC<{ isMobile: boolean }> = ({ isMobile }) => (
   <div className="flex items-center justify-center h-full p-4 sm:p-6 min-h-0">
-    <div className={`text-center max-w-md lg:max-w-lg bg-black/90 backdrop-blur-xl rounded-3xl p-4 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full transform transition-all duration-500 ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.02]'} ${!isMobile ? 'cursor-pointer' : ''}`}>
-      <div className="relative inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mb-4 sm:mb-6 mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-70 animate-pulse"></div>
-        <div className="relative bg-black/80 rounded-full p-3 sm:p-4 lg:p-5 border border-zinc-700/50 flex-shrink-0">
-          <SearchIcon className="h-8 w-8 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-purple-400" />
+    <div className={`text-center max-w-md lg:max-w-lg bg-zinc-900/40 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-zinc-800/50 shadow-xl w-full transform transition-all duration-500 ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.01]'} ${!isMobile ? 'cursor-pointer' : ''}`}>
+      <div className="relative inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mb-4 sm:mb-6 mx-auto">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-60 animate-pulse"></div>
+        <div className="relative bg-zinc-900 rounded-full p-2 sm:p-3 lg:p-4 border border-zinc-700/50 flex-shrink-0">
+          <SearchIcon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-purple-400" />
         </div>
       </div>
       <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Explore Creative Sparks</h2>
-      <p className="text-zinc-400 leading-relaxed text-sm sm:text-base lg:text-lg">Discover design prompts, video templates, and branding ideas. Powered by AJ Studioz AI—coming soon with semantic search.</p>
+      <p className="text-zinc-400 leading-relaxed text-sm sm:text-base lg:text-lg">Discover design prompts, video templates, and branding ideas. Powered by AJ Studioz AI.</p>
       <div className="mt-4 sm:mt-6 flex justify-center space-x-2">
         <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse"></div>
         <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse delay-75"></div>
@@ -38,7 +38,7 @@ const ExploreView: React.FC<{ isMobile: boolean }> = ({ isMobile }) => (
   </div>
 );
 
-// Enhanced HistoryView: Mobile swipe hints, laptop hovers with shadows
+// Enhanced HistoryView: Grok-inspired minimalist design
 const HistoryView: React.FC<{ 
   chats: SavedChat[]; 
   onLoad: (chatId: string) => void;
@@ -53,11 +53,11 @@ const HistoryView: React.FC<{
   if (chats.length === 0) {
     return (
       <div className="flex items-center justify-center h-full p-4 sm:p-6 min-h-0">
-        <div className="text-center bg-black/90 backdrop-blur-xl rounded-3xl p-4 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full max-w-md lg:max-w-lg transform transition-all duration-500">
-          <div className="relative inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mb-4 sm:mb-6 mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-70 animate-pulse"></div>
-            <div className="relative bg-black/80 rounded-full p-3 sm:p-4 lg:p-5 border border-zinc-700/50 flex-shrink-0">
-              <HistoryIcon className="h-8 w-8 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-purple-400" />
+        <div className="text-center bg-zinc-900/40 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-zinc-800/50 shadow-xl w-full max-w-md lg:max-w-lg transform transition-all duration-500">
+          <div className="relative inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mb-4 sm:mb-6 mx-auto">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-60 animate-pulse"></div>
+            <div className="relative bg-zinc-900 rounded-full p-2 sm:p-3 lg:p-4 border border-zinc-700/50 flex-shrink-0">
+              <HistoryIcon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-purple-400" />
             </div>
           </div>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">No Saved Designs</h2>
@@ -99,8 +99,8 @@ const HistoryView: React.FC<{
   };
   
   return (
-    <div className="flex flex-col h-full bg-black min-h-0">
-      <header className="p-4 sm:px-10 border-b border-zinc-700/30 sticky top-0 bg-black/90 backdrop-blur-xl z-10">
+    <div className="flex flex-col h-full bg-zinc-950 min-h-0">
+      <header className="p-4 sm:px-10 border-b border-zinc-800/50 sticky top-0 bg-zinc-950/90 backdrop-blur-xl z-10">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Design History</h2>
         <p className="text-zinc-400 mb-4 text-sm sm:text-base lg:text-lg">Load or archive your saved sessions.</p>
         <div className="relative mb-4">
@@ -110,14 +110,14 @@ const HistoryView: React.FC<{
             placeholder="Search designs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-2xl bg-black/70 border border-zinc-700/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/30 transition-all placeholder-zinc-500 text-base min-h-[44px]"
+            className="w-full pl-10 pr-4 py-3 rounded-xl bg-zinc-900/70 border border-zinc-800/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/30 transition-all placeholder-zinc-500 text-base min-h-[44px]"
           />
         </div>
       </header>
       <div className="flex-grow overflow-y-auto p-4 sm:p-10 min-h-0">
         <ul className="space-y-3">
           {filteredChats.sort((a, b) => b.timestamp - a.timestamp).map(chat => (
-            <li key={chat.id} className={`group flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-6 rounded-2xl bg-black/70 border border-zinc-700/30 transition-all backdrop-blur-xl relative overflow-hidden ${isMobile ? 'transform hover:scale-100' : 'hover:shadow-lg hover:shadow-purple-500/20 transform hover:scale-[1.01] cursor-pointer'}`}>
+            <li key={chat.id} className={`group flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-6 rounded-xl bg-zinc-900/40 border border-zinc-800/50 transition-all backdrop-blur-xl relative overflow-hidden ${isMobile ? 'transform hover:scale-100' : 'hover:shadow-lg hover:shadow-purple-500/20 transform hover:scale-[1.01] cursor-pointer'}`}>
               {/* Mobile swipe delete overlay */}
               {isMobile && (
                 <div className="absolute inset-0 bg-red-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end pr-4">
@@ -150,7 +150,7 @@ const HistoryView: React.FC<{
           ))}
           {searchTerm && filteredChats.length === 0 && (
             <li className="text-center py-8 text-zinc-400">
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-black/50 border border-zinc-700/50 mx-auto">
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-zinc-900/50 border border-zinc-800/50 mx-auto">
                 <SearchIcon className="h-8 w-8 text-zinc-500" />
               </div>
               <p className="text-sm lg:text-base">No designs found matching "{searchTerm}"</p>
@@ -162,7 +162,7 @@ const HistoryView: React.FC<{
   );
 };
 
-// AJ Studioz-specific suggested prompts: Mobile stacks vertically, laptop grids with hovers
+// AJ Studioz-specific suggested prompts: Grok-inspired minimalist design
 const SUGGESTED_PROMPTS = [
   { title: "Logo Magic", prompt: "Design a modern logo for a sustainable fashion brand.", icon: "🎨" },
   { title: "Video Vision", prompt: "Storyboard a 30-second promo video for a tech gadget.", icon: "📹" },
@@ -176,7 +176,7 @@ const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void; isMo
       <button
         key={title}
         onClick={() => onPromptClick(prompt)}
-        className={`p-4 sm:p-6 bg-black/70 border border-zinc-700/30 rounded-2xl text-left transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] min-h-[100px] sm:min-h-[120px] transform ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 cursor-pointer'} group min-h-[44px] flex flex-col justify-between`}
+        className={`p-4 sm:p-6 bg-zinc-900/40 border border-zinc-800/50 rounded-xl text-left transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] min-h-[100px] sm:min-h-[120px] transform ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.01] hover:shadow-lg hover:shadow-purple-500/20 cursor-pointer'} group min-h-[44px] flex flex-col justify-between`}
       >
         <div className="flex items-start gap-3">
           <div className={`text-2xl sm:text-3xl mb-2 group-hover:scale-110 transition-transform flex-shrink-0 mt-1 ${!isMobile ? 'cursor-pointer' : ''}`}>{icon}</div>
@@ -193,9 +193,9 @@ const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void; isMo
 const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void; isMobile: boolean }> = ({ onPromptClick, isMobile }) => (
   <div className="flex-grow flex items-center justify-center px-4 min-h-0 pt-4 sm:pt-0">
     <div className="text-center w-full max-w-2xl lg:max-w-3xl">
-      <div className={`inline-block p-4 sm:p-6 bg-black/90 border border-zinc-700/30 rounded-3xl mb-4 sm:mb-6 backdrop-blur-xl shadow-2xl shadow-black/50 transform transition-all duration-500 ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.02]'} mx-auto`}>
+      <div className={`inline-block p-4 sm:p-6 bg-zinc-900/40 border border-zinc-800/50 rounded-2xl mb-4 sm:mb-6 backdrop-blur-xl shadow-xl mx-auto`}>
         <div className="relative p-1 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse">
-          <div className="p-2 sm:p-3 bg-black rounded-full">
+          <div className="p-2 sm:p-3 bg-zinc-950 rounded-full">
             <img 
               src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
               alt="AJ Studioz Logo" 
@@ -527,12 +527,9 @@ const App: React.FC = () => {
     handleSend(prompt);
   }, [handleSend]);
 
-  // Define the pattern URL as a constant to avoid escaping issues
-  const patternUrl = "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E";
-
   // Enhanced Error toast with mobile positioning
   const ErrorToast = () => error ? (
-    <div className={`fixed ${isMobile ? 'top-16 sm:top-4' : 'top-4'} right-4 z-50 p-4 rounded-2xl shadow-2xl max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 bg-red-900/90 text-white border border-red-700/50 backdrop-blur-xl`}>
+    <div className={`fixed ${isMobile ? 'top-16 sm:top-4' : 'top-4'} right-4 z-50 p-4 rounded-xl shadow-xl max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 bg-zinc-900/90 text-white border border-zinc-800/50 backdrop-blur-xl`}>
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <svg className="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -566,8 +563,8 @@ const App: React.FC = () => {
 
   // Google Sign-In Modal
   const GoogleSignInModal = () => (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
-      <div className="bg-black/90 border border-zinc-700/50 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+    <div className="fixed inset-0 bg-zinc-950/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div className="bg-zinc-900/90 border border-zinc-800/50 rounded-2xl p-6 max-w-md w-full shadow-xl">
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mb-4">
             <img 
@@ -600,17 +597,17 @@ const App: React.FC = () => {
     </div>
   );
 
-  // Enhanced GlobalStyles with balanced mobile/laptop optimizations
+  // Enhanced GlobalStyles with Grok-inspired design
   const GlobalStyles = () => (
     <style jsx global>{`
       @keyframes float-glow {
         0% { 
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.05); 
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(139, 92, 246, 0.05); 
           transform: translateY(0px);
         }
         100% { 
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 92, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.1); 
-          transform: translateY(-2px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.1), 0 0 30px rgba(59, 130, 246, 0.05); 
+          transform: translateY(-1px);
         }
       }
       .animate-float-glow {
@@ -643,7 +640,7 @@ const App: React.FC = () => {
       /* Laptop: Enhanced hovers and cursors */
       @media (min-width: 1024px) {
         .hover\\:shadow-xl:hover {
-          box-shadow: 0 35px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.2);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 92, 246, 0.15);
         }
       }
       /* Touch target min size enhanced */
@@ -663,11 +660,11 @@ const App: React.FC = () => {
         background: rgba(0, 0, 0, 0.1);
       }
       ::-webkit-scrollbar-thumb {
-        background: rgba(139, 92, 246, 0.5);
+        background: rgba(139, 92, 246, 0.4);
         border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: rgba(139, 92, 246, 0.7);
+        background: rgba(139, 92, 246, 0.6);
       }
       /* iOS input zoom fix */
       input[type="text"], input[type="email"], textarea {
@@ -705,18 +702,11 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <GlobalStyles />
-      <div className="flex h-screen font-sans transition-all duration-500 ease-in-out overflow-hidden bg-black text-white">
-        {/* Premium dark mode background effects with mobile perf */}
-        <div className="fixed inset-0 bg-black"></div>
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/5 via-transparent to-transparent"></div>
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/5 via-transparent to-transparent"></div>
-        {!isMobile && (
-          <>
-            <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-600/3 rounded-full blur-3xl animate-pulse"></div>
-            <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-600/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          </>
-        )}
-        <div className="fixed inset-0 opacity-10" style={{ backgroundImage: `url('${patternUrl}')` }}></div>
+      <div className="flex h-screen font-sans transition-all duration-500 ease-in-out overflow-hidden bg-zinc-950 text-white">
+        {/* Grok-inspired background effects */}
+        <div className="fixed inset-0 bg-zinc-950"></div>
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/3 via-transparent to-transparent"></div>
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/3 via-transparent to-transparent"></div>
         
         <ErrorToast />
         <OnlineStatus />
@@ -745,7 +735,7 @@ const App: React.FC = () => {
         
         {isSidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-2xl"
+            className="fixed inset-0 bg-zinc-950/60 z-30 md:hidden backdrop-blur-xl"
             onClick={toggleSidebar}
             aria-hidden="true"
           />
@@ -765,12 +755,12 @@ const App: React.FC = () => {
           onSignOut={handleSignOut}
         />
         <div className="flex flex-col flex-grow h-screen relative">
-          <header className="flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-2xl z-10 transition-all duration-500 bg-black/95 border-zinc-700/30">
-              <button onClick={toggleSidebar} className="p-3 -ml-2 rounded-2xl transition-all touch-manipulation active:scale-[0.95] text-white hover:bg-zinc-900/50 min-w-[44px] h-[44px] flex items-center justify-center">
+          <header className="flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-xl z-10 transition-all duration-500 bg-zinc-950/95 border-zinc-800/50">
+              <button onClick={toggleSidebar} className="p-3 -ml-2 rounded-xl transition-all touch-manipulation active:scale-[0.95] text-white hover:bg-zinc-900/50 min-w-[44px] h-[44px] flex items-center justify-center">
                 <MenuIcon className="h-6 w-6"/>
               </button>
               <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-2xl bg-zinc-900/50">
+                  <div className="p-1.5 rounded-xl bg-zinc-900/50">
                     <AJStudiozIcon className="h-5 w-5 text-white"/>
                   </div>
                   <h1 className="text-base font-bold tracking-wide text-white">AJ STUDIOZ</h1>
@@ -811,7 +801,7 @@ const App: React.FC = () => {
                   {isLoading && messages.length > 0 && messages[messages.length - 1].content === '' && (
                       <div className="py-6 px-2">
                           <div className="flex items-start gap-4">
-                              <div className="flex-shrink-0 w-8 h-8 rounded-full border border-zinc-700/30 flex items-center justify-center backdrop-blur-xl bg-black/50">
+                              <div className="flex-shrink-0 w-8 h-8 rounded-full border border-zinc-800/30 flex items-center justify-center backdrop-blur-xl bg-zinc-900/50">
                                   <AJStudiozIcon className="h-5 w-5 text-white"/>
                               </div>
                               <div className="flex items-center gap-2 pt-1.5">

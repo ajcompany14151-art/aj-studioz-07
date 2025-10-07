@@ -13,35 +13,39 @@ import { CheckIcon } from './icons/CheckIcon';
 // Theme configurations
 const themeConfigs = {
   dark: {
-    bg: 'bg-zinc-900/40',
-    border: 'border-zinc-800/50',
+    userBg: 'bg-zinc-800',
+    userBorder: 'border-zinc-700',
+    aiBg: 'bg-zinc-900/60',
+    aiBorder: 'border-zinc-800/50',
     text: 'text-white',
     textSecondary: 'text-zinc-400',
-    userBg: 'bg-zinc-800/50',
     codeTheme: 'atom-one-dark'
   },
   light: {
-    bg: 'bg-gray-50',
-    border: 'border-gray-200',
+    userBg: 'bg-gray-100',
+    userBorder: 'border-gray-200',
+    aiBg: 'bg-white',
+    aiBorder: 'border-gray-200',
     text: 'text-gray-900',
     textSecondary: 'text-gray-500',
-    userBg: 'bg-white',
     codeTheme: 'atom-one-light'
   },
   'z-ai': {
-    bg: 'bg-slate-800/40',
-    border: 'border-slate-700/50',
+    userBg: 'bg-slate-800',
+    userBorder: 'border-slate-700',
+    aiBg: 'bg-slate-900/60',
+    aiBorder: 'border-slate-800/50',
     text: 'text-white',
     textSecondary: 'text-slate-400',
-    userBg: 'bg-slate-700/50',
     codeTheme: 'vs2015'
   },
   'chatgpt': {
-    bg: 'bg-gray-800/40',
-    border: 'border-gray-700/50',
+    userBg: 'bg-gray-800',
+    userBorder: 'border-gray-700',
+    aiBg: 'bg-gray-900/60',
+    aiBorder: 'border-gray-800/50',
     text: 'text-white',
     textSecondary: 'text-gray-400',
-    userBg: 'bg-gray-700/50',
     codeTheme: 'github-dark'
   }
 };
@@ -149,27 +153,17 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
   if (isUser) {
     return (
       <div className="py-6 px-2 animate-in slide-in-from-right-2 duration-300">
-        <div className="flex items-start gap-4">
-            <div className={`flex-shrink-0 w-8 h-8 rounded-lg ${currentThemeConfig.userBg} border ${currentThemeConfig.border} flex items-center justify-center shadow-sm relative overflow-hidden group`}>
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-700 to-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <UserIcon className="h-5 w-5 text-zinc-300 dark:text-white relative z-10" />
+        <div className="flex items-start gap-4 max-w-4xl ml-auto">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-md">
+              <UserIcon className="h-5 w-5 text-white" />
             </div>
-            <div className="flex-grow">
-              <div className="relative group">
-                <p className={`pt-1 ${currentThemeConfig.text} font-medium text-base leading-relaxed`}>
-                    {message.content}
+            <div className="flex-grow min-w-0">
+              <div className={`p-4 rounded-2xl ${currentThemeConfig.userBg} border ${currentThemeConfig.userBorder} shadow-sm`}>
+                <p className={`${currentThemeConfig.text} whitespace-pre-wrap break-words`}>
+                  {message.content}
                 </p>
-                <div className="absolute -right-8 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button
-                    onClick={handleCopy}
-                    className={`p-1.5 rounded-lg ${currentThemeConfig.bgSecondary} ${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} transition-all duration-300`}
-                    aria-label="Copy message"
-                  >
-                    {isCopied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
-                  </button>
-                </div>
               </div>
-              <p className={`text-xs ${currentThemeConfig.textSecondary} mt-1 opacity-70`}>{timestamp}</p>
+              <p className={`text-xs ${currentThemeConfig.textSecondary} mt-1 text-right opacity-70`}>{timestamp}</p>
             </div>
         </div>
       </div>
@@ -178,10 +172,10 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
 
   return (
     <div className={`py-6 px-2 animate-in slide-in-from-left-2 duration-300 ${showStreamingCursor ? 'pr-4' : ''}`}>
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-4 max-w-4xl">
         <div className="relative flex-shrink-0">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse"></div>
-          <div className={`relative w-8 h-8 ${theme === 'light' ? 'bg-white' : 'bg-black'} rounded-full border ${currentThemeConfig.border} flex items-center justify-center overflow-hidden group`}>
+          <div className={`relative w-8 h-8 ${theme === 'light' ? 'bg-white' : 'bg-black'} rounded-full border ${currentThemeConfig.aiBorder} flex items-center justify-center overflow-hidden group`}>
             <img 
               src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
               alt="AJ Studioz Logo" 
@@ -205,7 +199,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
                   return (
                      <div
                         key={part.key}
-                        className={`prose prose-invert max-w-none prose-p:my-2 prose-pre:my-0 prose-a:text-sky-400 hover:prose-a:underline prose-ul:my-3 prose-ol:my-3 prose-code:${currentThemeConfig.text} prose-code:${currentThemeConfig.bgSecondary} prose-code:rounded-md prose-code:px-1.5 prose-code:py-1 prose-code:font-semibold prose-headings:${currentThemeConfig.text} prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-blockquote:border-l-4 prose-blockquote:border-purple-500/50 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:${currentThemeConfig.textSecondary} prose-table:border-collapse prose-table:border prose-table:${currentThemeConfig.border} prose-th:${currentThemeConfig.bgSecondary} prose-th:font-semibold prose-td:border prose-td:${currentThemeConfig.border} prose-td:px-2 prose-td:py-1 selection:bg-purple-500/30`}
+                        className={`prose prose-invert max-w-none prose-p:my-2 prose-pre:my-0 prose-a:text-sky-400 hover:prose-a:underline prose-ul:my-3 prose-ol:my-3 prose-code:${currentThemeConfig.text} prose-code:${currentThemeConfig.userBg} prose-code:rounded-md prose-code:px-1.5 prose-code:py-1 prose-code:font-semibold prose-headings:${currentThemeConfig.text} prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-blockquote:border-l-4 prose-blockquote:border-purple-500/50 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:${currentThemeConfig.textSecondary} prose-table:border-collapse prose-table:border prose-table:${currentThemeConfig.aiBorder} prose-th:${currentThemeConfig.userBg} prose-th:font-semibold prose-td:border prose-td:${currentThemeConfig.aiBorder} prose-td:px-2 prose-td:py-1 selection:bg-purple-500/30`}
                         dangerouslySetInnerHTML={{ __html: html }}
                       />
                   );
@@ -219,20 +213,20 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
           {/* Enhanced action buttons */}
           {!isLoading && !isModelTyping && message.content.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
-              <button className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.bgSecondary} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.border} rounded-full hover:${currentThemeConfig.hover} hover:${currentThemeConfig.text} transition-all duration-300 group`}>
+              <button className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.userBorder} rounded-full hover:opacity-80 transition-all duration-300 group`}>
                 <WandIcon className="h-3.5 w-3.5 group-hover:rotate-12 transition-transform duration-300" />
                 Think Harder
                 <XIcon className="h-3.5 w-3.5 text-zinc-500" />
               </button>
               
-              <button className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-gradient-to-r ${currentThemeConfig.gradient} text-purple-300 border border-purple-700/50 rounded-full hover:from-purple-800/50 hover:to-blue-800/50 hover:text-purple-200 transition-all duration-300 group`}>
+              <button className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-purple-600 to-blue-600 text-white border border-purple-700/50 rounded-full hover:opacity-90 transition-all duration-300 group`}>
                 <svg className="h-3.5 w-3.5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                 Regenerate
               </button>
               
               <button
                 onClick={handleCopy}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.bgSecondary} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.border} rounded-full hover:${currentThemeConfig.hover} hover:${currentThemeConfig.text} transition-all duration-300 group`}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.userBorder} rounded-full hover:opacity-80 transition-all duration-300 group`}
               >
                 {isCopied ? <CheckIcon className="h-3.5 w-3.5 text-green-400" /> : <CopyIcon className="h-3.5 w-3.5" />}
                 {isCopied ? 'Copied' : 'Copy'}
@@ -240,7 +234,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
               
               <button
                 onClick={handleShare}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.bgSecondary} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.border} rounded-full hover:${currentThemeConfig.hover} hover:${currentThemeConfig.text} transition-all duration-300 group`}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium ${currentThemeConfig.userBg} ${currentThemeConfig.textSecondary} border ${currentThemeConfig.userBorder} rounded-full hover:opacity-80 transition-all duration-300 group`}
               >
                 <ShareIcon className="h-3.5 w-3.5 group-hover:scale-110 transition-transform duration-300" />
                 Share
@@ -249,14 +243,14 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLoading, 
               <div className="flex items-center gap-1 border-l border-zinc-700/50 pl-2 ml-1">
                 <button
                   onClick={() => handleFeedback('up')}
-                  className={`p-1.5 rounded-lg transition-all duration-300 ${feedback === 'up' ? 'bg-green-900/30 text-green-400' : `${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} hover:${currentThemeConfig.bgSecondary}`}`}
+                  className={`p-1.5 rounded-lg transition-all duration-300 ${feedback === 'up' ? 'bg-green-900/30 text-green-400' : `${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} hover:${currentThemeConfig.userBg}`}`}
                   aria-label="Good response"
                 >
                   <ThumbsUpIcon className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => handleFeedback('down')}
-                  className={`p-1.5 rounded-lg transition-all duration-300 ${feedback === 'down' ? 'bg-red-900/30 text-red-400' : `${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} hover:${currentThemeConfig.bgSecondary}`}`}
+                  className={`p-1.5 rounded-lg transition-all duration-300 ${feedback === 'down' ? 'bg-red-900/30 text-red-400' : `${currentThemeConfig.textSecondary} hover:${currentThemeConfig.text} hover:${currentThemeConfig.userBg}`}`}
                   aria-label="Bad response"
                 >
                   <ThumbsDownIcon className="h-4 w-4" />

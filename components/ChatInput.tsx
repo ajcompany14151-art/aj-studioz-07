@@ -114,7 +114,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         ref={inputContainerRef}
         className={`
           relative mx-auto transition-all duration-200 ease-out
-          ${isMobile ? 'max-w-full' : 'max-w-3xl mr-8'}
+          ${isMobile ? 'max-w-full' : 'max-w-3xl'}
           ${isFocused ? 'scale-[1.01]' : 'scale-100'}
         `}
       >

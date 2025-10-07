@@ -17,53 +17,107 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { XIcon } from './components/icons/XIcon';
 import { GoogleIcon } from './components/icons/GoogleIcon';
 
-// Enhanced Explore view: Grok-inspired minimalist design
-const ExploreView: React.FC<{ isMobile: boolean }> = ({ isMobile }) => (
-  <div className="flex items-center justify-center h-full p-4 sm:p-6 min-h-0">
-    <div className={`text-center max-w-md lg:max-w-lg bg-zinc-900/40 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-zinc-800/50 shadow-xl w-full transform transition-all duration-500 ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.01]'} ${!isMobile ? 'cursor-pointer' : ''}`}>
-      <div className="relative inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mb-4 sm:mb-6 mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-60 animate-pulse"></div>
-        <div className="relative bg-zinc-900 rounded-full p-2 sm:p-3 lg:p-4 border border-zinc-700/50 flex-shrink-0">
-          <SearchIcon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-purple-400" />
+// Theme configurations
+const themeConfigs = {
+  dark: {
+    bg: 'bg-zinc-950',
+    bgSecondary: 'bg-zinc-900/40',
+    border: 'border-zinc-800/50',
+    text: 'text-white',
+    textSecondary: 'text-zinc-400',
+    input: 'bg-zinc-900/80',
+    hover: 'hover:bg-zinc-800/40',
+    gradient: 'from-purple-600 to-blue-600',
+    sidebar: 'bg-zinc-950 border-zinc-800/50'
+  },
+  light: {
+    bg: 'bg-white',
+    bgSecondary: 'bg-gray-50',
+    border: 'border-gray-200',
+    text: 'text-gray-900',
+    textSecondary: 'text-gray-500',
+    input: 'bg-white',
+    hover: 'hover:bg-gray-100',
+    gradient: 'from-purple-600 to-blue-600',
+    sidebar: 'bg-white border-gray-200'
+  },
+  'z-ai': {
+    bg: 'bg-slate-900',
+    bgSecondary: 'bg-slate-800/40',
+    border: 'border-slate-700/50',
+    text: 'text-white',
+    textSecondary: 'text-slate-400',
+    input: 'bg-slate-800/80',
+    hover: 'hover:bg-slate-700/40',
+    gradient: 'from-indigo-600 to-cyan-600',
+    sidebar: 'bg-slate-900 border-slate-700/50'
+  },
+  'chatgpt': {
+    bg: 'bg-gray-900',
+    bgSecondary: 'bg-gray-800/40',
+    border: 'border-gray-700/50',
+    text: 'text-white',
+    textSecondary: 'text-gray-400',
+    input: 'bg-gray-800/80',
+    hover: 'hover:bg-gray-700/40',
+    gradient: 'from-green-600 to-emerald-600',
+    sidebar: 'bg-gray-900 border-gray-700/50'
+  }
+};
+
+// Enhanced Explore view: Theme-aware minimalist design
+const ExploreView: React.FC<{ isMobile: boolean; theme: string }> = ({ isMobile, theme }) => {
+  const config = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.dark;
+  
+  return (
+    <div className="flex items-center justify-center h-full p-4 sm:p-6 min-h-0">
+      <div className={`text-center max-w-md lg:max-w-lg ${config.bgSecondary} backdrop-blur-xl rounded-2xl p-6 sm:p-8 border ${config.border} shadow-xl w-full transform transition-all duration-500 ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.01]'}`}>
+        <div className="relative inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mb-4 sm:mb-6 mx-auto">
+          <div className={`absolute inset-0 bg-gradient-to-r ${config.gradient} rounded-full blur-xl opacity-60 animate-pulse`}></div>
+          <div className={`relative ${config.bg} rounded-full p-2 sm:p-3 lg:p-4 border ${config.border} flex-shrink-0`}>
+            <SearchIcon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-purple-400" />
+          </div>
+        </div>
+        <h2 className={`text-xl sm:text-2xl lg:text-3xl font-bold ${config.text} mb-3 bg-gradient-to-r ${config.gradient} bg-clip-text text-transparent`}>Explore Creative Sparks</h2>
+        <p className={`${config.textSecondary} leading-relaxed text-sm sm:text-base lg:text-lg`}>Discover design prompts, video templates, and branding ideas. Powered by AJ Studioz AI.</p>
+        <div className="mt-4 sm:mt-6 flex justify-center space-x-2">
+          <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse"></div>
+          <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse delay-75"></div>
+          <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse delay-150"></div>
         </div>
       </div>
-      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Explore Creative Sparks</h2>
-      <p className="text-zinc-400 leading-relaxed text-sm sm:text-base lg:text-lg">Discover design prompts, video templates, and branding ideas. Powered by AJ Studioz AI.</p>
-      <div className="mt-4 sm:mt-6 flex justify-center space-x-2">
-        <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse"></div>
-        <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse delay-75"></div>
-        <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse delay-150"></div>
-      </div>
     </div>
-  </div>
-);
+  );
+};
 
-// Enhanced HistoryView: Grok-inspired minimalist design
+// Enhanced HistoryView: Theme-aware minimalist design
 const HistoryView: React.FC<{ 
   chats: SavedChat[]; 
   onLoad: (chatId: string) => void;
   onDelete: (chatId: string) => void;
   onCloseSidebar: () => void;
   isMobile: boolean;
-}> = ({ chats, onLoad, onDelete, onCloseSidebar, isMobile }) => {
+  theme: string;
+}> = ({ chats, onLoad, onDelete, onCloseSidebar, isMobile, theme }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const filteredChats = chats.filter(chat => chat.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const config = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.dark;
 
   if (chats.length === 0) {
     return (
       <div className="flex items-center justify-center h-full p-4 sm:p-6 min-h-0">
-        <div className="text-center bg-zinc-900/40 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-zinc-800/50 shadow-xl w-full max-w-md lg:max-w-lg transform transition-all duration-500">
+        <div className={`text-center ${config.bgSecondary} backdrop-blur-xl rounded-2xl p-6 sm:p-8 border ${config.border} shadow-xl w-full max-w-md lg:max-w-lg transform transition-all duration-500`}>
           <div className="relative inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mb-4 sm:mb-6 mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-60 animate-pulse"></div>
-            <div className="relative bg-zinc-900 rounded-full p-2 sm:p-3 lg:p-4 border border-zinc-700/50 flex-shrink-0">
+            <div className={`absolute inset-0 bg-gradient-to-r ${config.gradient} rounded-full blur-xl opacity-60 animate-pulse`}></div>
+            <div className={`relative ${config.bg} rounded-full p-2 sm:p-3 lg:p-4 border ${config.border} flex-shrink-0`}>
               <HistoryIcon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-purple-400" />
             </div>
           </div>
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">No Saved Designs</h2>
-          <p className="text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed text-sm sm:text-base lg:text-lg">Start a creative chat and save it here for later inspiration.</p>
+          <h2 className={`text-xl sm:text-2xl lg:text-3xl font-bold ${config.text} mb-3 bg-gradient-to-r ${config.gradient} bg-clip-text text-transparent`}>No Saved Designs</h2>
+          <p className={`${config.textSecondary} mt-1 max-w-xs mx-auto leading-relaxed text-sm sm:text-base lg:text-lg`}>Start a creative chat and save it here for later inspiration.</p>
           {isMobile && (
-            <p className="text-xs text-zinc-500 mt-2">Swipe left on chats to delete</p>
+            <p className={`text-xs ${config.textSecondary} mt-2`}>Swipe left on chats to delete</p>
           )}
         </div>
       </div>
@@ -99,25 +153,25 @@ const HistoryView: React.FC<{
   };
   
   return (
-    <div className="flex flex-col h-full bg-zinc-950 min-h-0">
-      <header className="p-4 sm:px-10 border-b border-zinc-800/50 sticky top-0 bg-zinc-950/90 backdrop-blur-xl z-10">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Design History</h2>
-        <p className="text-zinc-400 mb-4 text-sm sm:text-base lg:text-lg">Load or archive your saved sessions.</p>
+    <div className={`flex flex-col h-full ${config.bg} min-h-0`}>
+      <header className={`p-4 sm:px-10 border-b ${config.border} sticky top-0 ${config.bg}/90 backdrop-blur-xl z-10`}>
+        <h2 className={`text-xl sm:text-2xl lg:text-3xl font-bold ${config.text} mb-2 bg-gradient-to-r ${config.gradient} bg-clip-text text-transparent`}>Design History</h2>
+        <p className={`${config.textSecondary} mb-4 text-sm sm:text-base lg:text-lg`}>Load or archive your saved sessions.</p>
         <div className="relative mb-4">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+          <SearchIcon className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 ${config.textSecondary}`} />
           <input
             type="text"
             placeholder="Search designs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-xl bg-zinc-900/70 border border-zinc-800/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/30 transition-all placeholder-zinc-500 text-base min-h-[44px]"
+            className={`w-full pl-10 pr-4 py-3 rounded-xl ${config.input} border ${config.border} ${config.text} focus:outline-none focus:ring-2 focus:ring-purple-400/30 transition-all placeholder-${config.textSecondary} text-base min-h-[44px]`}
           />
         </div>
       </header>
       <div className="flex-grow overflow-y-auto p-4 sm:p-10 min-h-0">
         <ul className="space-y-3">
           {filteredChats.sort((a, b) => b.timestamp - a.timestamp).map(chat => (
-            <li key={chat.id} className={`group flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-6 rounded-xl bg-zinc-900/40 border border-zinc-800/50 transition-all backdrop-blur-xl relative overflow-hidden ${isMobile ? 'transform hover:scale-100' : 'hover:shadow-lg hover:shadow-purple-500/20 transform hover:scale-[1.01] cursor-pointer'}`}>
+            <li key={chat.id} className={`group flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-6 rounded-xl ${config.bgSecondary} border ${config.border} transition-all backdrop-blur-xl relative overflow-hidden ${isMobile ? 'transform hover:scale-100' : 'hover:shadow-lg hover:shadow-purple-500/20 transform hover:scale-[1.01] cursor-pointer'}`}>
               {/* Mobile swipe delete overlay */}
               {isMobile && (
                 <div className="absolute inset-0 bg-red-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end pr-4">
@@ -130,14 +184,14 @@ const HistoryView: React.FC<{
                 className="flex-grow text-left overflow-hidden touch-manipulation active:scale-[0.98] w-full sm:w-auto mb-2 sm:mb-0 min-h-[44px] flex items-center"
                 aria-label={`Load design: ${chat.name}`}
               >
-                <p className="font-bold text-white truncate text-sm sm:text-base lg:text-lg">{chat.name}</p>
-                <p className="text-xs text-zinc-400 mt-1">{formatTimestamp(chat.timestamp)}</p>
+                <p className={`font-bold ${config.text} truncate text-sm sm:text-base lg:text-lg`}>{chat.name}</p>
+                <p className={`text-xs ${config.textSecondary} mt-1`}>{formatTimestamp(chat.timestamp)}</p>
               </button>
               <button
                 onClick={() => handleDelete(chat.id)}
                 aria-label={`Delete design: ${chat.name}`}
                 title="Delete design"
-                className="self-start sm:self-auto ml-0 sm:ml-4 p-3 flex-shrink-0 rounded-xl text-zinc-500 hover:bg-red-900/50 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 active:scale-95 min-w-[44px] h-[44px] flex items-center justify-center"
+                className={`self-start sm:self-auto ml-0 sm:ml-4 p-3 flex-shrink-0 rounded-xl ${config.textSecondary} hover:bg-red-900/50 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 active:scale-95 min-w-[44px] h-[44px] flex items-center justify-center`}
                 disabled={isDeleting === chat.id}
               >
                 {isDeleting === chat.id ? (
@@ -149,8 +203,8 @@ const HistoryView: React.FC<{
             </li>
           ))}
           {searchTerm && filteredChats.length === 0 && (
-            <li className="text-center py-8 text-zinc-400">
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-zinc-900/50 border border-zinc-800/50 mx-auto">
+            <li className={`text-center py-8 ${config.textSecondary}`}>
+              <div className={`inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full ${config.input} border ${config.border} mx-auto`}>
                 <SearchIcon className="h-8 w-8 text-zinc-500" />
               </div>
               <p className="text-sm lg:text-base">No designs found matching "{searchTerm}"</p>
@@ -162,63 +216,36 @@ const HistoryView: React.FC<{
   );
 };
 
-// AJ Studioz-specific suggested prompts: Grok-inspired minimalist design
-const SUGGESTED_PROMPTS = [
-  { title: "Logo Magic", prompt: "Design a modern logo for a sustainable fashion brand.", icon: "🎨" },
-  { title: "Video Vision", prompt: "Storyboard a 30-second promo video for a tech gadget.", icon: "📹" },
-  { title: "Brand Boost", prompt: "Create a color palette and typography guide for a coffee shop.", icon: "☕" },
-  { title: "Idea Storm", prompt: "Brainstorm 5 poster concepts for a music festival.", icon: "🎶" },
-];
-
-const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void; isMobile: boolean }> = ({ onPromptClick, isMobile }) => (
-  <div className="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-4 p-2 sm:p-0">
-    {SUGGESTED_PROMPTS.map(({ title, prompt, icon }) => (
-      <button
-        key={title}
-        onClick={() => onPromptClick(prompt)}
-        className={`p-4 sm:p-6 bg-zinc-900/40 border border-zinc-800/50 rounded-xl text-left transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] min-h-[100px] sm:min-h-[120px] transform ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.01] hover:shadow-lg hover:shadow-purple-500/20 cursor-pointer'} group min-h-[44px] flex flex-col justify-between`}
-      >
-        <div className="flex items-start gap-3">
-          <div className={`text-2xl sm:text-3xl mb-2 group-hover:scale-110 transition-transform flex-shrink-0 mt-1 ${!isMobile ? 'cursor-pointer' : ''}`}>{icon}</div>
-          <div className="flex-1 min-w-0">
-            <p className="font-bold text-white text-sm mb-2 truncate">{title}</p>
-            <p className="text-zinc-400 leading-relaxed text-xs sm:text-sm overflow-hidden line-clamp-3">{prompt}</p>
+const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void; isMobile: boolean; theme: string }> = ({ onPromptClick, isMobile, theme }) => {
+  const config = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.dark;
+  
+  return (
+    <div className="flex-grow flex items-center justify-center px-4 min-h-0 pt-4 sm:pt-0">
+      <div className="text-center w-full max-w-2xl lg:max-w-3xl">
+        <div className={`inline-block p-4 sm:p-6 ${config.bgSecondary} border ${config.border} rounded-2xl mb-4 sm:mb-6 backdrop-blur-xl shadow-xl mx-auto`}>
+          <div className="relative p-1 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse">
+            <div className={`p-2 sm:p-3 ${theme === 'light' ? 'bg-white' : 'bg-zinc-950'} rounded-full`}>
+              <img 
+                src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
+                alt="AJ Studioz Logo" 
+                className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-full object-cover"
+              />
+            </div>
           </div>
         </div>
-      </button>
-    ))}
-  </div>
-);
-
-const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void; isMobile: boolean }> = ({ onPromptClick, isMobile }) => (
-  <div className="flex-grow flex items-center justify-center px-4 min-h-0 pt-4 sm:pt-0">
-    <div className="text-center w-full max-w-2xl lg:max-w-3xl">
-      <div className={`inline-block p-4 sm:p-6 bg-zinc-900/40 border border-zinc-800/50 rounded-2xl mb-4 sm:mb-6 backdrop-blur-xl shadow-xl mx-auto`}>
-        <div className="relative p-1 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse">
-          <div className="p-2 sm:p-3 bg-zinc-950 rounded-full">
-            <img 
-              src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
-              alt="AJ Studioz Logo" 
-              className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-full object-cover"
-            />
-          </div>
-        </div>
+        <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-bold ${config.text} mb-2 tracking-tight animate-in fade-in duration-500 bg-gradient-to-r ${config.gradient} bg-clip-text text-transparent`}>Ready to Create?</h1>
+        <p className={`${config.textSecondary} mb-6 sm:mb-8 max-w-md mx-auto leading-relaxed text-sm sm:text-base lg:text-lg`}>Spark your next project with AJ Studioz AI. Ask anything to get started.</p>
       </div>
-      <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 tracking-tight animate-in fade-in duration-500 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Ready to Create?</h1>
-      <p className="text-zinc-400 mb-6 sm:mb-8 max-w-md mx-auto leading-relaxed text-sm sm:text-base lg:text-lg">Spark your next project with AJ Studioz AI. Pick a prompt or dream big.</p>
-      <SuggestedPrompts onPromptClick={onPromptClick} isMobile={isMobile} />
     </div>
-  </div>
-);
-
-const getInitialTheme = (): Theme => 'dark'; // Always premium dark
+  );
+};
 
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>('dark'); // Locked to dark
+  const [theme, setTheme] = useState<Theme>('dark');
   const [highlightTheme, setHighlightTheme] = useState<HighlightTheme>('atom-one-dark');
   const [currentView, setCurrentView] = useState<AppView>('chat');
   
@@ -231,11 +258,15 @@ const App: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const chatSessionRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
+
+  // Get current theme configuration
+  const currentThemeConfig = themeConfigs[theme] || themeConfigs.dark;
 
   // Enhanced mobile detection with touch support
   useEffect(() => {
@@ -249,10 +280,10 @@ const App: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Effect to lock premium dark theme with mobile viewport fix
+  // Apply theme to document
   useEffect(() => {
-    document.documentElement.classList.add('dark', 'premium-dark');
-    localStorage.setItem('app-theme', 'dark');
+    document.documentElement.className = theme;
+    localStorage.setItem('app-theme', theme);
 
     // Enhanced mobile viewport with user-scalable=no for better control
     if (typeof document !== 'undefined') {
@@ -266,7 +297,7 @@ const App: React.FC = () => {
         viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
       }
     }
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     // Load saved chats from local storage on mount
@@ -523,13 +554,9 @@ const App: React.FC = () => {
     }
   }, [messages, currentChatId]);
 
-  const handlePromptClick = useCallback((prompt: string) => {
-    handleSend(prompt);
-  }, [handleSend]);
-
   // Enhanced Error toast with mobile positioning
   const ErrorToast = () => error ? (
-    <div className={`fixed ${isMobile ? 'top-16 sm:top-4' : 'top-4'} right-4 z-50 p-4 rounded-xl shadow-xl max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 bg-zinc-900/90 text-white border border-zinc-800/50 backdrop-blur-xl`}>
+    <div className={`fixed ${isMobile ? 'top-16 sm:top-4' : 'top-4'} right-4 z-50 p-4 rounded-xl shadow-xl max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 ${currentThemeConfig.bgSecondary} ${currentThemeConfig.text} border ${currentThemeConfig.border} backdrop-blur-xl`}>
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <svg className="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -563,8 +590,8 @@ const App: React.FC = () => {
 
   // Google Sign-In Modal
   const GoogleSignInModal = () => (
-    <div className="fixed inset-0 bg-zinc-950/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
-      <div className="bg-zinc-900/90 border border-zinc-800/50 rounded-2xl p-6 max-w-md w-full shadow-xl">
+    <div className={`fixed inset-0 ${currentThemeConfig.bg}/90 backdrop-blur-xl z-50 flex items-center justify-center p-4`}>
+      <div className={`${currentThemeConfig.bgSecondary} border ${currentThemeConfig.border} rounded-2xl p-6 max-w-md w-full shadow-xl`}>
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mb-4">
             <img 
@@ -573,8 +600,8 @@ const App: React.FC = () => {
               className="h-10 w-10 rounded-full object-cover"
             />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Welcome to AJ Studioz</h2>
-          <p className="text-zinc-400">Sign in to unlock premium features and save your designs</p>
+          <h2 className={`text-2xl font-bold ${currentThemeConfig.text} mb-2`}>Welcome to AJ Studioz</h2>
+          <p className={currentThemeConfig.textSecondary}>Sign in to unlock premium features and save your designs</p>
         </div>
         
         <button
@@ -591,15 +618,29 @@ const App: React.FC = () => {
         </button>
         
         <div className="mt-4 text-center">
-          <p className="text-xs text-zinc-500">By signing in, you agree to our Terms of Service and Privacy Policy</p>
+          <p className={`text-xs ${currentThemeConfig.textSecondary}`}>By signing in, you agree to our Terms of Service and Privacy Policy</p>
         </div>
       </div>
     </div>
   );
 
-  // Enhanced GlobalStyles with Grok-inspired design
+  // Enhanced GlobalStyles with theme support
   const GlobalStyles = () => (
     <style jsx global>{`
+      :root {
+        --bg-primary: ${theme === 'light' ? '#ffffff' : theme === 'z-ai' ? '#0f172a' : theme === 'chatgpt' ? '#111827' : '#09090b'};
+        --bg-secondary: ${theme === 'light' ? '#f9fafb' : theme === 'z-ai' ? '#1e293b' : theme === 'chatgpt' ? '#1f2937' : '#18181b'};
+        --bg-tertiary: ${theme === 'light' ? '#f3f4f6' : theme === 'z-ai' ? '#334155' : theme === 'chatgpt' ? '#374151' : '#27272a'};
+        --border-color: ${theme === 'light' ? '#e5e7eb' : theme === 'z-ai' ? '#334155' : theme === 'chatgpt' ? '#374151' : '#27272a'};
+        --text-primary: ${theme === 'light' ? '#111827' : '#ffffff'};
+        --text-secondary: ${theme === 'light' ? '#6b7280' : '#a1a1aa'};
+        --accent-gradient: ${theme === 'z-ai' ? 'linear-gradient(to right, #4f46e5, #06b6d4)' : theme === 'chatgpt' ? 'linear-gradient(to right, #16a34a, #10b981)' : 'linear-gradient(to right, #9333ea, #3b82f6)'};
+      }
+      
+      * {
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      }
+      
       @keyframes float-glow {
         0% { 
           box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(139, 92, 246, 0.05); 
@@ -702,9 +743,9 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <GlobalStyles />
-      <div className="flex h-screen font-sans transition-all duration-500 ease-in-out overflow-hidden bg-zinc-950 text-white">
-        {/* Grok-inspired background effects */}
-        <div className="fixed inset-0 bg-zinc-950"></div>
+      <div className={`flex h-screen font-sans transition-all duration-500 ease-in-out overflow-hidden ${currentThemeConfig.bg} ${currentThemeConfig.text}`}>
+        {/* Theme-aware background effects */}
+        <div className={`fixed inset-0 ${currentThemeConfig.bg}`}></div>
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/3 via-transparent to-transparent"></div>
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/3 via-transparent to-transparent"></div>
         
@@ -727,6 +768,7 @@ const App: React.FC = () => {
                   chatSessionRef.current = createChatSession();
                   setIsSaveModalOpen(false);
               }}
+              theme={theme}
           />
         )}
         
@@ -735,7 +777,7 @@ const App: React.FC = () => {
         
         {isSidebarOpen && (
           <div 
-            className="fixed inset-0 bg-zinc-950/60 z-30 md:hidden backdrop-blur-xl"
+            className={`fixed inset-0 ${currentThemeConfig.bg}/60 z-30 md:hidden backdrop-blur-xl`}
             onClick={toggleSidebar}
             aria-hidden="true"
           />
@@ -755,12 +797,12 @@ const App: React.FC = () => {
           onSignOut={handleSignOut}
         />
         <div className="flex flex-col flex-grow h-screen relative">
-          <header className="flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-xl z-10 transition-all duration-500 bg-zinc-950/95 border-zinc-800/50">
-              <button onClick={toggleSidebar} className="p-3 -ml-2 rounded-xl transition-all touch-manipulation active:scale-[0.95] text-white hover:bg-zinc-900/50 min-w-[44px] h-[44px] flex items-center justify-center">
+          <header className={`flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-xl z-10 transition-all duration-500 ${currentThemeConfig.bg}/95 ${currentThemeConfig.border}`}>
+              <button onClick={toggleSidebar} className={`p-3 -ml-2 rounded-xl transition-all touch-manipulation active:scale-[0.95] ${currentThemeConfig.text} ${currentThemeConfig.hover} min-w-[44px] h-[44px] flex items-center justify-center`}>
                 <MenuIcon className="h-6 w-6"/>
               </button>
               <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-xl bg-zinc-900/50">
+                  <div className={`p-1.5 rounded-xl ${currentThemeConfig.bgSecondary}`}>
                     <AJStudiozIcon className="h-5 w-5 text-white"/>
                   </div>
                   <h1 className="text-base font-bold tracking-wide text-white">AJ STUDIOZ</h1>
@@ -780,7 +822,7 @@ const App: React.FC = () => {
           >
             {currentView === 'chat' ? (
               messages.length === 0 ? (
-                <ChatWelcome onPromptClick={handlePromptClick} isMobile={isMobile} />
+                <ChatWelcome onPromptClick={() => {}} isMobile={isMobile} theme={theme} />
               ) : (
                 <div className="max-w-4xl lg:max-w-5xl mx-auto w-full pt-4 space-y-0">
                   {messages.map((msg, index) => {
@@ -794,6 +836,7 @@ const App: React.FC = () => {
                         isLoading={isLoading}
                         isLastMessage={index === messages.length - 1}
                         isMobile={isMobile}
+                        theme={theme}
                       />
                     );
                   })}
@@ -801,7 +844,7 @@ const App: React.FC = () => {
                   {isLoading && messages.length > 0 && messages[messages.length - 1].content === '' && (
                       <div className="py-6 px-2">
                           <div className="flex items-start gap-4">
-                              <div className="flex-shrink-0 w-8 h-8 rounded-full border border-zinc-800/30 flex items-center justify-center backdrop-blur-xl bg-zinc-900/50">
+                              <div className={`flex-shrink-0 w-8 h-8 rounded-full border ${currentThemeConfig.border} flex items-center justify-center backdrop-blur-xl ${currentThemeConfig.bgSecondary}`}>
                                   <AJStudiozIcon className="h-5 w-5 text-white"/>
                               </div>
                               <div className="flex items-center gap-2 pt-1.5">
@@ -814,7 +857,7 @@ const App: React.FC = () => {
                 </div>
               )
             ) : currentView === 'explore' ? (
-              <ExploreView isMobile={isMobile} />
+              <ExploreView isMobile={isMobile} theme={theme} />
             ) : (
               <HistoryView 
                 chats={savedChats}
@@ -822,6 +865,7 @@ const App: React.FC = () => {
                 onDelete={handleDeleteChat}
                 onCloseSidebar={toggleSidebar}
                 isMobile={isMobile}
+                theme={theme}
               />
             )}
           </main>
@@ -836,7 +880,7 @@ const App: React.FC = () => {
               paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 0px)' : '0'
             }}
           >
-            <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
+            <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} theme={theme} />
           </div>
         )}
       </div>

@@ -121,8 +121,7 @@ const HistoryView: React.FC<{
           )}
         </div>
       </div>
-    </div>
-  );
+    );
   }
 
   const formatTimestamp = (timestamp: number) => {
@@ -172,7 +171,7 @@ const HistoryView: React.FC<{
       <div className="flex-grow overflow-y-auto p-4 sm:p-10 min-h-0">
         <ul className="space-y-3">
           {filteredChats.sort((a, b) => b.timestamp - a.timestamp).map(chat => (
-            <li key={chat.id} className={`group flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-6 rounded-xl ${config.bgSecondary} border ${config.border} transition-all backdrop-blur-xl relative overflow-hidden ${isMobile ? 'transform hover:scale-100' : 'hover:shadow-lg hover:shadow-purple-500/20 transform hover:scale-[1.01] cursor-pointer'}>
+            <li key={chat.id} className={`group flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-6 rounded-xl ${config.bgSecondary} border ${config.border} transition-all backdrop-blur-xl relative overflow-hidden ${isMobile ? 'transform hover:scale-100' : 'hover:shadow-lg hover:shadow-purple-500/20 transform hover:scale-[1.01] cursor-pointer'}`}>
               {/* Mobile swipe delete overlay */}
               {isMobile && (
                 <div className="absolute inset-0 bg-red-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end pr-4">
@@ -433,7 +432,7 @@ const App: React.FC = () => {
     setIsGoogleSignInLoading(true);
     try {
       // This is a placeholder for Google Sign-In implementation
-      // In a real app, you would use the <message role="assistant" content="I'm here to help you create amazing designs. What would you like to work on today?" /> Google Sign-In library or Firebase Auth
+      // In a real app, you would use the Google Sign-In library or Firebase Auth
       // For now, we'll simulate a successful sign-in
       setTimeout(() => {
         setUser({
@@ -560,7 +559,7 @@ const App: React.FC = () => {
     }
   }, [messages, currentChatId]);
 
-  // Enhanced Error toast with mobile positioning
+  // Enhanced Error toast with mobile positioning (FIXED: Removed extra </div>)
   const ErrorToast = () => error ? (
     <div className={`fixed ${isMobile ? 'top-16 sm:top-4' : 'top-4'} right-4 z-50 p-4 rounded-xl shadow-xl max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 ${currentThemeConfig.bgSecondary} ${currentThemeConfig.text} border ${currentThemeConfig.border} backdrop-blur-xl`}>
       <div className="flex items-start">
@@ -568,7 +567,6 @@ const App: React.FC = () => {
           <svg className="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-        </div>
         </div>
         <div className="ml-3 flex-1">
           <p className="text-sm font-medium">{error}</p>
@@ -631,7 +629,7 @@ const App: React.FC = () => {
     </div>
   );
 
-  // Enhanced GlobalStyles with theme support
+  // Enhanced GlobalStyles with theme support (FIXED: Cleaned broken CSS rule)
   const GlobalStyles = () => (
     <style jsx global>{`
       :root {
@@ -712,10 +710,7 @@ const App: React.FC = () => {
         border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: rgba(139,  positioned: fixed;
-        bottom: 80px;
-        right: 20px;
-        z-index: 50;
+        background: rgba(139, 92, 246, 0.5);
       }
       /* iOS input zoom fix */
       input[type="text"], input[type="email"], textarea {
@@ -827,7 +822,7 @@ const App: React.FC = () => {
           {/* Main content with dynamic bottom padding for input/keyboard */}
           <main 
             ref={chatContainerRef} 
-            className="chat-container flex-grow overflow-y-auto px-4 sm:px-10 lg:px-20 flex flex flex-col relative z-10 transition-all duration-300"
+            className="chat-container flex-grow overflow-y-auto px-4 sm:px-10 lg:px-20 flex flex-col relative z-10 transition-all duration-300"
           >
             {currentView === 'chat' ? (
               messages.length === 0 ? (

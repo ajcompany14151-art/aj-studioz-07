@@ -13,20 +13,31 @@ import { HistoryIcon } from './components/icons/HistoryIcon';
 import { SpinnerIcon } from './components/icons/SpinnerIcon';
 import { SaveChatModal } from './components/SaveChatModal';
 import { TrashIcon } from './components/icons/TrashIcon';
-import { ErrorBoundary } from './components/ErrorBoundary'; // Assume added for stability
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { XIcon } from './components/icons/XIcon';
 
-// Placeholder for Explore view with enhancement
+// Enhanced Explore view with more sophisticated design
 const ExploreView: React.FC = () => (
   <div className="flex items-center justify-center h-full p-4 sm:p-6">
-    <div className="text-center max-w-md bg-black/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 animate-float-glow w-full">
-      <SearchIcon className="mx-auto h-12 w-12 text-purple-400 mb-4 animate-pulse" />
-      <h2 className="text-xl font-bold text-white mb-2">Explore</h2>
-      <p className="text-zinc-400">Discover prompts, templates, and more. Coming soon with advanced search.</p>
+    <div className="text-center max-w-md bg-black/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full transform transition-all duration-500 hover:scale-[1.02]">
+      <div className="relative inline-flex items-center justify-center w-20 h-20 mb-6">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-70 animate-pulse"></div>
+        <div className="relative bg-black/80 rounded-full p-4 border border-zinc-700/50">
+          <SearchIcon className="h-12 w-12 text-purple-400" />
+        </div>
+      </div>
+      <h2 className="text-2xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Explore</h2>
+      <p className="text-zinc-400 leading-relaxed">Discover prompts, templates, and more. Coming soon with advanced search capabilities powered by AI.</p>
+      <div className="mt-6 flex justify-center space-x-2">
+        <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse"></div>
+        <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse delay-75"></div>
+        <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse delay-150"></div>
+      </div>
     </div>
   </div>
 );
 
-// Functional Chat History view with search enhancement
+// Enhanced Chat History view with better mobile experience
 const HistoryView: React.FC<{ 
   chats: SavedChat[]; 
   onLoad: (chatId: string) => void;
@@ -34,15 +45,21 @@ const HistoryView: React.FC<{
   onCloseSidebar: () => void;
 }> = ({ chats, onLoad, onDelete, onCloseSidebar }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const filteredChats = chats.filter(chat => chat.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   if (chats.length === 0) {
     return (
       <div className="flex items-center justify-center h-full p-4 sm:p-6">
-        <div className="text-center bg-black/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 animate-float-glow w-full">
-          <HistoryIcon className="mx-auto h-12 w-12 text-purple-400 mb-4" />
-          <h2 className="text-xl font-bold text-white">No Saved Chats</h2>
-          <p className="text-zinc-400 mt-1 max-w-xs mx-auto">Start a conversation and create a new chat to save it here for later.</p>
+        <div className="text-center bg-black/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full max-w-md transform transition-all duration-500">
+          <div className="relative inline-flex items-center justify-center w-20 h-20 mb-6">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-70 animate-pulse"></div>
+            <div className="relative bg-black/80 rounded-full p-4 border border-zinc-700/50">
+              <HistoryIcon className="h-12 w-12 text-purple-400" />
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">No Saved Chats</h2>
+          <p className="text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed">Start a conversation and create a new chat to save it here for later.</p>
         </div>
       </div>
     );
@@ -50,6 +67,13 @@ const HistoryView: React.FC<{
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    
     return date.toLocaleString(undefined, {
       month: 'short',
       day: 'numeric',
@@ -58,10 +82,16 @@ const HistoryView: React.FC<{
     });
   };
   
+  const handleDelete = async (chatId: string) => {
+    setIsDeleting(chatId);
+    await onDelete(chatId);
+    setIsDeleting(null);
+  };
+  
   return (
     <div className="flex flex-col h-full bg-black">
       <header className="p-4 sm:px-10 border-b border-zinc-700/30 sticky top-0 bg-black/90 backdrop-blur-xl z-10">
-        <h2 className="text-xl font-bold text-white mb-2">Chat History</h2>
+        <h2 className="text-2xl font-bold text-white mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Chat History</h2>
         <p className="text-zinc-400 mb-4">Load or delete your saved conversations.</p>
         <div className="relative mb-4">
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
@@ -77,7 +107,7 @@ const HistoryView: React.FC<{
       <div className="flex-grow overflow-y-auto p-4 sm:p-10">
         <ul className="space-y-3">
           {filteredChats.sort((a, b) => b.timestamp - a.timestamp).map(chat => (
-            <li key={chat.id} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-black/70 border border-zinc-700/30 transition-all hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-xl">
+            <li key={chat.id} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-black/70 border border-zinc-700/30 transition-all hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-xl transform hover:scale-[1.01]">
               <button 
                 onClick={() => { onLoad(chat.id); onCloseSidebar(); }} 
                 className="flex-grow text-left overflow-hidden touch-manipulation active:scale-[0.98] w-full sm:w-auto mb-2 sm:mb-0"
@@ -87,17 +117,27 @@ const HistoryView: React.FC<{
                 <p className="text-xs text-zinc-400 mt-1">{formatTimestamp(chat.timestamp)}</p>
               </button>
               <button
-                onClick={() => onDelete(chat.id)}
+                onClick={() => handleDelete(chat.id)}
                 aria-label={`Delete chat: ${chat.name}`}
                 title="Delete chat"
-                className="self-start sm:self-auto ml-0 sm:ml-4 p-3 flex-shrink-0 rounded-xl text-zinc-500 hover:bg-red-900/50 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 active:scale-95 min-w-[44px] h-[44px] flex items-center justify-center"
+                className="self-start sm:self-auto ml-0 sm:ml-4 p-3 flex-shrink-0 rounded-xl text-zinc-500 hover:bg-red-900/50 hover:text-red-400 transition-all opacity-0 group-hover:opacity-100 active:scale-95 min-w-[44px] h-[44px] flex items-center justify-center"
+                disabled={isDeleting === chat.id}
               >
-                <TrashIcon className="h-5 w-5" />
+                {isDeleting === chat.id ? (
+                  <SpinnerIcon className="h-5 w-5 animate-spin" />
+                ) : (
+                  <TrashIcon className="h-5 w-5" />
+                )}
               </button>
             </li>
           ))}
           {searchTerm && filteredChats.length === 0 && (
-            <li className="text-center py-8 text-zinc-400">No chats found.</li>
+            <li className="text-center py-8 text-zinc-400">
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-black/50 border border-zinc-700/50">
+                <SearchIcon className="h-8 w-8 text-zinc-500" />
+              </div>
+              <p>No chats found matching "{searchTerm}"</p>
+            </li>
           )}
         </ul>
       </div>
@@ -106,22 +146,27 @@ const HistoryView: React.FC<{
 };
 
 const SUGGESTED_PROMPTS = [
-  { title: "Explain a concept", prompt: "Explain quantum computing in simple terms." },
-  { title: "Write some code", prompt: "Write a python script that scrapes the headlines from a news website." },
-  { title: "Draft an email", prompt: "Draft a professional email to a client apologizing for a project delay." },
-  { title: "Brainstorm ideas", prompt: "Give me 5 creative ideas for a new tech startup in the AI space." },
+  { title: "Explain a concept", prompt: "Explain quantum computing in simple terms.", icon: "🧠" },
+  { title: "Write some code", prompt: "Write a python script that scrapes the headlines from a news website.", icon: "💻" },
+  { title: "Draft an email", prompt: "Draft a professional email to a client apologizing for a project delay.", icon: "📧" },
+  { title: "Brainstorm ideas", prompt: "Give me 5 creative ideas for a new tech startup in the AI space.", icon: "💡" },
 ];
 
 const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void }> = ({ onPromptClick }) => (
   <div className="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-    {SUGGESTED_PROMPTS.map(({ title, prompt }) => (
+    {SUGGESTED_PROMPTS.map(({ title, prompt, icon }) => (
       <button
         key={title}
         onClick={() => onPromptClick(prompt)}
-        className="p-6 bg-black/70 border border-zinc-700/30 rounded-2xl text-left hover:bg-zinc-900/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] animate-float-glow min-h-[120px]"
+        className="p-6 bg-black/70 border border-zinc-700/30 rounded-2xl text-left hover:bg-zinc-900/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] min-h-[120px] transform hover:scale-[1.02] group"
       >
-        <p className="font-bold text-white text-sm mb-2">{title}</p>
-        <p className="text-zinc-400 leading-relaxed">{prompt}</p>
+        <div className="flex items-start gap-3">
+          <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">{icon}</div>
+          <div className="flex-1">
+            <p className="font-bold text-white text-sm mb-2">{title}</p>
+            <p className="text-zinc-400 leading-relaxed text-sm">{prompt}</p>
+          </div>
+        </div>
       </button>
     ))}
   </div>
@@ -129,20 +174,20 @@ const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void }> = 
 
 const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void }> = ({ onPromptClick }) => (
     <div className="flex-grow flex items-center justify-center px-4">
-        <div className="text-center">
-            <div className="inline-block p-6 bg-black/90 border border-zinc-700/30 rounded-3xl mb-6 backdrop-blur-xl shadow-2xl shadow-black/50 animate-float-glow">
+        <div className="text-center w-full max-w-2xl">
+            <div className="inline-block p-6 bg-black/90 border border-zinc-700/30 rounded-3xl mb-6 backdrop-blur-xl shadow-2xl shadow-black/50 transform transition-all duration-500 hover:scale-[1.02]">
                 <div className="relative p-1 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse">
                     <div className="p-2 bg-black rounded-full">
                         <img 
                             src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
                             alt="AJ Studioz Logo" 
-                            className="h-10 w-10 rounded-full object-cover"
+                            className="h-12 w-12 rounded-full object-cover"
                         />
                     </div>
                 </div>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight animate-in fade-in duration-500">How can I help you today?</h1>
-            <p className="text-zinc-400 mb-8 max-w-md mx-auto">Try one of these prompts to get started.</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 tracking-tight animate-in fade-in duration-500 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">How can I help you today?</h1>
+            <p className="text-zinc-400 mb-8 max-w-md mx-auto leading-relaxed">Try one of these prompts to get started or ask me anything.</p>
             <SuggestedPrompts onPromptClick={onPromptClick} />
         </div>
     </div>
@@ -163,6 +208,7 @@ const App: React.FC = () => {
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const chatSessionRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -207,8 +253,14 @@ const App: React.FC = () => {
 
   // Handle online/offline status
   useEffect(() => {
-    const handleOnline = () => setError(null);
-    const handleOffline = () => setError('You are offline. Some features may be limited.');
+    const handleOnline = () => {
+      setIsOnline(true);
+      setError(null);
+    };
+    const handleOffline = () => {
+      setIsOnline(false);
+      setError('You are offline. Some features may be limited.');
+    };
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -417,13 +469,37 @@ const App: React.FC = () => {
 
   // Enhancement: Error toast
   const ErrorToast = () => error ? (
-    <div className="fixed top-4 right-4 z-50 p-4 rounded-2xl shadow-2xl max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 bg-red-900/90 text-white border border-red-700/50 backdrop-blur-xl animate-float-glow">
-      {error}
-      <button onClick={() => setError(null)} className="absolute top-2 right-2 p-1 rounded-full hover:bg-white/10">
-        <XIcon className="h-4 w-4" />
-      </button>
+    <div className="fixed top-4 right-4 z-50 p-4 rounded-2xl shadow-2xl max-w-sm w-full mx-4 animate-in slide-in-from-top-2 duration-300 bg-red-900/90 text-white border border-red-700/50 backdrop-blur-xl">
+      <div className="flex items-start">
+        <div className="flex-shrink-0">
+          <svg className="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div className="ml-3 flex-1">
+          <p className="text-sm font-medium">{error}</p>
+        </div>
+        <div className="ml-auto flex-shrink-0">
+          <button
+            type="button"
+            className="inline-flex text-red-400 hover:text-red-300 focus:outline-none"
+            onClick={() => setError(null)}
+          >
+            <span className="sr-only">Dismiss</span>
+            <XIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
     </div>
   ) : null;
+
+  // Online status indicator
+  const OnlineStatus = () => (
+    <div className={`fixed bottom-4 left-4 z-50 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 transition-all duration-300 ${isOnline ? 'bg-green-900/70 text-green-300' : 'bg-red-900/70 text-red-300'} backdrop-blur-xl`}>
+      <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}></div>
+      {isOnline ? 'Online' : 'Offline'}
+    </div>
+  );
 
   // Global floating glow animation
   const GlobalStyles = () => (
@@ -458,6 +534,20 @@ const App: React.FC = () => {
         min-height: 44px;
         min-width: 44px;
       }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(139, 92, 246, 0.5);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(139, 92, 246, 0.7);
+      }
     `}</style>
   );
 
@@ -474,6 +564,7 @@ const App: React.FC = () => {
         <div className="fixed inset-0 opacity-10" style={{ backgroundImage: `url('${patternUrl}')` }}></div>
         
         <ErrorToast />
+        <OnlineStatus />
         
         {isSaveModalOpen && (
           <SaveChatModal
@@ -525,7 +616,7 @@ const App: React.FC = () => {
               <div className="w-6"></div>
           </header>
 
-          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 sm:px-10 flex flex-col relative z-10 scrollbar-thin scrollbar-thumb-zinc-700">
+          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 sm:px-10 flex flex-col relative z-10">
             {currentView === 'chat' ? (
               messages.length === 0 ? (
                 <ChatWelcome onPromptClick={handlePromptClick} />
@@ -548,7 +639,7 @@ const App: React.FC = () => {
                   {isLoading && messages.length > 0 && messages[messages.length - 1].content === '' && (
                       <div className="py-6 px-2">
                           <div className="flex items-start gap-4">
-                              <div className="flex-shrink-0 w-8 h-8 rounded-full border border-zinc-700/30 flex items-center justify-center backdrop-blur-xl bg-black/50 animate-float-glow">
+                              <div className="flex-shrink-0 w-8 h-8 rounded-full border border-zinc-700/30 flex items-center justify-center backdrop-blur-xl bg-black/50">
                                   <AJStudiozIcon className="h-5 w-5 text-white"/>
                               </div>
                               <div className="flex items-center gap-2 pt-1.5">

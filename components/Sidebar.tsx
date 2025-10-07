@@ -16,6 +16,7 @@ import { SparklesIcon } from './icons/SparklesIcon';
 import { ChevronUpIcon } from './icons/ChevronUpIcon';
 import { BellIcon } from './icons/BellIcon';
 import { MoonIcon } from './icons/MoonIcon';
+import { GoogleIcon } from './icons/GoogleIcon';
 import { 
   CrownIcon, 
   ZapIcon, 
@@ -35,6 +36,9 @@ interface SidebarProps {
   setHighlightTheme: (highlightTheme: HighlightTheme) => void;
   currentView: AppView;
   onViewChange: (view: AppView) => void;
+  isMobile: boolean;
+  user?: any;
+  onSignOut?: () => void;
 }
 
 interface SidebarNavItemProps {
@@ -86,10 +90,10 @@ const themes: { id: HighlightTheme; name: string }[] = [
     { id: 'ir-black', name: 'IR Black' },
 ];
 
-const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highlightTheme' | 'setHighlightTheme'>> = ({ theme, setTheme, highlightTheme, setHighlightTheme }) => {
+const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highlightTheme' | 'setHighlightTheme' | 'user' | 'onSignOut'>> = ({ theme, setTheme, highlightTheme, setHighlightTheme, user, onSignOut }) => {
     const [isOpen, setIsOpen] = useState(true);
-    const [userName, setUserName] = useState('Alex Jordan');
-    const [userEmail, setUserEmail] = useState('alex.jordan@ajstudioz.com');
+    const [userName, setUserName] = useState(user?.name || 'Alex Jordan');
+    const [userEmail, setUserEmail] = useState(user?.email || 'alex.jordan@ajstudioz.com');
     const [isEditing, setIsEditing] = useState(false);
     const [notifications, setNotifications] = useState(true);
     const [isPremium, setIsPremium] = useState(true); // Enhancement: Add premium status
@@ -122,7 +126,11 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                             <CrownIcon className="h-2.5 w-2.5 text-black" />
                           </div>
                         )}
-                        <UserIcon className="h-5 w-5 relative z-10 text-white" />
+                        {user?.photoUrl ? (
+                          <img src={user.photoUrl} alt={user.name} className="h-8 w-8 rounded-full object-cover" />
+                        ) : (
+                          <UserIcon className="h-5 w-5 relative z-10 text-white" />
+                        )}
                     </div>
                     <div className="overflow-hidden text-left">
                         <p className="text-sm font-bold truncate text-white flex items-center gap-1">
@@ -215,8 +223,17 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                         </div>
                     </div>
                     
-                    {/* Additional settings */}
-                    <div className="space-y-2">
+                    {/* Account section with Google Sign-In */}
+                    {!user ? (
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold px-1 block text-zinc-400">ACCOUNT</label>
+                        <button className="group relative flex items-center justify-center w-full gap-2 p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] bg-white text-black hover:bg-zinc-100">
+                          <GoogleIcon className="h-4 w-4" />
+                          <span>Sign in with Google</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
                         <label className="text-xs font-bold px-1 block text-zinc-400">ACCOUNT</label>
                         <button className="group relative flex items-center justify-between w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] text-zinc-300 hover:bg-zinc-900/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
                             <div className="flex items-center gap-3">
@@ -239,7 +256,9 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                             </div>
                             <ChevronDownIcon className="h-4 w-4 rotate-270" />
                         </button>
-                        <button className="group relative flex items-center justify-between w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] text-zinc-300 hover:bg-zinc-900/30 hover:text-white hover:shadow-lg hover:shadow-purple-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/10 before:to-blue-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
+                        <button 
+                          onClick={onSignOut}
+                          className="group relative flex items-center justify-between w-full p-3 rounded-2xl text-sm font-bold transition-all duration-500 overflow-hidden touch-manipulation active:scale-[0.98] min-h-[44px] text-zinc-300 hover:bg-red-900/30 hover:text-red-400 hover:shadow-lg hover:shadow-red-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-red-500/10 before:to-red-500/10 before:opacity-0 before:transition-all before:group-hover:opacity-100 animate-float-glow">
                             <div className="flex items-center gap-3">
                                 <LogOutIcon className="h-4 w-4" />
                                 <span>Sign Out</span>
@@ -247,6 +266,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
                             <ChevronDownIcon className="h-4 w-4 rotate-270" />
                         </button>
                     </div>
+                    )}
                     
                     {isEditing ? (
                         <div className="space-y-3 pt-2 animate-in slide-in-from-bottom-1 duration-300">
@@ -281,7 +301,7 @@ const ProfileSettings: React.FC<Pick<SidebarProps, 'theme' | 'setTheme' | 'highl
     );
 };
 
-const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, theme, setTheme, highlightTheme, setHighlightTheme, currentView, onViewChange }) => {
+const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, theme, setTheme, highlightTheme, setHighlightTheme, currentView, onViewChange, isMobile, user, onSignOut }) => {
   const handleNewChatClick = () => {
     onNewChat();
     onViewChange('chat');
@@ -347,6 +367,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({ onNewChat, isOpen, onClose, 
         setTheme={setTheme}
         highlightTheme={highlightTheme}
         setHighlightTheme={setHighlightTheme}
+        user={user}
+        onSignOut={onSignOut}
       />
     </aside>
   );

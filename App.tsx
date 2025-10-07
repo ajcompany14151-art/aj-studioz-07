@@ -581,6 +581,23 @@ const App: React.FC = () => {
       input[type="text"], input[type="email"], textarea {
         font-size: 16px !important;
       }
+      /* Add smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+      /* Prevent text selection on double tap */
+      * {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      input, textarea {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
     `}</style>
   );
 
@@ -649,7 +666,8 @@ const App: React.FC = () => {
               <div className="w-6"></div>
           </header>
 
-          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 sm:px-10 flex flex-col relative z-10">
+          {/* Main content area with bottom padding for floating input */}
+          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 sm:px-10 flex flex-col relative z-10 pb-32">
             {currentView === 'chat' ? (
               messages.length === 0 ? (
                 <ChatWelcome onPromptClick={handlePromptClick} />
@@ -695,12 +713,12 @@ const App: React.FC = () => {
               />
             )}
           </main>
-          {currentView === 'chat' && (
-              <footer className="w-full border-t transition-all duration-500 relative z-10 bg-black/95 border-zinc-700/30 backdrop-blur-2xl">
-                <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
-              </footer>
-          )}
         </div>
+
+        {/* Floating Input */}
+        {currentView === 'chat' && (
+          <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
+        )}
       </div>
     </ErrorBoundary>
   );

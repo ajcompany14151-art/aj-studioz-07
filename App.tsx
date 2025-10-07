@@ -16,7 +16,7 @@ import { TrashIcon } from './components/icons/TrashIcon';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { XIcon } from './components/icons/XIcon';
 
-// Enhanced Explore view with more sophisticated design
+// Placeholder for Explore view with enhancement
 const ExploreView: React.FC = () => (
   <div className="flex items-center justify-center h-full p-4 sm:p-6">
     <div className="text-center max-w-md bg-black/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full transform transition-all duration-500 hover:scale-[1.02]">
@@ -37,7 +37,7 @@ const ExploreView: React.FC = () => (
   </div>
 );
 
-// Enhanced Chat History view with better mobile experience
+// Functional Chat History view with search enhancement
 const HistoryView: React.FC<{ 
   chats: SavedChat[]; 
   onLoad: (chatId: string) => void;
@@ -120,7 +120,7 @@ const HistoryView: React.FC<{
                 onClick={() => handleDelete(chat.id)}
                 aria-label={`Delete chat: ${chat.name}`}
                 title="Delete chat"
-                className="self-start sm:self-auto ml-0 sm:ml-4 p-3 flex-shrink-0 rounded-xl text-zinc-500 hover:bg-red-900/50 hover:text-red-400 transition-all opacity-0 group-hover:opacity-100 active:scale-95 min-w-[44px] h-[44px] flex items-center justify-center"
+                className="self-start sm:self-auto ml-0 sm:ml-4 p-3 flex-shrink-0 rounded-xl text-zinc-500 hover:bg-red-900/50 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 active:scale-95 min-w-[44px] h-[44px] flex items-center justify-center"
                 disabled={isDeleting === chat.id}
               >
                 {isDeleting === chat.id ? (
@@ -209,18 +209,31 @@ const App: React.FC = () => {
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isMobile, setIsMobile] = useState(false);
 
   const chatSessionRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
 
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Effect to lock premium dark theme
   useEffect(() => {
     document.documentElement.classList.add('dark', 'premium-dark');
     localStorage.setItem('app-theme', 'dark');
 
-    // Mobile: Add viewport meta if not present (via dynamic script for SSR safety)
+    // Mobile: Add viewport meta if not present
     if (typeof document !== 'undefined') {
       let viewport = document.querySelector('meta[name="viewport"]');
       if (!viewport) {
@@ -273,13 +286,13 @@ const App: React.FC = () => {
 
   // Effect to focus chat input when the chat view becomes active
   useEffect(() => {
-    if (currentView === 'chat') {
+    if (currentView === 'chat' && !isMobile) {
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-      }, 150); // Slightly longer for mobile keyboard
+      }, 150);
       return () => clearTimeout(timer);
     }
-  }, [currentView]);
+  }, [currentView, isMobile]);
 
   // Effect for code highlight theme
   useEffect(() => {
@@ -315,7 +328,7 @@ const App: React.FC = () => {
 
   // Prevent body scroll when sidebar open on mobile
   useEffect(() => {
-    if (isSidebarOpen) {
+    if (isSidebarOpen && isMobile) {
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
       document.body.style.width = '100%';
@@ -329,17 +342,25 @@ const App: React.FC = () => {
       document.body.style.position = ''; 
       document.body.style.width = ''; 
     };
-  }, [isSidebarOpen]);
+  }, [isSidebarOpen, isMobile]);
 
-  // Mobile: Handle keyboard avoidance - adjust padding when input focused
+  // Mobile: Handle keyboard avoidance
   useEffect(() => {
     const handleFocus = () => {
-      if (window.innerWidth < 768) { // Mobile
-        document.body.style.paddingBottom = '200px'; // Space for keyboard
+      if (isMobile) {
+        // Only add padding if keyboard is actually visible
+        const visualViewport = (window as any).visualViewport;
+        if (visualViewport) {
+          const keyboardHeight = window.innerHeight - visualViewport.height;
+          if (keyboardHeight > 150) {
+            document.body.style.paddingBottom = `${keyboardHeight}px`;
+          }
+        }
       }
     };
+    
     const handleBlur = () => {
-      if (window.innerWidth < 768) {
+      if (isMobile) {
         document.body.style.paddingBottom = '';
       }
     };
@@ -356,7 +377,7 @@ const App: React.FC = () => {
         textarea.removeEventListener('blur', handleBlur);
       }
     };
-  }, []);
+  }, [isMobile]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -409,9 +430,12 @@ const App: React.FC = () => {
       });
     } finally {
       setIsLoading(false);
-      inputRef.current?.focus();
+      // Only focus on desktop
+      if (!isMobile) {
+        inputRef.current?.focus();
+      }
     }
-  }, [input, isLoading, currentChatId]);
+  }, [input, isLoading, currentChatId, isMobile]);
 
   const handleSaveChat = useCallback((name: string) => {
     const newChat: SavedChat = {
@@ -495,7 +519,7 @@ const App: React.FC = () => {
 
   // Online status indicator
   const OnlineStatus = () => (
-    <div className={`fixed bottom-4 left-4 z-50 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 transition-all duration-300 ${isOnline ? 'bg-green-900/70 text-green-300' : 'bg-red-900/70 text-red-300'} backdrop-blur-xl`}>
+    <div className={`fixed bottom-4 left-4 z-50 px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 transition-all duration-300 ${isOnline ? 'bg-green-900/70 text-green-300' : 'bg-red-900/70 text-red-300'} backdrop-blur-xl`}>
       <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}></div>
       {isOnline ? 'Online' : 'Offline'}
     </div>
@@ -527,6 +551,11 @@ const App: React.FC = () => {
       @media (max-width: 768px) {
         body {
           overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+        }
+        /* Fix iOS Safari scrolling */
+        .overflow-y-auto {
+          -webkit-overflow-scrolling: touch;
         }
       }
       /* Mobile: Touch target min size */
@@ -547,6 +576,10 @@ const App: React.FC = () => {
       }
       ::-webkit-scrollbar-thumb:hover {
         background: rgba(139, 92, 246, 0.7);
+      }
+      /* Fix iOS input zoom */
+      input[type="text"], input[type="email"], textarea {
+        font-size: 16px !important;
       }
     `}</style>
   );

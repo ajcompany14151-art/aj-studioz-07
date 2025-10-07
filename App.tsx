@@ -16,18 +16,18 @@ import { TrashIcon } from './components/icons/TrashIcon';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { XIcon } from './components/icons/XIcon';
 
-// Enhanced Explore view with Grok-like interactive elements and mobile optimization
-const ExploreView: React.FC = () => (
+// Enhanced Explore view: Balanced for mobile (compact) and laptop (spacious, interactive)
+const ExploreView: React.FC<{ isMobile: boolean }> = ({ isMobile }) => (
   <div className="flex items-center justify-center h-full p-4 sm:p-6 min-h-0">
-    <div className="text-center max-w-md bg-black/90 backdrop-blur-xl rounded-3xl p-4 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full transform transition-all duration-500 hover:scale-[1.02] md:hover:scale-100">
-      <div className="relative inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 mx-auto">
+    <div className={`text-center max-w-md lg:max-w-lg bg-black/90 backdrop-blur-xl rounded-3xl p-4 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full transform transition-all duration-500 ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.02]'} ${!isMobile ? 'cursor-pointer' : ''}`}>
+      <div className="relative inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mb-4 sm:mb-6 mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-70 animate-pulse"></div>
-        <div className="relative bg-black/80 rounded-full p-3 sm:p-4 border border-zinc-700/50 flex-shrink-0">
-          <SearchIcon className="h-8 w-8 sm:h-12 sm:w-12 text-purple-400" />
+        <div className="relative bg-black/80 rounded-full p-3 sm:p-4 lg:p-5 border border-zinc-700/50 flex-shrink-0">
+          <SearchIcon className="h-8 w-8 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-purple-400" />
         </div>
       </div>
-      <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Explore Creative Sparks</h2>
-      <p className="text-zinc-400 leading-relaxed text-sm sm:text-base">Discover design prompts, video templates, and branding ideas. Powered by AJ Studioz AI—coming soon with semantic search.</p>
+      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Explore Creative Sparks</h2>
+      <p className="text-zinc-400 leading-relaxed text-sm sm:text-base lg:text-lg">Discover design prompts, video templates, and branding ideas. Powered by AJ Studioz AI—coming soon with semantic search.</p>
       <div className="mt-4 sm:mt-6 flex justify-center space-x-2">
         <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse"></div>
         <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse delay-75"></div>
@@ -37,7 +37,7 @@ const ExploreView: React.FC = () => (
   </div>
 );
 
-// Enhanced HistoryView with better mobile search and swipe gestures hint
+// Enhanced HistoryView: Mobile swipe hints, laptop hovers with shadows
 const HistoryView: React.FC<{ 
   chats: SavedChat[]; 
   onLoad: (chatId: string) => void;
@@ -52,15 +52,15 @@ const HistoryView: React.FC<{
   if (chats.length === 0) {
     return (
       <div className="flex items-center justify-center h-full p-4 sm:p-6 min-h-0">
-        <div className="text-center bg-black/90 backdrop-blur-xl rounded-3xl p-4 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full max-w-md transform transition-all duration-500">
-          <div className="relative inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 mx-auto">
+        <div className="text-center bg-black/90 backdrop-blur-xl rounded-3xl p-4 sm:p-8 border border-zinc-700/30 shadow-2xl shadow-black/50 w-full max-w-md lg:max-w-lg transform transition-all duration-500">
+          <div className="relative inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mb-4 sm:mb-6 mx-auto">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-xl opacity-70 animate-pulse"></div>
-            <div className="relative bg-black/80 rounded-full p-3 sm:p-4 border border-zinc-700/50 flex-shrink-0">
-              <HistoryIcon className="h-8 w-8 sm:h-12 sm:w-12 text-purple-400" />
+            <div className="relative bg-black/80 rounded-full p-3 sm:p-4 lg:p-5 border border-zinc-700/50 flex-shrink-0">
+              <HistoryIcon className="h-8 w-8 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-purple-400" />
             </div>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">No Saved Designs</h2>
-          <p className="text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed text-sm sm:text-base">Start a creative chat and save it here for later inspiration.</p>
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">No Saved Designs</h2>
+          <p className="text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed text-sm sm:text-base lg:text-lg">Start a creative chat and save it here for later inspiration.</p>
           {isMobile && (
             <p className="text-xs text-zinc-500 mt-2">Swipe left on chats to delete</p>
           )}
@@ -100,8 +100,8 @@ const HistoryView: React.FC<{
   return (
     <div className="flex flex-col h-full bg-black min-h-0">
       <header className="p-4 sm:px-10 border-b border-zinc-700/30 sticky top-0 bg-black/90 backdrop-blur-xl z-10">
-        <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Design History</h2>
-        <p className="text-zinc-400 mb-4 text-sm sm:text-base">Load or archive your saved sessions.</p>
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Design History</h2>
+        <p className="text-zinc-400 mb-4 text-sm sm:text-base lg:text-lg">Load or archive your saved sessions.</p>
         <div className="relative mb-4">
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
           <input
@@ -116,7 +116,7 @@ const HistoryView: React.FC<{
       <div className="flex-grow overflow-y-auto p-4 sm:p-10 min-h-0">
         <ul className="space-y-3">
           {filteredChats.sort((a, b) => b.timestamp - a.timestamp).map(chat => (
-            <li key={chat.id} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-black/70 border border-zinc-700/30 transition-all hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-xl transform hover:scale-[1.01] md:hover:scale-100 relative overflow-hidden">
+            <li key={chat.id} className={`group flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-6 rounded-2xl bg-black/70 border border-zinc-700/30 transition-all backdrop-blur-xl relative overflow-hidden ${isMobile ? 'transform hover:scale-100' : 'hover:shadow-lg hover:shadow-purple-500/20 transform hover:scale-[1.01] cursor-pointer'}`}>
               {/* Mobile swipe delete overlay */}
               {isMobile && (
                 <div className="absolute inset-0 bg-red-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end pr-4">
@@ -129,7 +129,7 @@ const HistoryView: React.FC<{
                 className="flex-grow text-left overflow-hidden touch-manipulation active:scale-[0.98] w-full sm:w-auto mb-2 sm:mb-0 min-h-[44px] flex items-center"
                 aria-label={`Load design: ${chat.name}`}
               >
-                <p className="font-bold text-white truncate text-sm sm:text-base">{chat.name}</p>
+                <p className="font-bold text-white truncate text-sm sm:text-base lg:text-lg">{chat.name}</p>
                 <p className="text-xs text-zinc-400 mt-1">{formatTimestamp(chat.timestamp)}</p>
               </button>
               <button
@@ -152,7 +152,7 @@ const HistoryView: React.FC<{
               <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-black/50 border border-zinc-700/50 mx-auto">
                 <SearchIcon className="h-8 w-8 text-zinc-500" />
               </div>
-              <p className="text-sm">No designs found matching "{searchTerm}"</p>
+              <p className="text-sm lg:text-base">No designs found matching "{searchTerm}"</p>
             </li>
           )}
         </ul>
@@ -161,7 +161,7 @@ const HistoryView: React.FC<{
   );
 };
 
-// AJ Studioz-specific suggested prompts (creative focus)
+// AJ Studioz-specific suggested prompts: Mobile stacks vertically, laptop grids with hovers
 const SUGGESTED_PROMPTS = [
   { title: "Logo Magic", prompt: "Design a modern logo for a sustainable fashion brand.", icon: "🎨" },
   { title: "Video Vision", prompt: "Storyboard a 30-second promo video for a tech gadget.", icon: "📹" },
@@ -175,10 +175,10 @@ const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void; isMo
       <button
         key={title}
         onClick={() => onPromptClick(prompt)}
-        className="p-4 sm:p-6 bg-black/70 border border-zinc-700/30 rounded-2xl text-left hover:bg-zinc-900/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] min-h-[100px] sm:min-h-[120px] transform hover:scale-[1.02] md:hover:scale-100 group min-h-[44px] flex flex-col justify-between"
+        className={`p-4 sm:p-6 bg-black/70 border border-zinc-700/30 rounded-2xl text-left transition-all backdrop-blur-xl touch-manipulation active:scale-[0.98] min-h-[100px] sm:min-h-[120px] transform ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 cursor-pointer'} group min-h-[44px] flex flex-col justify-between`}
       >
         <div className="flex items-start gap-3">
-          <div className="text-2xl sm:text-3xl mb-2 group-hover:scale-110 transition-transform flex-shrink-0 mt-1">{icon}</div>
+          <div className={`text-2xl sm:text-3xl mb-2 group-hover:scale-110 transition-transform flex-shrink-0 mt-1 ${!isMobile ? 'cursor-pointer' : ''}`}>{icon}</div>
           <div className="flex-1 min-w-0">
             <p className="font-bold text-white text-sm mb-2 truncate">{title}</p>
             <p className="text-zinc-400 leading-relaxed text-xs sm:text-sm overflow-hidden line-clamp-3">{prompt}</p>
@@ -191,20 +191,20 @@ const SuggestedPrompts: React.FC<{ onPromptClick: (prompt: string) => void; isMo
 
 const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void; isMobile: boolean }> = ({ onPromptClick, isMobile }) => (
   <div className="flex-grow flex items-center justify-center px-4 min-h-0 pt-4 sm:pt-0">
-    <div className="text-center w-full max-w-2xl">
-      <div className="inline-block p-4 sm:p-6 bg-black/90 border border-zinc-700/30 rounded-3xl mb-4 sm:mb-6 backdrop-blur-xl shadow-2xl shadow-black/50 transform transition-all duration-500 hover:scale-[1.02] mx-auto">
+    <div className="text-center w-full max-w-2xl lg:max-w-3xl">
+      <div className={`inline-block p-4 sm:p-6 bg-black/90 border border-zinc-700/30 rounded-3xl mb-4 sm:mb-6 backdrop-blur-xl shadow-2xl shadow-black/50 transform transition-all duration-500 ${isMobile ? 'hover:scale-100' : 'hover:scale-[1.02]'} mx-auto`}>
         <div className="relative p-1 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 animate-pulse">
           <div className="p-2 sm:p-3 bg-black rounded-full">
             <img 
               src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
               alt="AJ Studioz Logo" 
-              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover"
+              className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-full object-cover"
             />
           </div>
         </div>
       </div>
-      <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2 tracking-tight animate-in fade-in duration-500 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Ready to Create?</h1>
-      <p className="text-zinc-400 mb-6 sm:mb-8 max-w-md mx-auto leading-relaxed text-sm sm:text-base">Spark your next project with AJ Studioz AI. Pick a prompt or dream big.</p>
+      <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 tracking-tight animate-in fade-in duration-500 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Ready to Create?</h1>
+      <p className="text-zinc-400 mb-6 sm:mb-8 max-w-md mx-auto leading-relaxed text-sm sm:text-base lg:text-lg">Spark your next project with AJ Studioz AI. Pick a prompt or dream big.</p>
       <SuggestedPrompts onPromptClick={onPromptClick} isMobile={isMobile} />
     </div>
   </div>
@@ -550,7 +550,7 @@ const App: React.FC = () => {
     </div>
   );
 
-  // Enhanced GlobalStyles with more mobile optimizations
+  // Enhanced GlobalStyles with balanced mobile/laptop optimizations
   const GlobalStyles = () => (
     <style jsx global>{`
       @keyframes float-glow {
@@ -589,6 +589,12 @@ const App: React.FC = () => {
           --safe-area-inset-bottom: env(safe-area-inset-bottom);
         }
         header { padding-top: var(--safe-area-inset-top, 0); }
+      }
+      /* Laptop: Enhanced hovers and cursors */
+      @media (min-width: 1024px) {
+        .hover\\:shadow-xl:hover {
+          box-shadow: 0 35px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.2);
+        }
       }
       /* Touch target min size enhanced */
       button, [role="button"], .touch-target {
@@ -717,12 +723,12 @@ const App: React.FC = () => {
           </header>
 
           {/* Main content with dynamic bottom padding for input/keyboard */}
-          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 sm:px-10 flex flex-col relative z-10 pb-28 sm:pb-32" style={{ paddingBottom: isMobile ? 'env(safe-area-inset-bottom)' : '0' }}>
+          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 sm:px-10 lg:px-20 flex flex-col relative z-10 pb-28 sm:pb-32" style={{ paddingBottom: isMobile ? 'env(safe-area-inset-bottom)' : '0' }}>
             {currentView === 'chat' ? (
               messages.length === 0 ? (
                 <ChatWelcome onPromptClick={handlePromptClick} isMobile={isMobile} />
               ) : (
-                <div className="max-w-4xl mx-auto w-full pt-4 space-y-0">
+                <div className="max-w-4xl lg:max-w-5xl mx-auto w-full pt-4 space-y-0">
                   {messages.map((msg, index) => {
                     const isTypingPlaceholder = isLoading && index === messages.length - 1 && msg.role === MessageRole.MODEL && msg.content === '';
                     if (isTypingPlaceholder) return null;
@@ -754,7 +760,7 @@ const App: React.FC = () => {
                 </div>
               )
             ) : currentView === 'explore' ? (
-              <ExploreView />
+              <ExploreView isMobile={isMobile} />
             ) : (
               <HistoryView 
                 chats={savedChats}

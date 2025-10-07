@@ -6,7 +6,7 @@ import { AJStudiozIcon } from './icons/AJStudiozIcon';
 import { CodeBlock } from './CodeBlock';
 import { WandIcon } from './icons/WandIcon';
 import { XIcon } from './icons/XIcon';
-import { TypingIndicator } from './TypingIndicator';
+import TypingIndicator from './TypingIndicator'; // Changed from named to default import
 import { CopyIcon } from './icons/CopyIcon';
 import { CheckIcon } from './icons/CheckIcon';
 

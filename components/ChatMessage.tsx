@@ -9,9 +9,8 @@ import { XIcon } from './icons/XIcon';
 import { TypingIndicator } from './TypingIndicator';
 import { CopyIcon } from './icons/CopyIcon';
 import { CheckIcon } from './icons/CheckIcon';
-import { ThumbsUpIcon } from './icons/ThumbsUpIcon';
-import { ThumbsDownIcon } from './icons/ThumbsDownIcon';
 import { ShareIcon } from './icons/ShareIcon';
+import { ThumbsUpIcon, ThumbsDownIcon } from './icons/CustomIcons';
 
 // This informs TypeScript that 'marked' is a global variable provided by the script in index.html
 declare var marked: any;

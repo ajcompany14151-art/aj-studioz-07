@@ -240,6 +240,32 @@ const ChatWelcome: React.FC<{ onPromptClick: (prompt: string) => void; isMobile:
   );
 };
 
+// Enhanced AJ Loading Indicator
+const AJLoadingIndicator: React.FC<{ theme: string }> = ({ theme }) => {
+  const config = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.dark;
+  
+  return (
+    <div className="flex flex-col items-center justify-center py-8">
+      <div className="relative mb-4">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
+          <img 
+            src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
+            alt="AJ Studioz Logo" 
+            className="h-10 w-10 rounded-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 animate-ping opacity-75"></div>
+      </div>
+      <div className="flex items-center gap-1 mb-2">
+        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+      </div>
+      <p className={`text-sm font-medium ${config.textSecondary}`}>AJ is thinking...</p>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -258,7 +284,6 @@ const App: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const chatSessionRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -842,17 +867,7 @@ const App: React.FC = () => {
                   })}
 
                   {isLoading && messages.length > 0 && messages[messages.length - 1].content === '' && (
-                      <div className="py-6 px-2">
-                          <div className="flex items-start gap-4">
-                              <div className={`flex-shrink-0 w-8 h-8 rounded-full border ${currentThemeConfig.border} flex items-center justify-center backdrop-blur-xl ${currentThemeConfig.bgSecondary}`}>
-                                  <AJStudiozIcon className="h-5 w-5 text-white"/>
-                              </div>
-                              <div className="flex items-center gap-2 pt-1.5">
-                                  <SpinnerIcon className="h-5 w-5 animate-spin text-purple-400" />
-                                  <span className="text-sm font-medium text-white">AJ is ideating...</span>
-                              </div>
-                          </div>
-                      </div>
+                      <AJLoadingIndicator theme={theme} />
                   )}
                 </div>
               )

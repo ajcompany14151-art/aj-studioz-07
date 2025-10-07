@@ -76,8 +76,8 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
       // Reset height to auto to get the correct scrollHeight
       textarea.style.height = 'auto';
       const scrollHeight = textarea.scrollHeight;
-      // Responsive max height
-      const maxHeight = isExpanded ? (isMobile ? 200 : 300) : (isMobile ? 120 : 200);
+      // Responsive max height - shorter for Grok-like design
+      const maxHeight = isExpanded ? (isMobile ? 150 : 200) : (isMobile ? 80 : 120);
       textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
       textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
@@ -160,40 +160,35 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         ref={inputContainerRef}
         className={`
           relative mx-auto max-w-4xl pointer-events-auto transition-all duration-300 ease-out
-          ${isFocused ? 'scale-[1.02]' : 'scale-100'}
+          ${isFocused ? 'scale-[1.01]' : 'scale-100'}
         `}
         style={{
           marginBottom: isMobile ? `${keyboardHeight}px` : '0',
           paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 0px)' : '0'
         }}
       >
-        {/* Glassmorphism floating input container with Grok-inspired AJ flair */}
+        {/* Grok-inspired compact input container */}
         <div 
           className={`
-            relative flex items-end gap-2 p-4
-            bg-black/40 backdrop-blur-xl
-            border border-white/10
-            rounded-3xl
-            shadow-2xl
+            relative flex items-center gap-2 p-3
+            bg-zinc-900/80 backdrop-blur-xl
+            border border-zinc-800/50
+            rounded-xl
+            shadow-lg
             transition-all duration-300
             ${isFocused 
-              ? 'bg-black/60 border-white/20 shadow-[0_0_30px_rgba(139,92,246,0.3)]' 
-              : 'hover:bg-black/50 hover:border-white/15 hover:shadow-[0_0_20px_rgba(139,92,246,0.2)]'
+              ? 'bg-zinc-900/90 border-zinc-700/50 shadow-[0_0_20px_rgba(139,92,246,0.2)]' 
+              : 'hover:bg-zinc-900/85 hover:border-zinc-800/60 hover:shadow-md'
             }
-            ${isExpanded ? 'rounded-t-3xl' : 'rounded-3xl'}
+            ${isExpanded ? 'rounded-t-xl' : 'rounded-xl'}
           `}
-          style={{
-            background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-          }}
         >
           {/* Animated gradient border */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 opacity-0 transition-opacity duration-300" 
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-purple-500/10 opacity-0 transition-opacity duration-300" 
                style={{
                  background: isFocused 
-                   ? 'linear-gradient(90deg, rgba(139,92,246,0.3) 0%, rgba(59,130,246,0.3) 50%, rgba(139,92,246,0.3) 100%)' 
-                   : 'linear-gradient(90deg, rgba(139,92,246,0.1) 0%, rgba(59,130,246,0.1) 50%, rgba(139,92,246,0.1) 100%)',
+                   ? 'linear-gradient(90deg, rgba(139,92,246,0.2) 0%, rgba(59,130,246,0.2) 50%, rgba(139,92,246,0.2) 100%)' 
+                   : 'linear-gradient(90deg, rgba(139,92,246,0.05) 0%, rgba(59,130,246,0.05) 50%, rgba(139,92,246,0.05) 100%)',
                  filter: 'blur(1px)',
                  zIndex: -1,
                }}
@@ -203,11 +198,11 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           <button
               aria-label="Attach file"
               title="Attach file (coming soon)"
-              className="p-2.5 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
+              className="p-2 text-zinc-500 hover:text-white/90 transition-all duration-300 rounded-lg flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
               onTouchStart={(e) => e.preventDefault()}
           >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-2xl"></div>
-              <PaperclipIcon className="h-5 w-5 relative z-10 group-hover:scale-110 transition-transform duration-200" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg"></div>
+              <PaperclipIcon className="h-4 w-4 relative z-10 group-hover:scale-110 transition-transform duration-200" />
           </button>
 
           <div className="relative flex-1 min-w-0">
@@ -218,16 +213,16 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
               onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={1}
-              placeholder="Design your vision with AJ Studioz..."
+              placeholder="Ask anything..."
               className={`
                 flex-1 bg-transparent text-white resize-none 
                 focus:outline-none focus:placeholder-transparent
                 disabled:cursor-not-allowed
-                placeholder-zinc-400 text-base leading-relaxed
-                py-2.5 px-4
-                min-h-[24px]
+                placeholder-zinc-500 text-base leading-relaxed
+                py-2 px-3
+                min-h-[20px]
                 ${isFocused ? 'text-white' : 'text-zinc-100'}
-                ${isMobile ? 'text-lg' : ''}
+                ${isMobile ? 'text-base' : ''}
               `}
               disabled={isLoading}
               aria-label="Chat input"
@@ -240,7 +235,7 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             
             {/* Character count indicator - only show when approaching limit */}
             {charCount > maxChars * 0.8 && (
-              <div className={`absolute bottom-2 right-2 text-xs transition-all duration-300 ${
+              <div className={`absolute bottom-1 right-1 text-xs transition-all duration-300 ${
                 charCount > maxChars * 0.9 ? 'text-red-400' : 'text-zinc-500'
               }`}>
                 {charCount}/{maxChars}
@@ -252,12 +247,12 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
           <button
               aria-label="Use voice mode"
               title="Voice mode (coming soon—whisper your ideas!)"
-              className="p-2.5 text-zinc-400 hover:text-white/90 transition-all duration-300 rounded-2xl flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
+              className="p-2 text-zinc-500 hover:text-white/90 transition-all duration-300 rounded-lg flex-shrink-0 cursor-not-allowed opacity-60 group hover:opacity-100 relative overflow-hidden"
               onTouchStart={(e) => e.preventDefault()}
           >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-2xl"></div>
-              <MicIcon className="h-5 w-5 relative z-10 group-hover:scale-110 transition-transform duration-200" />
-              <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg"></div>
+              <MicIcon className="h-4 w-4 relative z-10 group-hover:scale-110 transition-transform duration-200" />
+              <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
           </button>
 
           {/* Enhanced send button with Grok sparkle */}
@@ -266,27 +261,27 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
             disabled={isDisabled}
             aria-label={isLoading ? "Sending..." : "Send to AJ Studioz"}
             className={`
-              p-2.5 rounded-2xl transition-all duration-300 transform flex-shrink-0 relative overflow-hidden group
+              p-2 rounded-lg transition-all duration-300 transform flex-shrink-0 relative overflow-hidden group
               ${isDisabled
                 ? 'text-zinc-600 cursor-not-allowed opacity-50'
-                : 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 text-white hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 hover:scale-110 active:scale-95 shadow-lg'
+                : 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 text-white hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 hover:scale-105 active:scale-95'
               }
             `}
             onTouchStart={(e) => !isDisabled && e.preventDefault()}
           >
             {/* Ripple effect */}
-            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-2xl"></div>
+            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg"></div>
             
             {/* Enhanced icon with rotation effect */}
             <div className="relative z-10">
               {isLoading ? (
-                <div className="h-5 w-5 flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <div className="h-4 w-4 flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                 </div>
               ) : (
                 <>
-                  <SendIcon className="h-5 w-5 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
-                  <SparklesIcon className="h-3 w-3 absolute -top-1 -right-1 text-yellow-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
+                  <SendIcon className="h-4 w-4 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
+                  <SparklesIcon className="h-2.5 w-2.5 absolute -top-0.5 -right-0.5 text-yellow-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
                 </>
               )}
             </div>
@@ -295,9 +290,9 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         
         {/* Floating suggestions with Grok-AJ theme: Witty header, smooth hovers */}
         {showSuggestions && !isMobile && value.length === 0 && !isLoading && (
-          <div className="absolute bottom-full left-0 right-0 mb-3 p-4 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="mx-auto max-w-4xl bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-xl flex items-center gap-2 mb-2">
-              <AJIcon className="h-4 w-4 text-purple-400" />
+          <div className="absolute bottom-full left-0 right-0 mb-2 p-3 animate-in slide-in-from-bottom-2 duration-300">
+            <div className="mx-auto max-w-4xl bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-xl p-2 shadow-lg flex items-center gap-2 mb-2">
+              <AJIcon className="h-3.5 w-3.5 text-purple-400" />
               <span className="text-xs text-zinc-400">Spark your creativity with AJ Studioz:</span>
             </div>
             <div className="mx-auto max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -308,9 +303,9 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
                     onChange(suggestion.text);
                     setShowSuggestions(false);
                   }}
-                  className="flex items-center gap-2 p-2 rounded-xl bg-black/40 hover:bg-black/60 transition-all duration-200 text-left group border border-white/5 hover:shadow-md hover:shadow-purple-500/20 transform hover:scale-[1.02]"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-zinc-900/60 hover:bg-zinc-900/80 transition-all duration-200 text-left group border border-zinc-800/30 hover:shadow-md hover:shadow-purple-500/20 transform hover:scale-[1.02]"
                 >
-                  <span className="text-lg">{suggestion.icon}</span>
+                  <span className="text-base">{suggestion.icon}</span>
                   <span className="text-xs text-zinc-300 group-hover:text-white truncate">{suggestion.text}</span>
                 </button>
               ))}
@@ -322,10 +317,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         {!isExpanded && (
           <button
             onClick={() => setIsExpanded(true)}
-            className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-xl border border-white/10 rounded-full p-1.5 text-zinc-400 hover:text-white transition-all duration-200"
+            className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-full p-1 text-zinc-500 hover:text-white transition-all duration-200"
             aria-label="Expand input"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -335,10 +330,10 @@ const ChatInputComponent = forwardRef<HTMLTextAreaElement, ChatInputProps>(({ va
         {isExpanded && (
           <button
             onClick={() => setIsExpanded(false)}
-            className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-xl border border-white/10 rounded-full p-1.5 text-zinc-400 hover:text-white transition-all duration-200"
+            className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-full p-1 text-zinc-500 hover:text-white transition-all duration-200"
             aria-label="Collapse input"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
             </svg>
           </button>

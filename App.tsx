@@ -15,6 +15,7 @@ import { SaveChatModal } from './components/SaveChatModal';
 import { TrashIcon } from './components/icons/TrashIcon';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { XIcon } from './components/icons/XIcon';
+import { GoogleIcon } from './components/icons/GoogleIcon';
 
 // Enhanced Explore view: Balanced for mobile (compact) and laptop (spacious, interactive)
 const ExploreView: React.FC<{ isMobile: boolean }> = ({ isMobile }) => (
@@ -227,6 +228,9 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isMobile, setIsMobile] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const chatSessionRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -323,6 +327,25 @@ const App: React.FC = () => {
     localStorage.setItem('hljs-theme', highlightTheme);
   }, [highlightTheme]);
 
+  // Enhanced keyboard height detection for mobile
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const handleVisualViewportChange = () => {
+      const viewport = (window as any).visualViewport;
+      if (viewport) {
+        const heightDiff = window.innerHeight - viewport.height;
+        setKeyboardHeight(heightDiff > 150 ? heightDiff : 0);
+      }
+    };
+    
+    const viewport = (window as any).visualViewport;
+    if (viewport) {
+      viewport.addEventListener('resize', handleVisualViewportChange);
+      return () => viewport.removeEventListener('resize', handleVisualViewportChange);
+    }
+  }, [isMobile]);
+
   const scrollToBottom = useCallback((behavior: 'smooth' | 'auto') => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -368,41 +391,32 @@ const App: React.FC = () => {
     };
   }, [isSidebarOpen, isMobile]);
 
-  // Advanced mobile keyboard avoidance with visualViewport
-  useEffect(() => {
-    const handleResize = () => {
-      if (isMobile) {
-        const visualViewport = (window as any).visualViewport;
-        if (visualViewport) {
-          const keyboardHeight = window.innerHeight - visualViewport.height;
-          if (keyboardHeight > 100) { // Threshold for actual keyboard
-            document.body.style.paddingBottom = `${keyboardHeight + 20}px`; // Extra for input
-            scrollToBottom('auto'); // Auto-scroll on resize
-          } else {
-            document.body.style.paddingBottom = '';
-          }
-        }
-      }
-    };
-
-    const handleFocus = () => {
-      setTimeout(handleResize, 0);
-    };
-
-    const textarea = inputRef.current;
-    if (textarea) {
-      textarea.addEventListener('focus', handleFocus);
-      window.addEventListener('resize', handleResize);
+  // Google Sign-In functionality
+  const handleGoogleSignIn = async () => {
+    setIsGoogleSignInLoading(true);
+    try {
+      // This is a placeholder for Google Sign-In implementation
+      // In a real app, you would use the Google Sign-In library or Firebase Auth
+      // For now, we'll simulate a successful sign-in
+      setTimeout(() => {
+        setUser({
+          name: 'Alex Jordan',
+          email: 'alex.jordan@ajstudioz.com',
+          photoUrl: 'https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e'
+        });
+        setIsGoogleSignInLoading(false);
+      }, 1000);
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+      setError('Failed to sign in with Google. Please try again.');
+      setIsGoogleSignInLoading(false);
     }
+  };
 
-    return () => {
-      if (textarea) {
-        textarea.removeEventListener('focus', handleFocus);
-      }
-      window.removeEventListener('resize', handleResize);
-      document.body.style.paddingBottom = '';
-    };
-  }, [isMobile, scrollToBottom]);
+  const handleSignOut = () => {
+    setUser(null);
+    // In a real app, you would also sign out from Google
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -550,6 +564,42 @@ const App: React.FC = () => {
     </div>
   );
 
+  // Google Sign-In Modal
+  const GoogleSignInModal = () => (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div className="bg-black/90 border border-zinc-700/50 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mb-4">
+            <img 
+              src="https://z-cdn-media.chatglm.cn/files/079b3e92-abfc-4ae5-84aa-f3fb926bfc5c_pasted_image_1759679553935.jpg?auth_key=1791215623-bec51edb33d145949cd4eb868c03460f-0-0dc6f9ab62e0f657961e3774e4e8173e" 
+              alt="AJ Studioz Logo" 
+              className="h-10 w-10 rounded-full object-cover"
+            />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Welcome to AJ Studioz</h2>
+          <p className="text-zinc-400">Sign in to unlock premium features and save your designs</p>
+        </div>
+        
+        <button
+          onClick={handleGoogleSignIn}
+          disabled={isGoogleSignInLoading}
+          className="w-full flex items-center justify-center gap-3 bg-white text-black font-medium py-3 px-4 rounded-xl hover:bg-zinc-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isGoogleSignInLoading ? (
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
+          ) : (
+            <GoogleIcon className="h-5 w-5" />
+          )}
+          Sign in with Google
+        </button>
+        
+        <div className="mt-4 text-center">
+          <p className="text-xs text-zinc-500">By signing in, you agree to our Terms of Service and Privacy Policy</p>
+        </div>
+      </div>
+    </div>
+  );
+
   // Enhanced GlobalStyles with balanced mobile/laptop optimizations
   const GlobalStyles = () => (
     <style jsx global>{`
@@ -689,6 +739,10 @@ const App: React.FC = () => {
               }}
           />
         )}
+        
+        {/* Google Sign-In Modal */}
+        {!user && <GoogleSignInModal />}
+        
         {isSidebarOpen && (
           <div 
             className="fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-2xl"
@@ -707,6 +761,8 @@ const App: React.FC = () => {
           currentView={currentView}
           onViewChange={setCurrentView}
           isMobile={isMobile}
+          user={user}
+          onSignOut={handleSignOut}
         />
         <div className="flex flex-col flex-grow h-screen relative">
           <header className="flex items-center justify-between p-3 border-b md:hidden sticky top-0 backdrop-blur-2xl z-10 transition-all duration-500 bg-black/95 border-zinc-700/30">
@@ -723,7 +779,15 @@ const App: React.FC = () => {
           </header>
 
           {/* Main content with dynamic bottom padding for input/keyboard */}
-          <main ref={chatContainerRef} className="flex-grow overflow-y-auto px-4 sm:px-10 lg:px-20 flex flex-col relative z-10 pb-28 sm:pb-32" style={{ paddingBottom: isMobile ? 'env(safe-area-inset-bottom)' : '0' }}>
+          <main 
+            ref={chatContainerRef} 
+            className="flex-grow overflow-y-auto px-4 sm:px-10 lg:px-20 flex flex-col relative z-10 transition-all duration-300" 
+            style={{ 
+              paddingBottom: isMobile 
+                ? `calc(28px + ${keyboardHeight}px + env(safe-area-inset-bottom, 0px))` 
+                : '0' 
+            }}
+          >
             {currentView === 'chat' ? (
               messages.length === 0 ? (
                 <ChatWelcome onPromptClick={handlePromptClick} isMobile={isMobile} />
@@ -775,7 +839,15 @@ const App: React.FC = () => {
 
         {/* Floating Input - always visible in chat view */}
         {currentView === 'chat' && (
-          <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
+          <div 
+            className="fixed bottom-0 left-0 right-0 z-40 transition-all duration-300"
+            style={{ 
+              marginBottom: isMobile ? `${keyboardHeight}px` : '0',
+              paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 0px)' : '0'
+            }}
+          >
+            <ChatInput ref={inputRef} value={input} onChange={setInput} onSend={() => handleSend()} isLoading={isLoading} />
+          </div>
         )}
       </div>
     </ErrorBoundary>

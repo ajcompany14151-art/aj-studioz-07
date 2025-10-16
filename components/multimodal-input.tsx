@@ -249,7 +249,7 @@ function PureMultimodalInput({
       />
 
       <PromptInput
-        className="group relative rounded-3xl border border-border bg-background p-3 shadow-sm transition-all duration-200 hover:shadow-md focus-within:border-border focus-within:shadow-md sm:p-3.5"
+        className="group relative rounded-xl border border-border bg-background p-2 shadow-sm transition-all duration-200 hover:shadow-md focus-within:border-primary focus-within:shadow-md sm:p-3"
         onSubmit={(event) => {
           event.preventDefault();
           if (status !== "ready") {
@@ -261,7 +261,7 @@ function PureMultimodalInput({
       >
         {(attachments.length > 0 || uploadQueue.length > 0) && (
           <div
-            className="flex flex-row items-end gap-2 overflow-x-scroll"
+            className="flex flex-row items-end gap-2 overflow-x-scroll px-1 pb-2"
             data-testid="attachments-preview"
           >
             {attachments.map((attachment) => (
@@ -292,45 +292,41 @@ function PureMultimodalInput({
             ))}
           </div>
         )}
-        <div className="flex flex-row items-start gap-0.5 sm:gap-1 md:gap-2">
+        <div className="flex flex-row items-end gap-1 sm:gap-2">
+          <AttachmentsButton fileInputRef={fileInputRef} status={status} />
           <PromptInputTextarea
             autoFocus
-            className="grow resize-none border-0! border-none! bg-transparent p-2 text-base leading-relaxed outline-none ring-0 [-ms-overflow-style:none] [scrollbar-width:none] placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-scrollbar]:hidden"
+            className="grow resize-none border-0! bg-transparent px-2 py-2 text-base leading-relaxed outline-none ring-0 [-ms-overflow-style:none] [scrollbar-width:none] placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-scrollbar]:hidden"
             data-testid="multimodal-input"
             disableAutoResize={true}
             maxHeight={200}
-            minHeight={44}
+            minHeight={24}
             onChange={handleInput}
             placeholder="Message AJ..."
             ref={textareaRef}
             rows={1}
             value={input}
-          />{" "}
+          />
           <Context {...contextProps} />
-        </div>
-        <PromptInputToolbar className="!border-top-0 border-t-0! p-0 pt-0.5 shadow-none sm:pt-1 dark:border-0 dark:border-transparent!">
-          <PromptInputTools className="gap-0.5 sm:gap-1 md:gap-1.5">
-            <AttachmentsButton
-              fileInputRef={fileInputRef}
-              status={status}
-            />
-            <ModelSelectorCompact
-              onModelChange={onModelChange}
-              selectedModelId={selectedModelId}
-            />
-          </PromptInputTools>
-
           {status === "submitted" ? (
             <StopButton setMessages={setMessages} stop={stop} />
           ) : (
             <PromptInputSubmit
-              className="size-8 rounded-full bg-foreground text-background transition-all duration-200 hover:bg-foreground/80 disabled:bg-muted disabled:text-muted-foreground"
+              className="size-8 rounded-lg bg-primary text-primary-foreground transition-all duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground"
               disabled={!input.trim() || uploadQueue.length > 0}
               status={status}
             >
               <ArrowUpIcon size={18} />
             </PromptInputSubmit>
           )}
+        </div>
+        <PromptInputToolbar className="!border-top-0 border-t-0! p-0 pt-0.5 shadow-none sm:pt-1 dark:border-0 dark:border-transparent!">
+          <PromptInputTools className="gap-0.5 sm:gap-1 md:gap-1.5">
+            <ModelSelectorCompact
+              onModelChange={onModelChange}
+              selectedModelId={selectedModelId}
+            />
+          </PromptInputTools>
         </PromptInputToolbar>
       </PromptInput>
     </div>
@@ -372,7 +368,7 @@ function PureAttachmentsButton({
 
   return (
     <Button
-      className="aspect-square h-8 rounded-lg p-1.5 transition-all duration-200 hover:bg-accent"
+      className="aspect-square size-8 rounded-full p-1.5 text-muted-foreground transition-all duration-200 hover:bg-muted"
       data-testid="attachments-button"
       disabled={isDisabled}
       onClick={(event) => {
@@ -420,7 +416,7 @@ function PureModelSelectorCompact({
       value={selectedModel?.name}
     >
       <Trigger
-        className="flex h-8 items-center gap-1.5 rounded-lg border-0 bg-background px-2.5 text-sm text-foreground shadow-none transition-all duration-200 hover:bg-accent focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="flex h-8 items-center gap-1.5 rounded-full border bg-background px-2.5 text-sm text-foreground shadow-none transition-all duration-200 hover:bg-muted focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
         type="button"
       >
         <CpuIcon size={16} />
@@ -456,7 +452,7 @@ function PureStopButton({
 }) {
   return (
     <Button
-      className="size-8 rounded-full bg-foreground p-1.5 text-background transition-all duration-200 hover:bg-foreground/80 disabled:bg-muted disabled:text-muted-foreground"
+      className="size-8 rounded-lg bg-destructive p-1.5 text-destructive-foreground transition-all duration-200 hover:bg-destructive/90 disabled:bg-muted disabled:text-muted-foreground"
       data-testid="stop-button"
       onClick={(event) => {
         event.preventDefault();

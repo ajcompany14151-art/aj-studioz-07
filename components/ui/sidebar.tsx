@@ -26,9 +26,9 @@ import { cn } from "@/lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = "16rem";
-const SIDEBAR_WIDTH_MOBILE = "18rem";
-const SIDEBAR_WIDTH_ICON = "3rem";
+const SIDEBAR_WIDTH = "16rem"; // 256px
+const SIDEBAR_WIDTH_MOBILE = "18rem"; // 288px
+const SIDEBAR_WIDTH_ICON = "3rem"; // 48px
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContextProps = {
@@ -146,6 +146,7 @@ const SidebarProvider = React.forwardRef<
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH,
+                "--sidebar-width-mobile": SIDEBAR_WIDTH_MOBILE,
                 "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
                 ...style,
               } as React.CSSProperties
@@ -201,15 +202,10 @@ const Sidebar = React.forwardRef<
       return (
         <Sheet onOpenChange={setOpenMobile} open={openMobile} {...props}>
           <SheetContent
-            className="w-[var(--sidebar-width)] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            className="w-[var(--sidebar-width-mobile)] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
             data-mobile="true"
             data-sidebar="sidebar"
             side={side}
-            style={
-              {
-                "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
-              } as React.CSSProperties
-            }
           >
             <SheetHeader className="sr-only">
               <SheetTitle>Sidebar</SheetTitle>
@@ -276,7 +272,10 @@ const SidebarTrigger = React.forwardRef<
 
   return (
     <Button
-      className={cn("h-7 w-7", className)}
+      className={cn(
+        "size-10 rounded-full p-2 text-muted-foreground transition-all duration-200 hover:bg-muted",
+        className
+      )}
       data-sidebar="trigger"
       onClick={(event) => {
         onClick?.(event);
@@ -348,7 +347,7 @@ const SidebarInput = React.forwardRef<
   return (
     <Input
       className={cn(
-        "h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+        "h-10 w-full rounded-full border-0 bg-muted px-4 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0",
         className
       )}
       data-sidebar="input"

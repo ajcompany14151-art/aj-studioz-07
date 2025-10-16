@@ -70,45 +70,29 @@ const PurePreviewMessage = ({
         })}
       >
         {message.role === "assistant" && (
-          <motion.div 
-            className="-mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900"
+          <motion.div
+            className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted"
             animate={isLoading ? {
-              boxShadow: [
-                "0 0 0 0 rgba(59, 130, 246, 0.4)",
-                "0 0 0 6px rgba(59, 130, 246, 0)",
-                "0 0 0 0 rgba(59, 130, 246, 0)",
-              ],
+              scale: [1, 1.05, 1],
             } : {}}
             transition={{
-              duration: 2,
+              duration: 1,
               repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
               ease: "easeInOut",
             }}
           >
-            <motion.div
-              animate={isLoading ? {
-                opacity: [1, 0.7, 1],
-              } : {}}
-              transition={{
-                duration: 1.5,
-                repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
-                ease: "easeInOut",
-              }}
-              className="relative size-full"
-            >
-              <Image
-                src="/logo.jpg"
-                alt="AI Avatar"
-                width={28}
-                height={28}
-                className="object-cover sm:h-8 sm:w-8"
-              />
-            </motion.div>
+            <Image
+              src="/logo.jpg"
+              alt="AI Avatar"
+              width={32}
+              height={32}
+              className="object-cover"
+            />
           </motion.div>
         )}
 
         {message.role === "user" && session?.user && (
-          <div className="order-2 -mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900">
+          <div className="order-2 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted">
             <Image
               src={session.user.image || `https://avatar.vercel.sh/${session.user.email}`}
               alt={session.user.name || "User"}
@@ -173,18 +157,13 @@ const PurePreviewMessage = ({
                 return (
                   <div key={key}>
                     <MessageContent
-                      className={cn({
-                        "w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base":
-                          message.role === "user",
-                        "bg-transparent px-0 py-0 text-left text-sm sm:text-base":
-                          message.role === "assistant",
-                      })}
-                      data-testid="message-content"
-                      style={
+                      className={cn(
+                        "break-words text-sm sm:text-base",
                         message.role === "user"
-                          ? { backgroundColor: "#006cff" }
-                          : undefined
-                      }
+                          ? "rounded-xl rounded-br-none bg-primary px-3 py-2 text-primary-foreground"
+                          : "rounded-xl rounded-tl-none bg-muted px-3 py-2 text-foreground"
+                      )}
+                      data-testid="message-content"
                     >
                       <Response>{sanitizeText(part.text)}</Response>
                     </MessageContent>
@@ -368,13 +347,13 @@ export const ThinkingMessage = () => {
       data-testid="message-assistant-loading"
       initial={{ opacity: 0 }}
     >
-      <div className="flex items-start justify-start gap-3">
-        <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
-          <SparklesIcon size={14} />
+      <div className="flex items-start justify-start gap-1.5 sm:gap-2 md:gap-3">
+        <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted">
+          <SparklesIcon size={16} className="text-muted-foreground" />
         </div>
 
         <div className="flex w-full flex-col gap-2 md:gap-4">
-          <div className="p-0 text-muted-foreground text-sm">
+          <div className="rounded-xl rounded-tl-none bg-muted px-3 py-2 text-sm text-muted-foreground sm:text-base">
             <LoadingText>Thinking...</LoadingText>
           </div>
         </div>

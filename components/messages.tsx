@@ -88,8 +88,8 @@ function PureMessages({
       ref={messagesContainerRef}
       style={{ overflowAnchor: "none" }}
     >
-      <Conversation className="mx-auto flex min-w-0 max-w-3xl flex-col gap-3 sm:gap-4 md:gap-6">
-        <ConversationContent className="flex flex-col gap-3 px-2 py-3 sm:gap-4 sm:py-4 md:gap-6 md:px-4">
+      <Conversation className="mx-auto flex min-w-0 max-w-3xl flex-col gap-6 sm:gap-8">
+        <ConversationContent className="flex flex-col gap-6 px-4 py-6 sm:gap-8 sm:py-8 md:px-6">
           {messages.length === 0 && <Greeting />}
 
           {messages.map((message, index) => (
@@ -129,7 +129,7 @@ function PureMessages({
       {!isAtBottom && (
         <button
           aria-label="Scroll to bottom"
-          className="absolute bottom-28 left-1/2 z-10 -translate-x-1/2 rounded-full border bg-background p-2 shadow-lg transition-colors hover:bg-muted sm:bottom-36"
+          className="absolute bottom-32 left-1/2 z-10 -translate-x-1/2 rounded-2xl border border-border/50 bg-card/80 p-2.5 shadow-xl shadow-black/10 backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-primary/50 hover:bg-card hover:shadow-2xl hover:shadow-primary/20 sm:bottom-36"
           onClick={() => scrollToBottom("smooth")}
           type="button"
         >

@@ -145,7 +145,7 @@ export function Chat({
           votes={votes}
         />
 
-        <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-4xl gap-2 border-t-0 bg-background px-2 pb-2 sm:pb-3 md:px-4 md:pb-4">
+        <div className="sticky bottom-0 z-10 mx-auto flex w-full max-w-3xl gap-2 border-t-0 px-4 pb-6 pt-2 sm:pb-8 md:px-6">
           {!isReadonly && (
             <MultimodalInput
               attachments={attachments}

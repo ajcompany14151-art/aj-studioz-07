@@ -64,19 +64,20 @@ const PurePreviewMessage = ({
       initial={{ opacity: 0 }}
     >
       <div
-        className={cn("flex w-full items-start gap-1.5 sm:gap-2 md:gap-3", {
+        className={cn("flex w-full items-start gap-3 sm:gap-4", {
           "justify-end": message.role === "user" && mode !== "edit",
           "justify-start": message.role === "assistant",
         })}
       >
         {message.role === "assistant" && (
           <motion.div
-            className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted"
+            className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-600 shadow-sm"
             animate={isLoading ? {
-              scale: [1, 1.05, 1],
+              scale: [1, 1.08, 1],
+              rotate: [0, 2, -2, 0],
             } : {}}
             transition={{
-              duration: 1,
+              duration: 2,
               repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
               ease: "easeInOut",
             }}
@@ -86,7 +87,7 @@ const PurePreviewMessage = ({
               alt="AI Avatar"
               width={32}
               height={32}
-              className="object-cover"
+              className="rounded-full object-cover"
             />
           </motion.div>
         )}
@@ -158,10 +159,10 @@ const PurePreviewMessage = ({
                   <div key={key}>
                     <MessageContent
                       className={cn(
-                        "break-words text-sm sm:text-base",
+                        "break-words text-sm leading-relaxed sm:text-base transition-all duration-200",
                         message.role === "user"
-                          ? "rounded-xl rounded-br-none bg-primary px-3 py-2 text-primary-foreground"
-                          : "rounded-xl rounded-tl-none bg-muted px-3 py-2 text-foreground"
+                          ? "rounded-2xl rounded-br-md bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-white shadow-md hover:shadow-lg"
+                          : "rounded-2xl rounded-tl-md bg-gray-50 px-4 py-3 text-gray-900 shadow-sm border border-gray-200 hover:shadow-md dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                       )}
                       data-testid="message-content"
                     >
@@ -347,13 +348,24 @@ export const ThinkingMessage = () => {
       data-testid="message-assistant-loading"
       initial={{ opacity: 0 }}
     >
-      <div className="flex items-start justify-start gap-1.5 sm:gap-2 md:gap-3">
-        <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted">
-          <SparklesIcon size={16} className="text-muted-foreground" />
-        </div>
+      <div className="flex items-start justify-start gap-3 sm:gap-4">
+        <motion.div
+          className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-600 shadow-sm"
+          animate={{
+            scale: [1, 1.05, 1],
+            rotate: [0, 5, -5, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
+        >
+          <SparklesIcon size={16} />
+        </motion.div>
 
         <div className="flex w-full flex-col gap-2 md:gap-4">
-          <div className="rounded-xl rounded-tl-none bg-muted px-3 py-2 text-sm text-muted-foreground sm:text-base">
+          <div className="rounded-2xl rounded-tl-md bg-gray-50 px-4 py-3 text-sm text-gray-600 shadow-sm border border-gray-200 sm:text-base dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
             <LoadingText>Thinking...</LoadingText>
           </div>
         </div>

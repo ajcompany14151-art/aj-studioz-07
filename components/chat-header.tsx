@@ -27,15 +27,15 @@ function PureChatHeader({
 
       {(!open || windowWidth < 768) && (
         <Button
-          className="order-2 ml-auto h-7 px-1.5 text-xs sm:h-8 sm:px-2 sm:text-sm md:order-1 md:ml-0 md:h-fit md:px-2"
+          className="order-2 ml-auto h-9 rounded-lg px-3 text-sm transition-all duration-200 hover:bg-accent md:order-1 md:ml-0"
           onClick={() => {
             router.push("/");
             router.refresh();
           }}
-          variant="outline"
+          variant="ghost"
         >
-          <PlusIcon size={16} />
-          <span className="md:sr-only">New Chat</span>
+          <PlusIcon size={18} />
+          <span className="ml-1.5 md:sr-only">New chat</span>
         </Button>
       )}
     </header>

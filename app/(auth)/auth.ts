@@ -3,7 +3,6 @@ import NextAuth, { type DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import type { NextAuthConfig } from "next-auth";
 import { DUMMY_PASSWORD } from "@/lib/constants";
 import { createGuestUser, getUser } from "@/lib/db/queries";
 import { authConfig } from "./auth.config";
@@ -25,6 +24,7 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 
+  // biome-ignore lint/nursery/useConsistentTypeDefinitions: "Required"
   interface User {
     id?: string;
     email?: string | null;
@@ -39,7 +39,12 @@ declare module "next-auth/jwt" {
   }
 }
 
-export const authOptions: NextAuthConfig = {
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   ...authConfig,
   providers: [
     Google({
@@ -92,8 +97,10 @@ export const authOptions: NextAuthConfig = {
     jwt({ token, user, account }) {
       if (user) {
         token.id = user.id as string;
+        // Set type to 'regular' for Google OAuth users, otherwise use user.type
         token.type = account?.provider === "google" ? "regular" : user.type;
       }
+
       return token;
     },
     session({ session, token }) {
@@ -101,19 +108,24 @@ export const authOptions: NextAuthConfig = {
         session.user.id = token.id;
         session.user.type = token.type;
       }
+
       return session;
     },
     async signIn({ user, account }) {
+      // For Google OAuth, create user in database if they don't exist
       if (account?.provider === "google" && user.email) {
         try {
           let existingUsers = await getUser(user.email);
           if (existingUsers.length === 0) {
+            // Create new user for Google OAuth
             await db.insert(userTable).values({
               email: user.email,
-              password: null,
+              password: null, // No password for OAuth users
             });
+            // Fetch the newly created user to get the ID
             existingUsers = await getUser(user.email);
           }
+          // Set user type and ID for Google OAuth users
           user.type = "regular";
           if (existingUsers.length > 0) {
             user.id = existingUsers[0].id;
@@ -126,11 +138,4 @@ export const authOptions: NextAuthConfig = {
       return true;
     },
   },
-};
-
-export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-} = NextAuth(authOptions);
+});

@@ -5,7 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SessionProvider } from "next-auth/react";
-import { getServerSession } from "next-auth"; // Import from next-auth
+import getServerSession from "next-auth"; // Default import
+import { auth } from "@/app/(auth)/auth"; // Import authOptions as auth
 
 import "./globals.css";
 
@@ -131,7 +132,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(); // Use getServerSession from next-auth
+  const session = await getServerSession(auth); // Use auth (authOptions) from app/(auth)/auth.ts
 
   return (
     <html

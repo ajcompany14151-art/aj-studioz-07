@@ -6,7 +6,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SessionProvider } from "next-auth/react";
 import getServerSession from "next-auth"; // Default import
-import { auth } from "@/app/(auth)/auth"; // Import authOptions as auth
+import { authOptions } from "@/app/(auth)/auth"; // Import authOptions
 
 import "./globals.css";
 
@@ -132,7 +132,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(auth); // Use auth (authOptions) from app/(auth)/auth.ts
+  const session = await getServerSession(authOptions); // Use authOptions
 
   return (
     <html

@@ -363,8 +363,8 @@ export default function GrokResponse({
   return elements
   }
 
-// User Message Component
-function UserMessage({ content, timestamp, avatar }: UserMessageProps) {
+// User Message Component - Exported for standalone use
+export function UserMessage({ content, timestamp, avatar }: UserMessageProps) {
   return (
     <div className="flex justify-end mb-4">
       <div className="flex items-start gap-3 max-w-[85%] sm:max-w-[75%]">
@@ -576,5 +576,4 @@ export function ExampleGrokResponse() {
   )
 }
 
-// Export UserMessage for standalone use
-export { UserMessage }
+// UserMessage is already exported above

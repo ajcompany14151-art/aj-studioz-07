@@ -125,9 +125,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="alternate icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="icon" href="/logo.jpg" type="image/jpeg" />
+        <link rel="alternate icon" href="/logo.jpg" />
+        <link rel="apple-touch-icon" href="/logo.jpg" />
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required"
           dangerouslySetInnerHTML={{

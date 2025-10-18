@@ -46,12 +46,11 @@ import { SuggestedActions } from "./suggested-actions";
 import { Button } from "./ui/button";
 import type { VisibilityType } from "./visibility-selector";
 
-// Enhanced Rate Limit Hook with Circular Progress
+// Rate limiting hook
 function useRateLimit(limitMs: number = 1000) {
   const [lastSubmitTime, setLastSubmitTime] = useState<number>(0);
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [cooldownTime, setCooldownTime] = useState(0);
-  const [progress, setProgress] = useState(100);
 
   const checkRateLimit = useCallback(() => {
     const now = Date.now();
@@ -59,25 +58,12 @@ function useRateLimit(limitMs: number = 1000) {
     
     if (timeSinceLastSubmit < limitMs) {
       setIsRateLimited(true);
-      const remainingTime = limitMs - timeSinceLastSubmit;
-      setCooldownTime(Math.ceil(remainingTime / 1000));
-      
-      // Start progress animation
-      const progressInterval = setInterval(() => {
-        const elapsed = Date.now() - now;
-        const newProgress = Math.min(100, (elapsed / limitMs) * 100);
-        setProgress(newProgress);
-        
-        if (newProgress >= 100) {
-          clearInterval(progressInterval);
-        }
-      }, 50);
+      setCooldownTime(Math.ceil((limitMs - timeSinceLastSubmit) / 1000));
       
       const timer = setTimeout(() => {
         setIsRateLimited(false);
         setCooldownTime(0);
-        setProgress(100);
-      }, remainingTime);
+      }, limitMs - timeSinceLastSubmit);
       
       return false;
     }
@@ -85,167 +71,11 @@ function useRateLimit(limitMs: number = 1000) {
     setLastSubmitTime(now);
     setIsRateLimited(false);
     setCooldownTime(0);
-    setProgress(100);
     return true;
   }, [lastSubmitTime, limitMs]);
 
-  return { isRateLimited, cooldownTime, progress, checkRateLimit };
+  return { isRateLimited, cooldownTime, checkRateLimit };
 }
-
-// Circular Progress Component
-const CircularProgress = ({ 
-  progress, 
-  size = 20, 
-  strokeWidth = 2,
-  className 
-}: { 
-  progress: number; 
-  size?: number; 
-  strokeWidth?: number;
-  className?: string;
-}) => {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
-
-  return (
-    <div className={cn("relative inline-flex items-center justify-center", className)}>
-      <svg
-        width={size}
-        height={size}
-        className="transform -rotate-90"
-      >
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke="currentColor"
-          strokeWidth={strokeWidth}
-          fill="none"
-          className="text-gray-600"
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke="currentColor"
-          strokeWidth={strokeWidth}
-          fill="none"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          className="text-primary transition-all duration-150 ease-out"
-          strokeLinecap="round"
-        />
-      </svg>
-      {progress < 100 && (
-        <span className="absolute text-xs font-medium text-primary">
-          {Math.ceil(progress)}
-        </span>
-      )}
-    </div>
-  );
-};
-
-// Inline Attachment Preview Component
-const InlineAttachmentPreview = ({ 
-  attachment, 
-  onRemove 
-}: { 
-  attachment: Attachment; 
-  onRemove: () => void;
-}) => {
-  return (
-    <div className="group relative inline-flex items-center gap-2 rounded-lg bg-gray-800/50 px-3 py-2 text-sm text-gray-300 backdrop-blur-sm border border-gray-700/50">
-      <div className="flex h-6 w-6 items-center justify-center rounded bg-gray-700">
-        <PaperclipIcon size={12} />
-      </div>
-      <span className="max-w-[120px] truncate text-xs">{attachment.name}</span>
-      <button
-        onClick={onRemove}
-        className="absolute -top-1 -right-1 hidden h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white group-hover:flex hover:bg-red-600"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-  );
-};
-
-// Inline Upload Progress Component
-const InlineUploadProgress = ({ filename }: { filename: string }) => {
-  return (
-    <div className="inline-flex items-center gap-2 rounded-lg bg-gray-800/50 px-3 py-2 text-sm text-gray-300 backdrop-blur-sm border border-gray-700/50">
-      <div className="flex h-6 w-6 items-center justify-center rounded bg-gray-700">
-        <div className="h-3 w-3 animate-spin rounded-full border border-gray-400 border-t-transparent"></div>
-      </div>
-      <span className="max-w-[120px] truncate text-xs">{filename}</span>
-    </div>
-  );
-};
-
-// Enhanced Model Selector with Inline Design
-const InlineModelSelector = ({
-  selectedModelId,
-  onModelChange,
-}: {
-  selectedModelId: string;
-  onModelChange?: (modelId: string) => void;
-}) => {
-  const [optimisticModelId, setOptimisticModelId] = useState(selectedModelId);
-  const { width } = useWindowSize();
-
-  useEffect(() => {
-    setOptimisticModelId(selectedModelId);
-  }, [selectedModelId]);
-
-  const selectedModel = chatModels.find(
-    (model) => model.id === optimisticModelId
-  );
-
-  return (
-    <PromptInputModelSelect
-      onValueChange={(modelName) => {
-        const model = chatModels.find((m) => m.name === modelName);
-        if (model) {
-          setOptimisticModelId(model.id);
-          onModelChange?.(model.id);
-          startTransition(() => {
-            saveChatModelAsCookie(model.id);
-          });
-        }
-      }}
-      value={selectedModel?.name}
-    >
-      <Trigger
-        className={cn(
-          "inline-flex h-7 items-center gap-1.5 rounded-xl border border-gray-700 bg-gray-800/50 px-2.5 text-xs font-medium text-gray-300 backdrop-blur-sm transition-all duration-200 hover:border-gray-600 hover:bg-gray-800/70 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
-          width && width < 640 ? "h-6 px-2 text-[10px]" : "h-7 px-2.5 text-xs"
-        )}
-        type="button"
-      >
-        <CpuIcon size={width && width < 640 ? 10 : 12} />
-        <span className="font-medium truncate max-w-[60px]">
-          {selectedModel?.name}
-        </span>
-        <ChevronDownIcon size={width && width < 640 ? 10 : 12} />
-      </Trigger>
-      <PromptInputModelSelectContent className="min-w-[200px] p-0 border-gray-700 bg-gray-900/95 backdrop-blur-xl">
-        <div className="flex flex-col gap-px">
-          {chatModels.map((model) => (
-            <SelectItem key={model.id} value={model.name} className="text-xs">
-              <div className="truncate font-medium text-gray-100">{model.name}</div>
-              <div className="mt-px truncate text-[10px] text-gray-400 leading-tight">
-                {model.description}
-              </div>
-            </SelectItem>
-          ))}
-        </div>
-      </PromptInputModelSelectContent>
-    </PromptInputModelSelect>
-  );
-};
 
 function PureMultimodalInput({
   chatId,
@@ -282,7 +112,7 @@ function PureMultimodalInput({
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
-  const { isRateLimited, cooldownTime, progress, checkRateLimit } = useRateLimit(1000);
+  const { isRateLimited, cooldownTime, checkRateLimit } = useRateLimit(1000); // 1 second rate limit
 
   const adjustHeight = useCallback(() => {
     if (textareaRef.current) {
@@ -310,10 +140,13 @@ function PureMultimodalInput({
   useEffect(() => {
     if (textareaRef.current) {
       const domValue = textareaRef.current.value;
+      // Prefer DOM value over localStorage to handle hydration
       const finalValue = domValue || localStorageInput || "";
       setInput(finalValue);
       adjustHeight();
     }
+    // Only run once after hydration
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adjustHeight, localStorageInput, setInput]);
 
   useEffect(() => {
@@ -328,6 +161,7 @@ function PureMultimodalInput({
   const [uploadQueue, setUploadQueue] = useState<string[]>([]);
 
   const submitForm = useCallback(() => {
+    // Check rate limit before submitting
     if (!checkRateLimit()) {
       toast.error(`Please wait ${cooldownTime} second${cooldownTime !== 1 ? 's' : ''} before sending another message.`);
       return;
@@ -434,7 +268,7 @@ function PureMultimodalInput({
   );
 
   return (
-    <div className={cn("relative w-full", className)}>
+    <div className={cn("relative flex w-full flex-col gap-4", className)}>
       {messages.length === 0 &&
         attachments.length === 0 &&
         uploadQueue.length === 0 && (
@@ -456,8 +290,8 @@ function PureMultimodalInput({
 
       <PromptInput
         className={cn(
-          "group relative rounded-2xl border border-gray-700/50 bg-gray-900/50 p-2.5 shadow-2xl shadow-black/20 backdrop-blur-xl transition-all duration-300 hover:border-gray-600/50 hover:shadow-2xl hover:shadow-black/30 focus-within:border-primary focus-within:shadow-2xl focus-within:shadow-primary/20 dark:bg-gray-900/50 dark:shadow-black/40",
-          width && width < 640 ? "p-2" : "p-2.5"
+          "group relative rounded-3xl border border-border/50 bg-card/50 p-3 shadow-2xl shadow-black/10 backdrop-blur-xl transition-all duration-300 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 focus-within:border-primary focus-within:shadow-2xl focus-within:shadow-primary/20 sm:p-4 dark:bg-card/30 dark:shadow-black/30",
+          width && width < 640 ? "p-2.5" : "p-3 sm:p-4"
         )}
         onSubmit={(event) => {
           event.preventDefault();
@@ -468,11 +302,16 @@ function PureMultimodalInput({
           }
         }}
       >
-        {/* Inline Attachments and Upload Queue */}
         {(attachments.length > 0 || uploadQueue.length > 0) && (
-          <div className="mb-2 flex flex-wrap items-center gap-2">
+          <div
+            className={cn(
+              "flex flex-row items-end gap-2 overflow-x-scroll px-1 pb-2",
+              width && width < 640 ? "gap-1.5" : "gap-2"
+            )}
+            data-testid="attachments-preview"
+          >
             {attachments.map((attachment) => (
-              <InlineAttachmentPreview
+              <PreviewAttachment
                 attachment={attachment}
                 key={attachment.url}
                 onRemove={() => {
@@ -485,36 +324,30 @@ function PureMultimodalInput({
                 }}
               />
             ))}
+
             {uploadQueue.map((filename) => (
-              <InlineUploadProgress filename={filename} key={filename} />
+              <PreviewAttachment
+                attachment={{
+                  url: "",
+                  name: filename,
+                  contentType: "",
+                }}
+                isUploading={true}
+                key={filename}
+              />
             ))}
           </div>
         )}
-
-        <div className="flex items-center gap-2">
-          {/* Attachment Button */}
-          <Button
-            className={cn(
-              "aspect-square h-8 rounded-xl p-0 text-gray-400 transition-all duration-200 hover:bg-gray-800/50 hover:text-gray-200",
-              width && width < 640 ? "h-7" : "h-8"
-            )}
-            data-testid="attachments-button"
-            disabled={status !== "ready"}
-            onClick={(event) => {
-              event.preventDefault();
-              fileInputRef.current?.click();
-            }}
-            variant="ghost"
-          >
-            <PaperclipIcon size={width && width < 640 ? 16 : 18} />
-          </Button>
-
-          {/* Text Input */}
+        <div className={cn(
+          "flex flex-row items-end gap-1 sm:gap-2",
+          width && width < 640 ? "gap-1" : "gap-1 sm:gap-2"
+        )}>
+          <AttachmentsButton fileInputRef={fileInputRef} status={status} />
           <PromptInputTextarea
             autoFocus
             className={cn(
-              "grow resize-none border-0 bg-transparent px-3 py-2 text-sm leading-relaxed outline-none ring-0 placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-              width && width < 640 ? "px-2.5 py-1.5 text-xs" : "px-3 py-2 text-sm"
+              "grow resize-none border-0! bg-transparent px-3 py-2.5 text-base leading-relaxed outline-none ring-0 [-ms-overflow-style:none] [scrollbar-width:none] placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-scrollbar]:hidden",
+              width && width < 640 ? "px-2.5 py-2 text-sm" : "px-3 py-2.5 text-base"
             )}
             data-testid="multimodal-input"
             disableAutoResize={true}
@@ -526,84 +359,44 @@ function PureMultimodalInput({
             rows={1}
             value={input}
           />
-
-          {/* Context Indicator */}
           <Context {...contextProps} />
-
-          {/* Submit/Stop Button with Rate Limit Indicator */}
-          <div className="relative">
-            {status === "submitted" ? (
-              <Button
-                className={cn(
-                  "h-8 rounded-xl bg-red-500/20 p-0 text-red-400 transition-all duration-200 hover:bg-red-500/30 hover:text-red-300",
-                  width && width < 640 ? "h-7" : "h-8"
-                )}
-                data-testid="stop-button"
-                onClick={(event) => {
-                  event.preventDefault();
-                  stop();
-                  setMessages((messages) => messages);
-                }}
-              >
-                <StopIcon size={width && width < 640 ? 16 : 18} />
-              </Button>
-            ) : (
-              <div className="relative">
-                <Button
-                  className={cn(
-                    "h-8 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 p-0 text-white shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/40 disabled:scale-100 disabled:bg-gray-700 disabled:text-gray-400 disabled:shadow-none",
-                    width && width < 640 ? "h-7" : "h-8"
-                  )}
-                  disabled={!input.trim() || uploadQueue.length > 0 || isRateLimited}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    submitForm();
-                  }}
-                >
-                  <ArrowUpIcon size={width && width < 640 ? 16 : 18} />
-                </Button>
-                
-                {/* Rate Limit Circular Progress Overlay */}
-                {isRateLimited && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <CircularProgress 
-                      progress={progress} 
-                      size={width && width < 640 ? 28 : 32}
-                      strokeWidth={2}
-                      className="text-gray-600"
-                    />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          {status === "submitted" ? (
+            <StopButton setMessages={setMessages} stop={stop} />
+          ) : (
+            <PromptInputSubmit
+              className={cn(
+                "size-9 rounded-2xl bg-gradient-to-br from-primary via-primary to-accent text-primary-foreground shadow-lg shadow-primary/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/40 disabled:scale-100 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none",
+                width && width < 640 ? "size-8" : "size-9"
+              )}
+              disabled={!input.trim() || uploadQueue.length > 0 || isRateLimited}
+              status={status}
+            >
+              <ArrowUpIcon size={width && width < 640 ? 18 : 20} />
+            </PromptInputSubmit>
+          )}
         </div>
-
-        {/* Inline Toolbar */}
-        <PromptInputToolbar className="border-t border-gray-700/50 p-0 pt-2">
-          <PromptInputTools className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-2">
-              <InlineModelSelector
-                onModelChange={onModelChange}
-                selectedModelId={selectedModelId}
-              />
-            </div>
-            
-            {/* Rate Limit Status */}
-            {isRateLimited && (
-              <div className="flex items-center gap-2 text-xs text-gray-400">
-                <CircularProgress 
-                  progress={progress} 
-                  size={16}
-                  strokeWidth={1.5}
-                  className="text-gray-600"
-                />
-                <span>Rate limited: {cooldownTime}s</span>
-              </div>
-            )}
+        <PromptInputToolbar className={cn(
+          "!border-top-0 border-t-0! p-0 pt-0.5 shadow-none sm:pt-1 dark:border-0 dark:border-transparent!",
+          width && width < 640 ? "pt-0.5" : "pt-0.5 sm:pt-1"
+        )}>
+          <PromptInputTools className={cn(
+            "gap-0.5 sm:gap-1 md:gap-1.5",
+            width && width < 640 ? "gap-0.5" : "gap-0.5 sm:gap-1 md:gap-1.5"
+          )}>
+            <ModelSelectorCompact
+              onModelChange={onModelChange}
+              selectedModelId={selectedModelId}
+            />
           </PromptInputTools>
         </PromptInputToolbar>
       </PromptInput>
+      
+      {/* Rate limiting indicator */}
+      {isRateLimited && (
+        <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 rounded-full bg-amber-500/90 px-3 py-1 text-xs text-white shadow-lg animate-pulse">
+          Rate limited: {cooldownTime}s
+        </div>
+      )}
     </div>
   );
 }
@@ -630,3 +423,129 @@ export const MultimodalInput = memo(
     return true;
   }
 );
+
+function PureAttachmentsButton({
+  fileInputRef,
+  status,
+}: {
+  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  status: UseChatHelpers<ChatMessage>["status"];
+}) {
+  // Enable file uploads for all models including reasoning/student mode
+  const isDisabled = status !== "ready";
+
+  return (
+    <Button
+      className={cn(
+        "aspect-square rounded-2xl p-2 text-muted-foreground transition-all duration-300 hover:bg-muted/50 hover:text-foreground",
+        "sm:size-9 size-8"
+      )}
+      data-testid="attachments-button"
+      disabled={isDisabled}
+      onClick={(event) => {
+        event.preventDefault();
+        fileInputRef.current?.click();
+      }}
+      variant="ghost"
+    >
+      <PaperclipIcon size={20} />
+    </Button>
+  );
+}
+
+const AttachmentsButton = memo(PureAttachmentsButton);
+
+function PureModelSelectorCompact({
+  selectedModelId,
+  onModelChange,
+}: {
+  selectedModelId: string;
+  onModelChange?: (modelId: string) => void;
+}) {
+  const [optimisticModelId, setOptimisticModelId] = useState(selectedModelId);
+  const { width } = useWindowSize();
+
+  useEffect(() => {
+    setOptimisticModelId(selectedModelId);
+  }, [selectedModelId]);
+
+  const selectedModel = chatModels.find(
+    (model) => model.id === optimisticModelId
+  );
+
+  return (
+    <PromptInputModelSelect
+      onValueChange={(modelName) => {
+        const model = chatModels.find((m) => m.name === modelName);
+        if (model) {
+          setOptimisticModelId(model.id);
+          onModelChange?.(model.id);
+          startTransition(() => {
+            saveChatModelAsCookie(model.id);
+          });
+        }
+      }}
+      value={selectedModel?.name}
+    >
+      <Trigger
+        className={cn(
+          "flex h-8 items-center gap-1.5 rounded-2xl border border-border/50 bg-muted/30 px-3 text-xs font-medium text-foreground shadow-none transition-all duration-300 hover:border-primary/50 hover:bg-muted/50 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
+          width && width < 640 ? "h-7 px-2.5 text-[10px]" : "h-8 px-3 text-xs"
+        )}
+        type="button"
+      >
+        <CpuIcon size={width && width < 640 ? 12 : 14} />
+        <span className={cn(
+          "font-semibold",
+          width && width < 640 ? "hidden" : "hidden sm:inline text-xs"
+        )}>
+          {selectedModel?.name}
+        </span>
+        <ChevronDownIcon size={width && width < 640 ? 12 : 14} />
+      </Trigger>
+      <PromptInputModelSelectContent className="min-w-[260px] p-0">
+        <div className="flex flex-col gap-px">
+          {chatModels.map((model) => (
+            <SelectItem key={model.id} value={model.name}>
+              <div className="truncate font-medium text-xs">{model.name}</div>
+              <div className="mt-px truncate text-[10px] text-muted-foreground leading-tight">
+                {model.description}
+              </div>
+            </SelectItem>
+          ))}
+        </div>
+      </PromptInputModelSelectContent>
+    </PromptInputModelSelect>
+  );
+}
+
+const ModelSelectorCompact = memo(PureModelSelectorCompact);
+
+function PureStopButton({
+  stop,
+  setMessages,
+}: {
+  stop: () => void;
+  setMessages: UseChatHelpers<ChatMessage>["setMessages"];
+}) {
+  const { width } = useWindowSize();
+  
+  return (
+    <Button
+      className={cn(
+        "rounded-2xl bg-destructive p-2 text-destructive-foreground shadow-lg shadow-destructive/30 transition-all duration-300 hover:scale-105 hover:bg-destructive/90 hover:shadow-xl hover:shadow-destructive/40 disabled:bg-muted disabled:text-muted-foreground",
+        width && width < 640 ? "size-8" : "size-9"
+      )}
+      data-testid="stop-button"
+      onClick={(event) => {
+        event.preventDefault();
+        stop();
+        setMessages((messages) => messages);
+      }}
+    >
+      <StopIcon size={width && width < 640 ? 18 : 20} />
+    </Button>
+  );
+}
+
+const StopButton = memo(PureStopButton);

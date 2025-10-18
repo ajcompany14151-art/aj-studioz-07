@@ -27,8 +27,8 @@ export function AppSidebar({ user }: { user: User | undefined }) {
 
   return (
     <Sidebar
-      className="border-r border-border/50 bg-background"
-      collapsible="icon" // Use 'icon' mode for Grok-like behavior
+      className="border-r border-border/50 bg-gradient-to-b from-gray-900 to-gray-800"
+      collapsible="icon"
     >
       <SidebarHeader className="border-b border-border/50 pb-4">
         <SidebarMenu>
@@ -58,7 +58,6 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-
           <SidebarMenuItem>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -84,11 +83,9 @@ export function AppSidebar({ user }: { user: User | undefined }) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-
       <SidebarContent className="px-2">
         <SidebarHistory user={user} />
       </SidebarContent>
-
       <SidebarFooter className="border-t border-border/50 pt-4 px-2">
         {user && <SidebarUserNav user={user} />}
       </SidebarFooter>

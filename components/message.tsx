@@ -64,17 +64,20 @@ const PurePreviewMessage = ({
       initial={{ opacity: 0 }}
     >
       <div
-        className={cn("flex w-full items-start gap-3 sm:gap-4", {
+        className={cn("flex w-full items-start gap-1.5 sm:gap-2 md:gap-3", {
           "justify-end": message.role === "user" && mode !== "edit",
           "justify-start": message.role === "assistant",
         })}
       >
         {message.role === "assistant" && (
-          <motion.div
-            className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-600 shadow-sm"
+          <motion.div 
+            className="-mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900"
             animate={isLoading ? {
-              scale: [1, 1.08, 1],
-              rotate: [0, 2, -2, 0],
+              boxShadow: [
+                "0 0 0 0 rgba(59, 130, 246, 0.4)",
+                "0 0 0 6px rgba(59, 130, 246, 0)",
+                "0 0 0 0 rgba(59, 130, 246, 0)",
+              ],
             } : {}}
             transition={{
               duration: 2,
@@ -82,18 +85,30 @@ const PurePreviewMessage = ({
               ease: "easeInOut",
             }}
           >
-            <Image
-              src="/logo.jpg"
-              alt="AI Avatar"
-              width={32}
-              height={32}
-              className="rounded-full object-cover"
-            />
+            <motion.div
+              animate={isLoading ? {
+                opacity: [1, 0.7, 1],
+              } : {}}
+              transition={{
+                duration: 1.5,
+                repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
+                ease: "easeInOut",
+              }}
+              className="relative size-full"
+            >
+              <Image
+                src="/logo.jpg"
+                alt="AI Avatar"
+                width={28}
+                height={28}
+                className="object-cover sm:h-8 sm:w-8"
+              />
+            </motion.div>
           </motion.div>
         )}
 
         {message.role === "user" && session?.user && (
-          <div className="order-2 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted">
+          <div className="order-2 -mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900">
             <Image
               src={session.user.image || `https://avatar.vercel.sh/${session.user.email}`}
               alt={session.user.name || "User"}
@@ -158,13 +173,18 @@ const PurePreviewMessage = ({
                 return (
                   <div key={key}>
                     <MessageContent
-                      className={cn(
-                        "break-words text-sm leading-relaxed sm:text-base transition-all duration-200",
-                        message.role === "user"
-                          ? "rounded-2xl rounded-br-md bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-white shadow-md hover:shadow-lg"
-                          : "rounded-2xl rounded-tl-md bg-gray-50 px-4 py-3 text-gray-900 shadow-sm border border-gray-200 hover:shadow-md dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-                      )}
+                      className={cn({
+                        "w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base":
+                          message.role === "user",
+                        "bg-transparent px-0 py-0 text-left text-sm sm:text-base":
+                          message.role === "assistant",
+                      })}
                       data-testid="message-content"
+                      style={
+                        message.role === "user"
+                          ? { backgroundColor: "#006cff" }
+                          : undefined
+                      }
                     >
                       <Response>{sanitizeText(part.text)}</Response>
                     </MessageContent>
@@ -348,24 +368,13 @@ export const ThinkingMessage = () => {
       data-testid="message-assistant-loading"
       initial={{ opacity: 0 }}
     >
-      <div className="flex items-start justify-start gap-3 sm:gap-4">
-        <motion.div
-          className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-600 shadow-sm"
-          animate={{
-            scale: [1, 1.05, 1],
-            rotate: [0, 5, -5, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-        >
-          <SparklesIcon size={16} />
-        </motion.div>
+      <div className="flex items-start justify-start gap-3">
+        <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
+          <SparklesIcon size={14} />
+        </div>
 
         <div className="flex w-full flex-col gap-2 md:gap-4">
-          <div className="rounded-2xl rounded-tl-md bg-gray-50 px-4 py-3 text-sm text-gray-600 shadow-sm border border-gray-200 sm:text-base dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
+          <div className="p-0 text-muted-foreground text-sm">
             <LoadingText>Thinking...</LoadingText>
           </div>
         </div>

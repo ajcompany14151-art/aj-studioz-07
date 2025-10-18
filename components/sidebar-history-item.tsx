@@ -53,7 +53,9 @@ const PureChatItem = ({
           onClick={() => setOpenMobile(false)}
           className="flex-1 overflow-hidden whitespace-nowrap text-ellipsis"
         >
-          <MessageIcon size={16} className={open ? "hidden" : ""} />
+          <span className={open ? "hidden" : ""}>
+            <MessageIcon size={16} />
+          </span>
           {open && <span>{chat.title}</span>}
         </Link>
       </SidebarMenuButton>

@@ -8,8 +8,11 @@ import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://aj-studioz-07.vercel.app"),
-  title: "AJ Studioz AI Chatbot - Advanced AI with 3D, Code, & More",
-  description: "Experience next-generation AI with 3D visualizations, interactive diagrams, code playground, PDF generation, Excel integration, and Grok-style responses. Built by AJ STUDIOZ.",
+  title: {
+    default: "AJ Studioz AI",
+    template: "%s | AJ Studioz AI"
+  },
+  description: "Advanced AI assistant with HTML preview, Grok-style responses, and mobile-optimized design. Get instant code previews, smart conversations, and creative solutions.",
   keywords: [
     "AI chat", "AJ STUDIOZ", "3D visualization", "code playground", "interactive diagrams", 
     "PDF generation", "Excel integration", "artificial intelligence", "AI assistant", 
@@ -122,6 +125,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="alternate icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required"
           dangerouslySetInnerHTML={{

@@ -33,11 +33,21 @@ interface GrokResponseProps {
   showActions?: boolean
   timestamp?: Date
   model?: string
+  isUser?: boolean
+  userAvatar?: string
 }
 
-// Simple Code Block Component
+interface UserMessageProps {
+  content: string
+  timestamp?: Date
+  avatar?: string
+}
+
+// Enhanced Code Block Component with HTML Preview
 function CodeBlock({ language = 'text', children, fileName }: CodeBlockProps) {
   const [copied, setCopied] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const handleCopy = async () => {
     try {
@@ -62,10 +72,12 @@ function CodeBlock({ language = 'text', children, fileName }: CodeBlockProps) {
     return colors[lang.toLowerCase()] || 'bg-gray-500'
   }
 
+  const canPreview = language.toLowerCase() === 'html'
+
   return (
-    <div className="relative group my-3 rounded-lg overflow-hidden border border-gray-700/50 bg-gray-900/80">
+    <div className="relative group my-3 rounded-xl overflow-hidden border border-gray-700/50 bg-gradient-to-br from-gray-900/90 to-gray-800/80 shadow-lg">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-2 bg-gray-800/50 border-b border-gray-600/30">
+      <div className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-gray-800/80 to-gray-700/60 border-b border-gray-600/40">
         <div className="flex items-center gap-2">
           {fileName && (
             <div className="flex items-center gap-2 text-gray-300">
@@ -75,32 +87,76 @@ function CodeBlock({ language = 'text', children, fileName }: CodeBlockProps) {
           )}
           {language && (
             <div className="flex items-center gap-1.5">
-              <div className={`w-1.5 h-1.5 rounded-full ${getLanguageColor(language)}`} />
-              <span className="text-xs text-gray-400 font-mono uppercase">
+              <div className={`w-2 h-2 rounded-full ${getLanguageColor(language)} shadow-sm`} />
+              <span className="text-xs text-gray-400 font-mono uppercase tracking-wide">
                 {language}
               </span>
             </div>
           )}
         </div>
         
-        <button
-          onClick={handleCopy}
-          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-700/50 rounded text-gray-400 hover:text-white"
-        >
-          {copied ? (
-            <Check className="w-3 h-3 text-green-400" />
-          ) : (
-            <Copy className="w-3 h-3" />
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          {canPreview && (
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className={`p-1.5 rounded text-xs font-medium transition-all ${
+                showPreview 
+                  ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' 
+                  : 'text-gray-400 hover:text-blue-300 hover:bg-blue-500/10'
+              }`}
+            >
+              {showPreview ? 'Code' : 'Preview'}
+            </button>
           )}
-        </button>
+          
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="p-1 hover:bg-gray-600/50 rounded text-gray-400 hover:text-white transition-colors"
+          >
+            {isCollapsed ? (
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            ) : (
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              </svg>
+            )}
+          </button>
+          
+          <button
+            onClick={handleCopy}
+            className="p-1 hover:bg-gray-600/50 rounded text-gray-400 hover:text-white transition-colors"
+          >
+            {copied ? (
+              <Check className="w-3 h-3 text-green-400" />
+            ) : (
+              <Copy className="w-3 h-3" />
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Code content */}
-      <div className="overflow-x-auto">
-        <pre className="p-4 text-sm text-gray-200 font-mono leading-relaxed">
-          <code>{children}</code>
-        </pre>
-      </div>
+      {!isCollapsed && (
+        <div className="relative">
+          {showPreview && canPreview ? (
+            <div className="bg-white">
+              <iframe
+                srcDoc={children}
+                className="w-full h-64 border-0"
+                title="HTML Preview"
+                sandbox="allow-scripts allow-same-origin"
+              />
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <pre className="p-4 text-sm text-gray-200 font-mono leading-relaxed bg-gray-900/20">
+                <code className="language-{language}">{children}</code>
+              </pre>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -167,10 +223,17 @@ export default function GrokResponse({
   onCopy,
   showActions = true,
   timestamp,
-  model = 'AJ Studioz AI'
+  model = 'AJ Studioz AI',
+  isUser = false,
+  userAvatar
 }: GrokResponseProps) {
   const [copied, setCopied] = useState(false)
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null)
+
+  // If it's a user message, render the user component
+  if (isUser) {
+    return <UserMessage content={content} timestamp={timestamp} avatar={userAvatar} />
+  }
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(content)
@@ -297,8 +360,41 @@ export default function GrokResponse({
       }
     })
 
-    return elements
+  return elements
   }
+
+// User Message Component
+function UserMessage({ content, timestamp, avatar }: UserMessageProps) {
+  return (
+    <div className="flex justify-end mb-4">
+      <div className="flex items-start gap-3 max-w-[85%] sm:max-w-[75%]">
+        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl px-4 py-3 shadow-lg">
+          <p className="text-white text-sm sm:text-base leading-relaxed">
+            {content}
+          </p>
+          {timestamp && (
+            <div className="text-xs text-blue-200/70 mt-1 text-right">
+              {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          )}
+        </div>
+        <div className="flex-shrink-0">
+          {avatar ? (
+            <img 
+              src={avatar} 
+              alt="User" 
+              className="w-8 h-8 rounded-full border-2 border-blue-500/30"
+            />
+          ) : (
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+              U
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
 
   return (
     <div className="relative group w-full">
@@ -387,47 +483,91 @@ export default function GrokResponse({
 
 // Example usage component
 export function ExampleGrokResponse() {
-  const sampleContent = `# Welcome to AJ Studioz AI! ✨
+  const htmlContent = `Here's a simple HTML page with preview:
 
-I'm your advanced AI assistant, optimized for mobile and desktop. Here's what I can help you with:
-
-## 🚀 Features
-
-Here's some JavaScript code:
-
-\`\`\`javascript
-const greeting = "Hello, World!"
-console.log(greeting)
-
-// Modern arrow function
-const multiply = (a, b) => a * b
-console.log(multiply(5, 3))
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Webpage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        .btn {
+            background: #ff6b6b;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Welcome to My Website!</h1>
+        <p>This is a beautiful webpage with modern styling.</p>
+        <button class="btn" onclick="alert('Hello from AJ Studioz AI!')">Click Me!</button>
+        <div style="margin-top: 30px;">
+            <h3>Features:</h3>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Responsive design</li>
+                <li>Modern CSS effects</li>
+                <li>Interactive elements</li>
+                <li>Beautiful gradients</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
 \`\`\`
 
-## 📋 What I can do:
-
-- Help with coding and development
-- Explain complex concepts simply
-- Generate creative content
-- Provide detailed analysis
-- Answer technical questions
-
-> [!INFO] I'm designed to work perfectly on both mobile and desktop devices!
-
-How can I assist you today?`
+> [!TIP] Click the "Preview" button above to see the HTML rendered live!`
 
   return (
-    <div className="space-y-4 max-w-4xl mx-auto p-3 sm:p-6">
+    <div className="space-y-4 max-w-4xl mx-auto p-3 sm:p-6 bg-gray-950 min-h-screen">
+      {/* User Message */}
       <GrokResponse
-        content={sampleContent}
+        content="give me simple html code"
+        isUser={true}
+        timestamp={new Date(Date.now() - 30000)}
+      />
+      
+      {/* AI Response with HTML Preview */}
+      <GrokResponse
+        content={htmlContent}
         timestamp={new Date()}
         model="AJ Studioz AI"
         onFeedback={(type) => console.log('Feedback:', type)}
         onCopy={() => console.log('Content copied!')}
       />
       
+      {/* Streaming Response */}
       <GrokResponse
-        content="I'm processing your request... 🤔"
+        content="I'm generating more examples for you... 🤔"
         isStreaming={true}
         showActions={false}
         model="AJ Studioz AI"
@@ -435,3 +575,6 @@ How can I assist you today?`
     </div>
   )
 }
+
+// Export UserMessage for standalone use
+export { UserMessage }

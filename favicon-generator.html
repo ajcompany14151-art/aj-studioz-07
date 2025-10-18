@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AJ Studioz AI - Circular Favicon Generator</title>
+</head>
+<body style="background: #111; color: white; font-family: Arial, sans-serif; padding: 20px;">
+    <h1>AJ Studioz AI - Circular Favicon Generator</h1>
+    <canvas id="favicon" width="32" height="32" style="border: 1px solid #333; image-rendering: pixelated; width: 128px; height: 128px;"></canvas>
+    <br><br>
+    <button onclick="downloadFavicon()">Download as ICO</button>
+    <button onclick="downloadPNG()">Download as PNG</button>
+    <br><br>
+    <canvas id="icon192" width="192" height="192" style="border: 1px solid #333; width: 192px; height: 192px;"></canvas>
+    <br><br>
+    <button onclick="download192()">Download 192x192 PNG</button>
+
+    <script>
+        function createCircularFavicon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = size / 2;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+
+            // Create circular gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#6366f1');
+            gradient.addColorStop(0.5, '#8b5cf6');
+            gradient.addColorStop(1, '#3b82f6');
+
+            // Draw main circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // Add inner glow
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * 0.88, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = size * 0.02;
+            ctx.stroke();
+
+            // Add text "AJ"
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.4}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('AJ', centerX, centerY + size * 0.1);
+
+            // Add AI sparkle symbol
+            const sparkleSize = size * 0.15;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.lineWidth = size * 0.03;
+            ctx.lineCap = 'round';
+
+            // Draw sparkle
+            ctx.beginPath();
+            ctx.moveTo(centerX - sparkleSize, centerY - sparkleSize * 1.5);
+            ctx.lineTo(centerX + sparkleSize, centerY - sparkleSize * 0.5);
+            ctx.moveTo(centerX + sparkleSize, centerY - sparkleSize * 1.5);
+            ctx.lineTo(centerX - sparkleSize, centerY - sparkleSize * 0.5);
+            ctx.stroke();
+
+            // Add center dot
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - sparkleSize, size * 0.02, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        }
+
+        // Create 32x32 favicon
+        createCircularFavicon(document.getElementById('favicon'), 32);
+        
+        // Create 192x192 icon
+        createCircularFavicon(document.getElementById('icon192'), 192);
+
+        function downloadFavicon() {
+            const canvas = document.getElementById('favicon');
+            const link = document.createElement('a');
+            link.download = 'favicon.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function downloadPNG() {
+            const canvas = document.getElementById('favicon');
+            const link = document.createElement('a');
+            link.download = 'favicon-32.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function download192() {
+            const canvas = document.getElementById('icon192');
+            const link = document.createElement('a');
+            link.download = 'icon-192.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>

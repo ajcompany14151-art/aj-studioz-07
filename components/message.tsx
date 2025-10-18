@@ -1,10 +1,8 @@
 "use client";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import equal from "fast-deep-equal";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { memo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { memo, useState, useEffect } from "react";
 import type { Vote } from "@/lib/db/schema";
 import type { ChatMessage } from "@/lib/types";
 import { cn, sanitizeText } from "@/lib/utils";
@@ -27,6 +25,229 @@ import { MessageReasoning } from "./message-reasoning";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
 
+// Enhanced typing indicator component
+const TypingIndicator = () => (
+  <div className="flex space-x-1 px-2 py-1">
+    <motion.div
+      className="h-2 w-2 bg-current rounded-full"
+      animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+      transition={{
+        duration: 1.5,
+        repeat: Infinity,
+        delay: 0,
+      }}
+    />
+    <motion.div
+      className="h-2 w-2 bg-current rounded-full"
+      animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+      transition={{
+        duration: 1.5,
+        repeat: Infinity,
+        delay: 0.2,
+      }}
+    />
+    <motion.div
+      className="h-2 w-2 bg-current rounded-full"
+      animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+      transition={{
+        duration: 1.5,
+        repeat: Infinity,
+        delay: 0.4,
+      }}
+    />
+  </div>
+);
+
+// Enhanced message timestamp component
+const MessageTimestamp = ({ timestamp }: { timestamp: Date | string }) => {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const date = typeof timestamp === "string" ? new Date(timestamp) : timestamp;
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      
+      if (diffMins < 1) {
+        setTime("now");
+      } else if (diffMins < 60) {
+        setTime(`${diffMins}m ago`);
+      } else if (diffMins < 1440) {
+        setTime(`${Math.floor(diffMins / 60)}h ago`);
+      } else {
+        setTime(date.toLocaleDateString());
+      }
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, [timestamp]);
+
+  return (
+    <span className="text-xs text-muted-foreground ml-2">{time}</span>
+  );
+};
+
+// Enhanced tool result component with better styling
+const EnhancedToolResult = ({ 
+  type, 
+  input, 
+  output, 
+  state, 
+  toolCallId,
+  isReadonly 
+}: {
+  type: string;
+  input?: any;
+  output?: any;
+  state: string;
+  toolCallId: string;
+  isReadonly: boolean;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(true);
+  
+  const getToolIcon = (toolType: string) => {
+    switch (toolType) {
+      case "tool-getWeather":
+        return "🌤️";
+      case "tool-createDocument":
+        return "📄";
+      case "tool-updateDocument":
+        return "✏️";
+      case "tool-requestSuggestions":
+        return "💡";
+      default:
+        return "🔧";
+    }
+  };
+
+  const getToolName = (toolType: string) => {
+    switch (toolType) {
+      case "tool-getWeather":
+        return "Weather";
+      case "tool-createDocument":
+        return "Create Document";
+      case "tool-updateDocument":
+        return "Update Document";
+      case "tool-requestSuggestions":
+        return "Request Suggestions";
+      default:
+        return "Tool";
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="my-2 overflow-hidden rounded-xl border border-border/40 bg-gradient-to-br from-background to-muted/20 shadow-sm"
+    >
+      <div
+        className="flex cursor-pointer items-center justify-between p-3 transition-colors hover:bg-muted/30"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-lg">{getToolIcon(type)}</span>
+          <span className="font-medium">{getToolName(type)}</span>
+          {state === "input-available" && (
+            <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-xs text-blue-500">
+              Processing
+            </span>
+          )}
+          {state === "output-available" && (
+            <span className="rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-500">
+              Complete
+            </span>
+          )}
+        </div>
+        <motion.div
+          animate={{ rotate: isExpanded ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </motion.div>
+      </div>
+      
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-border/40 p-3">
+              {type === "tool-getWeather" && (
+                <>
+                  {state === "input-available" && (
+                    <div className="mb-2 text-sm text-muted-foreground">
+                      Requesting weather for: <span className="font-medium">{input.location}</span>
+                    </div>
+                  )}
+                  {state === "output-available" && (
+                    <Weather weatherAtLocation={output} />
+                  )}
+                </>
+              )}
+              
+              {type === "tool-createDocument" && (
+                <DocumentPreview isReadonly={isReadonly} result={output} />
+              )}
+              
+              {type === "tool-updateDocument" && (
+                <DocumentPreview
+                  args={{ ...output, isUpdate: true }}
+                  isReadonly={isReadonly}
+                  result={output}
+                />
+              )}
+              
+              {type === "tool-requestSuggestions" && (
+                <>
+                  {state === "input-available" && (
+                    <div className="mb-2 text-sm text-muted-foreground">
+                      Requesting suggestions for: <span className="font-medium">{input.document}</span>
+                    </div>
+                  )}
+                  {state === "output-available" && (
+                    "error" in output ? (
+                      <div className="rounded border border-red-200 bg-red-50 p-2 text-red-500 dark:bg-red-950/50">
+                        Error: {String(output.error)}
+                      </div>
+                    ) : (
+                      <DocumentToolResult
+                        isReadonly={isReadonly}
+                        result={output}
+                        type="request-suggestions"
+                      />
+                    )
+                  )}
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
 const PurePreviewMessage = ({
   chatId,
   message,
@@ -47,7 +268,7 @@ const PurePreviewMessage = ({
   requiresScrollPadding: boolean;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
-  const { data: session } = useSession();
+  const [isHovered, setIsHovered] = useState(false);
 
   const attachmentsFromMessage = message.parts.filter(
     (part) => part.type === "file"
@@ -57,85 +278,66 @@ const PurePreviewMessage = ({
 
   return (
     <motion.div
-      animate={{ opacity: 1 }}
-      className="group/message w-full"
+      animate={{ opacity: 1, y: 0 }}
+      className={cn(
+        "group/message relative w-full px-4 py-6 transition-colors",
+        message.role === "user" ? "bg-background" : "bg-gradient-to-b from-background to-muted/10"
+      )}
       data-role={message.role}
       data-testid={`message-${message.role}`}
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 0, y: 10 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      transition={{ duration: 0.3 }}
     >
       <div
-        className={cn("flex w-full items-start gap-1.5 sm:gap-2 md:gap-3", {
+        className={cn("mx-auto flex w-full max-w-4xl items-start gap-4", {
           "justify-end": message.role === "user" && mode !== "edit",
           "justify-start": message.role === "assistant",
         })}
       >
         {message.role === "assistant" && (
-          <motion.div 
-            className="-mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900"
-            animate={isLoading ? {
-              boxShadow: [
-                "0 0 0 0 rgba(59, 130, 246, 0.4)",
-                "0 0 0 6px rgba(59, 130, 246, 0)",
-                "0 0 0 0 rgba(59, 130, 246, 0)",
-              ],
-            } : {}}
-            transition={{
-              duration: 2,
-              repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
-              ease: "easeInOut",
-            }}
-          >
-            <motion.div
-              animate={isLoading ? {
-                opacity: [1, 0.7, 1],
-              } : {}}
-              transition={{
-                duration: 1.5,
-                repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
-                ease: "easeInOut",
-              }}
-              className="relative size-full"
-            >
-              <Image
-                src="/logo.jpg"
-                alt="AI Avatar"
-                width={28}
-                height={28}
-                className="object-cover sm:h-8 sm:w-8"
+          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 shadow-md">
+            <SparklesIcon size={16} className="text-primary-foreground" />
+            {isLoading && (
+              <motion.div
+                className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500"
+                animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                }}
               />
-            </motion.div>
-          </motion.div>
-        )}
-
-        {message.role === "user" && session?.user && (
-          <div className="order-2 -mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900">
-            <Image
-              src={session.user.image || `https://avatar.vercel.sh/${session.user.email}`}
-              alt={session.user.name || "User"}
-              width={32}
-              height={32}
-              className="size-full rounded-full object-cover"
-              unoptimized
-            />
+            )}
           </div>
         )}
 
         <div
           className={cn("flex flex-col", {
-            "gap-2 md:gap-4": message.parts?.some(
-              (p) => p.type === "text" && "text" in p && p.text?.trim()
-            ),
+            "gap-3": message.parts?.some((p) => p.type === "text" && p.text?.trim()),
             "min-h-96": message.role === "assistant" && requiresScrollPadding,
             "w-full":
               (message.role === "assistant" &&
-                message.parts?.some(
-                  (p) => p.type === "text" && "text" in p && p.text?.trim()
-                )) ||
+                message.parts?.some((p) => p.type === "text" && p.text?.trim())) ||
               mode === "edit",
-            "max-w-[calc(100%-2.5rem)] sm:max-w-[min(fit-content,80%)]":
+            "max-w-[calc(100%-3rem)] sm:max-w-[min(fit-content,70%)]":
               message.role === "user" && mode !== "edit",
           })}
         >
+          {message.role === "assistant" && (
+            <div className="mb-1 flex items-center">
+              <span className="font-semibold text-foreground">Assistant</span>
+              <MessageTimestamp timestamp={message.createdAt || new Date()} />
+            </div>
+          )}
+
+          {message.role === "user" && (
+            <div className="mb-1 flex items-center justify-end">
+              <MessageTimestamp timestamp={message.createdAt || new Date()} />
+              <span className="ml-2 font-semibold text-foreground">You</span>
+            </div>
+          )}
+
           {attachmentsFromMessage.length > 0 && (
             <div
               className="flex flex-row justify-end gap-2"
@@ -158,47 +360,69 @@ const PurePreviewMessage = ({
             const { type } = part;
             const key = `message-${message.id}-part-${index}`;
 
-            if (type === "reasoning" && "text" in part && part.text?.trim().length > 0) {
+            if (type === "reasoning" && part.text?.trim().length > 0) {
               return (
-                <MessageReasoning
-                  isLoading={isLoading}
+                <motion.div
                   key={key}
-                  reasoning={part.text}
-                />
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <MessageReasoning
+                    isLoading={isLoading}
+                    reasoning={part.text}
+                  />
+                </motion.div>
               );
             }
 
             if (type === "text") {
               if (mode === "view") {
                 return (
-                  <div key={key}>
+                  <motion.div
+                    key={key}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
                     <MessageContent
-                      className={cn({
-                        "w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base":
-                          message.role === "user",
-                        "bg-transparent px-0 py-0 text-left text-sm sm:text-base":
-                          message.role === "assistant",
-                      })}
+                      className={cn(
+                        "relative overflow-hidden rounded-2xl px-4 py-3 shadow-sm transition-all",
+                        {
+                          "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-blue-500/20":
+                            message.role === "user",
+                          "bg-background border border-border/40 text-foreground":
+                            message.role === "assistant",
+                        }
+                      )}
                       data-testid="message-content"
-                      style={
-                        message.role === "user"
-                          ? { backgroundColor: "#006cff" }
-                          : undefined
-                      }
                     >
-                      <Response>{sanitizeText(part.text)}</Response>
+                      {message.role === "user" && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 opacity-90" />
+                      )}
+                      <div className="relative">
+                        <Response>{sanitizeText(part.text)}</Response>
+                        {isLoading && message.role === "assistant" && (
+                          <div className="mt-2">
+                            <TypingIndicator />
+                          </div>
+                        )}
+                      </div>
                     </MessageContent>
-                  </div>
+                  </motion.div>
                 );
               }
 
               if (mode === "edit") {
                 return (
-                  <div
+                  <motion.div
                     className="flex w-full flex-row items-start gap-3"
                     key={key}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <div className="size-8" />
+                    <div className="h-8 w-8" />
                     <div className="min-w-0 flex-1">
                       <MessageEditor
                         key={message.id}
@@ -208,110 +432,64 @@ const PurePreviewMessage = ({
                         setMode={setMode}
                       />
                     </div>
-                  </div>
+                  </motion.div>
                 );
               }
             }
 
-            if (type === "tool-getWeather" && "toolCallId" in part && "state" in part) {
+            // Enhanced tool results
+            if (type.startsWith("tool-")) {
               const { toolCallId, state } = part;
 
-              return (
-                <Tool defaultOpen={true} key={toolCallId}>
-                  <ToolHeader state={state} type="tool-getWeather" />
-                  <ToolContent>
-                    {state === "input-available" && "input" in part && (
-                      <ToolInput input={part.input} />
-                    )}
-                    {state === "output-available" && "output" in part && (
-                      <ToolOutput
-                        errorText={undefined}
-                        output={<Weather weatherAtLocation={part.output} />}
-                      />
-                    )}
-                  </ToolContent>
-                </Tool>
-              );
-            }
+              if (type === "tool-createDocument" || type === "tool-updateDocument") {
+                if (part.output && "error" in part.output) {
+                  return (
+                    <motion.div
+                      key={toolCallId}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="my-2 rounded-lg border border-red-200 bg-red-50 p-4 text-red-500 dark:bg-red-950/50"
+                    >
+                      Error {type === "tool-createDocument" ? "creating" : "updating"} document:{" "}
+                      {String(part.output.error)}
+                    </motion.div>
+                  );
+                }
 
-            if (type === "tool-createDocument" && "toolCallId" in part) {
-              const { toolCallId } = part;
-
-              if ("output" in part && part.output && "error" in part.output) {
                 return (
-                  <div
-                    className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-500 dark:bg-red-950/50"
+                  <motion.div
                     key={toolCallId}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    Error creating document: {String(part.output.error)}
-                  </div>
+                    {type === "tool-createDocument" ? (
+                      <DocumentPreview isReadonly={isReadonly} result={part.output} />
+                    ) : (
+                      <div className="relative">
+                        <DocumentPreview
+                          args={{ ...part.output, isUpdate: true }}
+                          isReadonly={isReadonly}
+                          result={part.output}
+                        />
+                      </div>
+                    )}
+                  </motion.div>
                 );
               }
 
+              // Use enhanced tool result component for other tools
               return (
-                <DocumentPreview
-                  isReadonly={isReadonly}
+                <EnhancedToolResult
                   key={toolCallId}
-                  result={"output" in part ? part.output : undefined}
+                  type={type}
+                  input={part.input}
+                  output={part.output}
+                  state={state}
+                  toolCallId={toolCallId}
+                  isReadonly={isReadonly}
                 />
-              );
-            }
-
-            if (type === "tool-updateDocument" && "toolCallId" in part) {
-              const { toolCallId } = part;
-
-              if ("output" in part && part.output && "error" in part.output) {
-                return (
-                  <div
-                    className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-500 dark:bg-red-950/50"
-                    key={toolCallId}
-                  >
-                    Error updating document: {String(part.output.error)}
-                  </div>
-                );
-              }
-
-              return (
-                <div className="relative" key={toolCallId}>
-                  <DocumentPreview
-                    args={("output" in part && part.output) ? { ...part.output, isUpdate: true } : {}}
-                    isReadonly={isReadonly}
-                    result={"output" in part ? part.output : undefined}
-                  />
-                </div>
-              );
-            }
-
-            if (type === "tool-requestSuggestions" && "toolCallId" in part && "state" in part) {
-              const { toolCallId, state } = part;
-
-              return (
-                <Tool defaultOpen={true} key={toolCallId}>
-                  <ToolHeader state={state} type="tool-requestSuggestions" />
-                  <ToolContent>
-                    {state === "input-available" && "input" in part && (
-                      <ToolInput input={part.input} />
-                    )}
-                    {state === "output-available" && "output" in part && (
-                      <ToolOutput
-                        errorText={undefined}
-                        output={
-                          "error" in part.output ? (
-                            <div className="rounded border p-2 text-red-500">
-                              Error: {String(part.output.error)}
-                            </div>
-                          ) : (
-                            <DocumentToolResult
-                              isReadonly={isReadonly}
-                              result={part.output}
-                              type="request-suggestions"
-                            />
-                          )
-                        }
-                      />
-                    )}
-                  </ToolContent>
-                </Tool>
               );
             }
 
@@ -319,14 +497,21 @@ const PurePreviewMessage = ({
           })}
 
           {!isReadonly && (
-            <MessageActions
-              chatId={chatId}
-              isLoading={isLoading}
-              key={`action-${message.id}`}
-              message={message}
-              setMode={setMode}
-              vote={vote}
-            />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="mt-2"
+            >
+              <MessageActions
+                chatId={chatId}
+                isLoading={isLoading}
+                key={`action-${message.id}`}
+                message={message}
+                setMode={setMode}
+                vote={vote}
+              />
+            </motion.div>
           )}
         </div>
       </div>
@@ -363,21 +548,56 @@ export const ThinkingMessage = () => {
   return (
     <motion.div
       animate={{ opacity: 1 }}
-      className="group/message w-full"
+      className="group/message relative w-full px-4 py-6 bg-gradient-to-b from-background to-muted/10"
       data-role={role}
       data-testid="message-assistant-loading"
       initial={{ opacity: 0 }}
     >
-      <div className="flex items-start justify-start gap-3">
-        <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
-          <div className="text-white">
-            <SparklesIcon size={14} />
-          </div>
+      <div className="mx-auto flex w-full max-w-4xl items-start gap-4 justify-start">
+        <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 shadow-md">
+          <SparklesIcon size={16} className="text-primary-foreground" />
+          <motion.div
+            className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+            }}
+          />
         </div>
 
-        <div className="flex w-full flex-col gap-2 md:gap-4">
-          <div className="p-0 text-muted-foreground text-sm">
-            <LoadingText>Thinking...</LoadingText>
+        <div className="flex w-full flex-col gap-2">
+          <div className="mb-1 flex items-center">
+            <span className="font-semibold text-foreground">Assistant</span>
+            <MessageTimestamp timestamp={new Date()} />
+          </div>
+          
+          <div className="relative overflow-hidden rounded-2xl bg-background border border-border/40 px-4 py-3 shadow-sm">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+              </motion.div>
+              <LoadingText>Thinking...</LoadingText>
+            </div>
           </div>
         </div>
       </div>

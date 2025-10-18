@@ -1,4 +1,3 @@
-// components/sidebar-history-item.tsx
 import Link from "next/link";
 import { memo } from "react";
 import { useChatVisibility } from "@/hooks/use-chat-visibility";

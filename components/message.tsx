@@ -60,7 +60,7 @@ const PurePreviewMessage = ({
       animate={{ opacity: 1 }}
       className="group/message w-full"
       data-role={message.role}
-      data-testid={message-${message.role}}
+      data-testid={`message-${message.role}`}
       initial={{ opacity: 0 }}
     >
       <div
@@ -110,7 +110,7 @@ const PurePreviewMessage = ({
         {message.role === "user" && session?.user && (
           <div className="order-2 -mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900">
             <Image
-              src={session.user.image || https://avatar.vercel.sh/${session.user.email}}
+              src={session.user.image || `https://avatar.vercel.sh/${session.user.email}`}
               alt={session.user.name || "User"}
               width={32}
               height={32}
@@ -123,13 +123,13 @@ const PurePreviewMessage = ({
         <div
           className={cn("flex flex-col", {
             "gap-2 md:gap-4": message.parts?.some(
-              (p) => p.type === "text" && p.text?.trim()
+              (p) => p.type === "text" && "text" in p && p.text?.trim()
             ),
             "min-h-96": message.role === "assistant" && requiresScrollPadding,
             "w-full":
               (message.role === "assistant" &&
                 message.parts?.some(
-                  (p) => p.type === "text" && p.text?.trim()
+                  (p) => p.type === "text" && "text" in p && p.text?.trim()
                 )) ||
               mode === "edit",
             "max-w-[calc(100%-2.5rem)] sm:max-w-[min(fit-content,80%)]":
@@ -156,9 +156,9 @@ const PurePreviewMessage = ({
 
           {message.parts?.map((part, index) => {
             const { type } = part;
-            const key = message-${message.id}-part-${index};
+            const key = `message-${message.id}-part-${index}`;
 
-            if (type === "reasoning" && part.text?.trim().length > 0) {
+            if (type === "reasoning" && "text" in part && part.text?.trim().length > 0) {
               return (
                 <MessageReasoning
                   isLoading={isLoading}
@@ -213,17 +213,17 @@ const PurePreviewMessage = ({
               }
             }
 
-            if (type === "tool-getWeather") {
+            if (type === "tool-getWeather" && "toolCallId" in part && "state" in part) {
               const { toolCallId, state } = part;
 
               return (
                 <Tool defaultOpen={true} key={toolCallId}>
                   <ToolHeader state={state} type="tool-getWeather" />
                   <ToolContent>
-                    {state === "input-available" && (
+                    {state === "input-available" && "input" in part && (
                       <ToolInput input={part.input} />
                     )}
-                    {state === "output-available" && (
+                    {state === "output-available" && "output" in part && (
                       <ToolOutput
                         errorText={undefined}
                         output={<Weather weatherAtLocation={part.output} />}
@@ -234,10 +234,10 @@ const PurePreviewMessage = ({
               );
             }
 
-            if (type === "tool-createDocument") {
+            if (type === "tool-createDocument" && "toolCallId" in part) {
               const { toolCallId } = part;
 
-              if (part.output && "error" in part.output) {
+              if ("output" in part && part.output && "error" in part.output) {
                 return (
                   <div
                     className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-500 dark:bg-red-950/50"
@@ -252,15 +252,15 @@ const PurePreviewMessage = ({
                 <DocumentPreview
                   isReadonly={isReadonly}
                   key={toolCallId}
-                  result={part.output}
+                  result={"output" in part ? part.output : undefined}
                 />
               );
             }
 
-            if (type === "tool-updateDocument") {
+            if (type === "tool-updateDocument" && "toolCallId" in part) {
               const { toolCallId } = part;
 
-              if (part.output && "error" in part.output) {
+              if ("output" in part && part.output && "error" in part.output) {
                 return (
                   <div
                     className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-500 dark:bg-red-950/50"
@@ -274,25 +274,25 @@ const PurePreviewMessage = ({
               return (
                 <div className="relative" key={toolCallId}>
                   <DocumentPreview
-                    args={{ ...part.output, isUpdate: true }}
+                    args={("output" in part && part.output) ? { ...part.output, isUpdate: true } : {}}
                     isReadonly={isReadonly}
-                    result={part.output}
+                    result={"output" in part ? part.output : undefined}
                   />
                 </div>
               );
             }
 
-            if (type === "tool-requestSuggestions") {
+            if (type === "tool-requestSuggestions" && "toolCallId" in part && "state" in part) {
               const { toolCallId, state } = part;
 
               return (
                 <Tool defaultOpen={true} key={toolCallId}>
                   <ToolHeader state={state} type="tool-requestSuggestions" />
                   <ToolContent>
-                    {state === "input-available" && (
+                    {state === "input-available" && "input" in part && (
                       <ToolInput input={part.input} />
                     )}
-                    {state === "output-available" && (
+                    {state === "output-available" && "output" in part && (
                       <ToolOutput
                         errorText={undefined}
                         output={
@@ -322,7 +322,7 @@ const PurePreviewMessage = ({
             <MessageActions
               chatId={chatId}
               isLoading={isLoading}
-              key={action-${message.id}}
+              key={`action-${message.id}`}
               message={message}
               setMode={setMode}
               vote={vote}
@@ -370,7 +370,9 @@ export const ThinkingMessage = () => {
     >
       <div className="flex items-start justify-start gap-3">
         <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
-          <SparklesIcon size={14} />
+          <div className="text-white">
+            <SparklesIcon size={14} />
+          </div>
         </div>
 
         <div className="flex w-full flex-col gap-2 md:gap-4">
@@ -404,4 +406,4 @@ const LoadingText = ({ children }: { children: React.ReactNode }) => {
       {children}
     </motion.div>
   );
-}; 
+};

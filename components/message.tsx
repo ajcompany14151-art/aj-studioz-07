@@ -20,7 +20,7 @@ import {
   ToolInput,
   ToolOutput,
 } from "./elements/tool";
-import { SparklesIcon } from "./icons";
+import { SparklesIcon, ChevronDownIcon, ChevronUpIcon } from "./icons";
 import { MessageActions } from "./message-actions";
 import { MessageEditor } from "./message-editor";
 import { MessageReasoning } from "./message-reasoning";
@@ -56,6 +56,13 @@ const PurePreviewMessage = ({
 
   useDataStream();
 
+  // Check if message contains HTML content that can be previewed
+  const hasHtmlContent = message.parts?.some(part => 
+    part.type === "text" && 
+    part.text && 
+    /<[a-z][\s\S]*>/i.test(part.text)
+  );
+
   return (
     <motion.div
       animate={{ opacity: 1 }}
@@ -65,14 +72,14 @@ const PurePreviewMessage = ({
       initial={{ opacity: 0 }}
     >
       <div
-        className={cn("flex w-full gap-4 py-6", {
+        className={cn("flex w-full items-start gap-1.5 sm:gap-2 md:gap-3", {
           "justify-end": message.role === "user" && mode !== "edit",
           "justify-start": message.role === "assistant",
         })}
       >
         {message.role === "assistant" && (
           <motion.div 
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600"
+            className="-mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900"
             animate={isLoading ? {
               boxShadow: [
                 "0 0 0 0 rgba(59, 130, 246, 0.4)",
@@ -95,27 +102,27 @@ const PurePreviewMessage = ({
                 repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
                 ease: "easeInOut",
               }}
-              className="relative h-full w-full"
+              className="relative size-full"
             >
               <Image
                 src="/logo.jpg"
                 alt="AI Avatar"
-                width={32}
-                height={32}
-                className="h-full w-full rounded-full object-cover"
+                width={28}
+                height={28}
+                className="object-cover sm:h-8 sm:w-8"
               />
             </motion.div>
           </motion.div>
         )}
 
         {message.role === "user" && session?.user && (
-          <div className="order-2 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gray-200">
+          <div className="order-2 -mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900">
             <Image
               src={session.user.image || `https://avatar.vercel.sh/${session.user.email}`}
               alt={session.user.name || "User"}
               width={32}
               height={32}
-              className="h-full w-full rounded-full object-cover"
+              className="size-full rounded-full object-cover"
               unoptimized
             />
           </div>
@@ -123,14 +130,23 @@ const PurePreviewMessage = ({
 
         <div
           className={cn("flex flex-col", {
-            "max-w-[85%]": message.role === "user" && mode !== "edit",
-            "w-full": message.role === "assistant" || mode === "edit",
+            "gap-2 md:gap-4": message.parts?.some(
+              (p) => p.type === "text" && p.text?.trim()
+            ),
             "min-h-96": message.role === "assistant" && requiresScrollPadding,
+            "w-full":
+              (message.role === "assistant" &&
+                message.parts?.some(
+                  (p) => p.type === "text" && p.text?.trim()
+                )) ||
+              mode === "edit",
+            "max-w-[calc(100%-2.5rem)] sm:max-w-[min(fit-content,80%)]":
+              message.role === "user" && mode !== "edit",
           })}
         >
           {attachmentsFromMessage.length > 0 && (
             <div
-              className="mb-2 flex flex-row justify-end gap-2"
+              className="flex flex-row justify-end gap-2"
               data-testid={"message-attachments"}
             >
               {attachmentsFromMessage.map((attachment) => (
@@ -163,92 +179,96 @@ const PurePreviewMessage = ({
             if (type === "text") {
               if (mode === "view") {
                 return (
-                  <div key={key} className="relative">
-                    <MessageContent
-                      className={cn({
-                        "rounded-2xl rounded-br-sm px-4 py-3 text-sm text-white shadow-sm sm:text-base":
-                          message.role === "user",
-                        "rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-3 text-sm text-gray-800 shadow-sm dark:bg-gray-800 dark:text-gray-100 sm:text-base":
-                          message.role === "assistant",
-                      })}
-                      data-testid="message-content"
-                      style={
-                        message.role === "user"
-                          ? { backgroundColor: "#007AFF" }
-                          : undefined
-                      }
-                    >
-                      <Response>{sanitizeText(part.text)}</Response>
-                    </MessageContent>
-                    
-                    {/* HTML Preview Toggle for Assistant Messages */}
-                    {message.role === "assistant" && part.text?.trim() && (
-                      <div className="mt-2 flex items-center gap-2">
-                        <button
-                          onClick={() => setShowHtmlPreview(!showHtmlPreview)}
-                          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="h-3 w-3"
-                          >
-                            <polyline points="16 18 22 12 16 6"></polyline>
-                            <polyline points="8 6 2 12 8 18"></polyline>
-                          </svg>
-                          {showHtmlPreview ? "Hide" : "Show"} HTML
-                        </button>
-                      </div>
-                    )}
-                    
-                    {/* Collapsible HTML Preview */}
-                    {message.role === "assistant" && showHtmlPreview && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="mt-2 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
+                  <div key={key} className="w-full">
+                    <div className={cn("flex flex-col", {
+                      "items-end": message.role === "user",
+                      "items-start": message.role === "assistant",
+                    })}>
+                      {/* Message Bubble */}
+                      <div
+                        className={cn(
+                          "max-w-full rounded-2xl px-4 py-3 text-sm leading-relaxed",
+                          "transition-colors duration-200",
+                          {
+                            "bg-blue-600 text-white": message.role === "user",
+                            "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100": 
+                              message.role === "assistant",
+                            "rounded-br-md": message.role === "user",
+                            "rounded-bl-md": message.role === "assistant",
+                          }
+                        )}
                       >
-                        <div className="mb-2 flex items-center justify-between">
-                          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            HTML Preview
-                          </h3>
+                        <MessageContent
+                          className={cn("break-words", {
+                            "text-right": message.role === "user",
+                            "text-left": message.role === "assistant",
+                          })}
+                          data-testid="message-content"
+                        >
+                          <Response>{sanitizeText(part.text)}</Response>
+                        </MessageContent>
+                      </div>
+
+                      {/* HTML Preview Toggle - Only for assistant messages with HTML */}
+                      {message.role === "assistant" && hasHtmlContent && (
+                        <div className="mt-2 flex w-full justify-start">
                           <button
-                            onClick={() => setShowHtmlPreview(false)}
-                            className="rounded p-1 text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
+                            onClick={() => setShowHtmlPreview(!showHtmlPreview)}
+                            className={cn(
+                              "flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs",
+                              "transition-all duration-200 hover:bg-gray-200 dark:hover:bg-gray-700",
+                              "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200",
+                              "border border-gray-300 dark:border-gray-600"
+                            )}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <line x1="18" y1="6" x2="6" y2="18"></line>
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
+                            {showHtmlPreview ? (
+                              <>
+                                <ChevronUpIcon size={12} />
+                                Hide HTML Preview
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDownIcon size={12} />
+                                Show HTML Preview
+                              </>
+                            )}
                           </button>
                         </div>
-                        <div className="h-64 overflow-auto rounded border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-800">
-                          <div
-                            dangerouslySetInnerHTML={{ __html: part.text }}
-                            className="prose prose-sm max-w-none dark:prose-invert"
-                          />
-                        </div>
-                      </motion.div>
-                    )}
+                      )}
+
+                      {/* HTML Preview */}
+                      {message.role === "assistant" && hasHtmlContent && showHtmlPreview && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="mt-3 w-full"
+                        >
+                          <div className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900">
+                            <div className="flex items-center justify-between border-b border-gray-300 dark:border-gray-600 px-4 py-2">
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                HTML Preview
+                              </span>
+                              <button
+                                onClick={() => setShowHtmlPreview(false)}
+                                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                              >
+                                <ChevronUpIcon size={14} />
+                              </button>
+                            </div>
+                            <div className="p-4">
+                              <div 
+                                className="prose prose-sm max-w-none dark:prose-invert"
+                                dangerouslySetInnerHTML={{ 
+                                  __html: part.text || "" 
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
                   </div>
                 );
               }
@@ -259,7 +279,7 @@ const PurePreviewMessage = ({
                     className="flex w-full flex-row items-start gap-3"
                     key={key}
                   >
-                    <div className="h-8 w-8" />
+                    <div className="size-8" />
                     <div className="min-w-0 flex-1">
                       <MessageEditor
                         key={message.id}
@@ -424,18 +444,18 @@ export const ThinkingMessage = () => {
   return (
     <motion.div
       animate={{ opacity: 1 }}
-      className="group/message w-full py-6"
+      className="group/message w-full"
       data-role={role}
       data-testid="message-assistant-loading"
       initial={{ opacity: 0 }}
     >
-      <div className="flex items-start justify-start gap-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600">
-          <SparklesIcon size={16} />
+      <div className="flex items-start justify-start gap-3">
+        <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
+          <SparklesIcon size={14} />
         </div>
 
-        <div className="flex w-full flex-col">
-          <div className="rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-3 text-sm text-gray-800 shadow-sm dark:bg-gray-800 dark:text-gray-100">
+        <div className="flex w-full flex-col gap-2 md:gap-4">
+          <div className="p-0 text-muted-foreground text-sm">
             <LoadingText>Thinking...</LoadingText>
           </div>
         </div>

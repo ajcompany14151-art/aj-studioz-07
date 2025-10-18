@@ -1,4 +1,3 @@
-// components/sidebar-history.tsx
 "use client";
 
 import { isToday, isYesterday, subMonths, subWeeks } from "date-fns";
@@ -183,7 +182,9 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                 className="flex h-10 items-center gap-2 rounded-md px-3"
                 key={item}
               >
-                <MessageIcon size={16} className={open ? "hidden" : ""} />
+                <span className={open ? "hidden" : ""}>
+                  <MessageIcon size={16} />
+                </span>
                 {open && (
                   <div
                     className="h-4 max-w-[var(--skeleton-width)] flex-1 rounded-md bg-muted"

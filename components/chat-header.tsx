@@ -22,19 +22,20 @@ function PureChatHeader({
   const { width: windowWidth } = useWindowSize();
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border/50 bg-background/80 backdrop-blur-xl px-4 sm:gap-4 sm:px-6">
+    <header className="sticky top-0 flex items-center gap-1.5 bg-background px-1.5 py-1.5 sm:gap-2 sm:px-2 md:px-2">
       <SidebarToggle />
 
       {(!open || windowWidth < 768) && (
         <Button
-          className="order-2 ml-auto h-9 rounded-2xl bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-105 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 md:order-1 md:ml-0"
+          className="order-2 ml-auto h-7 px-1.5 text-xs sm:h-8 sm:px-2 sm:text-sm md:order-1 md:ml-0 md:h-fit md:px-2"
           onClick={() => {
             router.push("/");
             router.refresh();
           }}
+          variant="outline"
         >
-          <PlusIcon size={18} />
-          <span className="ml-2 md:sr-only">New</span>
+          <PlusIcon size={16} />
+          <span className="md:sr-only">New Chat</span>
         </Button>
       )}
     </header>

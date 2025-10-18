@@ -70,13 +70,13 @@ const PurePreviewMessage = ({
 
   // Check if message contains HTML
   const hasHTML = message.parts.some(
-    (part) => part.type === "text" && part.text?.includes("<")
+    (part) => part.type === "text" && "text" in part && part.text?.includes("<")
   );
 
   // Extract HTML content
   const htmlContent = message.parts.find(
-    (part) => part.type === "text" && part.text?.includes("<")
-  )?.text;
+    (part) => part.type === "text" && "text" in part && part.text?.includes("<")
+  ) as { type: "text"; text: string } | undefined;
 
   return (
     <motion.div
@@ -147,13 +147,13 @@ const PurePreviewMessage = ({
         <div
           className={cn("flex flex-col", {
             "gap-2 md:gap-3": message.parts?.some(
-              (p) => p.type === "text" && p.text?.trim()
+              (p) => p.type === "text" && "text" in p && p.text?.trim()
             ),
             "min-h-96": message.role === "assistant" && requiresScrollPadding,
             "w-full":
               (message.role === "assistant" &&
                 message.parts?.some(
-                  (p) => p.type === "text" && p.text?.trim()
+                  (p) => p.type === "text" && "text" in p && p.text?.trim()
                 )) ||
               mode === "edit",
             "max-w-[calc(100%-3.5rem)] sm:max-w-[min(fit-content,80%)]":
@@ -182,7 +182,7 @@ const PurePreviewMessage = ({
             const { type } = part;
             const key = `message-${message.id}-part-${index}`;
 
-            if (type === "reasoning" && part.text?.trim().length > 0) {
+            if (type === "reasoning" && "text" in part && part.text?.trim().length > 0) {
               return (
                 <MessageReasoning
                   isLoading={isLoading}
@@ -237,7 +237,7 @@ const PurePreviewMessage = ({
                     
                     {/* HTML Preview */}
                     {message.role === "assistant" && showHTML && htmlContent && (
-                      <HTMLPreview html={htmlContent} />
+                      <HTMLPreview html={htmlContent.text} />
                     )}
                   </div>
                 );
@@ -264,17 +264,17 @@ const PurePreviewMessage = ({
               }
             }
 
-            if (type === "tool-getWeather") {
+            if (type === "tool-getWeather" && "toolCallId" in part && "state" in part) {
               const { toolCallId, state } = part;
 
               return (
                 <Tool defaultOpen={true} key={toolCallId}>
                   <ToolHeader state={state} type="tool-getWeather" />
                   <ToolContent>
-                    {state === "input-available" && (
+                    {state === "input-available" && "input" in part && (
                       <ToolInput input={part.input} />
                     )}
-                    {state === "output-available" && (
+                    {state === "output-available" && "output" in part && (
                       <ToolOutput
                         errorText={undefined}
                         output={<Weather weatherAtLocation={part.output} />}
@@ -285,10 +285,10 @@ const PurePreviewMessage = ({
               );
             }
 
-            if (type === "tool-createDocument") {
+            if (type === "tool-createDocument" && "toolCallId" in part) {
               const { toolCallId } = part;
 
-              if (part.output && "error" in part.output) {
+              if ("output" in part && part.output && "error" in part.output) {
                 return (
                   <div
                     className="rounded-lg border border-red-500/30 bg-red-900/20 p-4 text-red-400"
@@ -303,15 +303,15 @@ const PurePreviewMessage = ({
                 <DocumentPreview
                   isReadonly={isReadonly}
                   key={toolCallId}
-                  result={part.output}
+                  result={"output" in part ? part.output : undefined}
                 />
               );
             }
 
-            if (type === "tool-updateDocument") {
+            if (type === "tool-updateDocument" && "toolCallId" in part) {
               const { toolCallId } = part;
 
-              if (part.output && "error" in part.output) {
+              if ("output" in part && part.output && "error" in part.output) {
                 return (
                   <div
                     className="rounded-lg border border-red-500/30 bg-red-900/20 p-4 text-red-400"
@@ -325,25 +325,25 @@ const PurePreviewMessage = ({
               return (
                 <div className="relative" key={toolCallId}>
                   <DocumentPreview
-                    args={{ ...part.output, isUpdate: true }}
+                    args={("output" in part && part.output) ? { ...part.output, isUpdate: true } : {}}
                     isReadonly={isReadonly}
-                    result={part.output}
+                    result={"output" in part ? part.output : undefined}
                   />
                 </div>
               );
             }
 
-            if (type === "tool-requestSuggestions") {
+            if (type === "tool-requestSuggestions" && "toolCallId" in part && "state" in part) {
               const { toolCallId, state } = part;
 
               return (
                 <Tool defaultOpen={true} key={toolCallId}>
                   <ToolHeader state={state} type="tool-requestSuggestions" />
                   <ToolContent>
-                    {state === "input-available" && (
+                    {state === "input-available" && "input" in part && (
                       <ToolInput input={part.input} />
                     )}
-                    {state === "output-available" && (
+                    {state === "output-available" && "output" in part && (
                       <ToolOutput
                         errorText={undefined}
                         output={

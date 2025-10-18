@@ -38,7 +38,6 @@ declare module "next-auth/jwt" {
   }
 }
 
-// Define authOptions explicitly
 export const authOptions: NextAuthOptions = {
   ...authConfig,
   providers: [
@@ -128,7 +127,6 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-// Export NextAuth handlers and auth
 export const {
   handlers: { GET, POST },
   auth,

@@ -1,7 +1,11 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarToggle } from "@/components/sidebar-toggle";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -41,7 +45,6 @@ export const metadata: Metadata = {
     images: ["/logo.jpg"],
     creator: "@ajstudioz",
   },
-  // Additional meta tags for better social media sharing
   other: {
     "og:image:width": "1200",
     "og:image:height": "630",
@@ -50,7 +53,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  maximumScale: 1, // Disable auto-zoom on mobile Safari
+  maximumScale: 1,
 };
 
 const geist = Geist({
@@ -93,16 +96,11 @@ export default function RootLayout({
   return (
     <html
       className={`${geist.variable} ${geistMono.variable}`}
-      // `next-themes` injects an extra classname to the body element to avoid
-      // visual flicker before hydration. Hence the `suppressHydrationWarning`
-      // prop is necessary to avoid the React hydration mismatch warning.
-      // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
       lang="en"
       suppressHydrationWarning
     >
       <head>
         <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required"
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
           }}
@@ -115,8 +113,23 @@ export default function RootLayout({
           disableTransitionOnChange
           enableSystem
         >
+          <SessionProvider>
+            <SidebarProvider>
+              <AppSidebar user={undefined} />
+              <SidebarInset className="flex-1 flex flex-col">
+                <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
+                  <div className="flex items-center gap-2 px-4">
+                    <SidebarToggle />
+                  </div>
+                  <div className="flex-1" />
+                </header>
+                <main className="flex-1 overflow-hidden">
+                  {children}
+                </main>
+              </SidebarInset>
+            </SidebarProvider>
+          </SessionProvider>
           <Toaster position="top-center" />
-          <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>
       </body>
     </html>

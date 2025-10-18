@@ -1,4 +1,3 @@
-// components/sidebar-toggle.tsx
 "use client";
 
 import { useSidebar } from "@/components/ui/sidebar";
@@ -28,7 +27,9 @@ export function SidebarToggle({
           onClick={toggleSidebar}
           variant="ghost"
         >
-          <SidebarLeftIcon size={16} className={open ? "rotate-180" : ""} />
+          <span className={open ? "rotate-180" : ""}>
+            <SidebarLeftIcon size={16} />
+          </span>
         </Button>
       </TooltipTrigger>
       <TooltipContent align="start" className="hidden md:block">

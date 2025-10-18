@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+"use client";
 
 import { type SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import {
@@ -19,10 +19,13 @@ export function SidebarToggle({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          className={cn("h-8 px-2 md:h-fit md:px-2", className)}
+          className={cn(
+            "h-8 w-8 rounded-2xl p-2 transition-all duration-300 hover:bg-primary/10 hover:text-primary",
+            className
+          )}
           data-testid="sidebar-toggle-button"
           onClick={toggleSidebar}
-          variant="outline"
+          variant="ghost"
         >
           <SidebarLeftIcon size={16} />
         </Button>

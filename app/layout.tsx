@@ -5,8 +5,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SessionProvider } from "next-auth/react";
-import getServerSession from "next-auth"; // Default import
+import { getServerSession } from "next-auth"; // Named import
 import { authOptions } from "@/app/(auth)/auth"; // Import authOptions
+import type { Session } from "next-auth"; // Import Session type
 
 import "./globals.css";
 
@@ -132,7 +133,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions); // Use authOptions
+  const session: Session | null = await getServerSession(authOptions); // Explicitly type session
 
   return (
     <html
@@ -204,7 +205,7 @@ export default async function RootLayout({
           <SessionProvider>
             <SidebarProvider>
               <div className="flex min-h-screen">
-                <AppSidebar user={session?.user} />
+                <AppSidebar user={session?.user ?? undefined} /> {/* Pass undefined if no session */}
                 <main className="flex-1 p-4">
                   <SidebarTrigger className="mb-4" />
                   {children}

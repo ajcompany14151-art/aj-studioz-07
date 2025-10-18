@@ -5,8 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SessionProvider } from "next-auth/react";
-import { auth } from "@/app/(auth)/auth"; // 使用 auth 函数而不是 getServerSession
-import type { Session } from "next-auth"; // Import Session type
+import { auth } from "@/app/(auth)/auth";
+import type { Session } from "next-auth";
 
 import "./globals.css";
 
@@ -132,7 +132,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth(); // 使用 auth() 函数而不是 getServerSession(authOptions)
+  const session = await auth();
 
   return (
     <html
@@ -194,19 +194,19 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased bg-black text-white">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           disableTransitionOnChange
-          enableSystem
+          enableSystem={false}
         >
           <SessionProvider>
             <SidebarProvider>
               <div className="flex min-h-screen">
-                <AppSidebar user={session?.user ?? undefined} /> {/* Pass undefined if no session */}
-                <main className="flex-1 p-4">
-                  <SidebarTrigger className="mb-4" />
+                <AppSidebar user={session?.user ?? undefined} />
+                <main className="flex-1 p-4 bg-black">
+                  <SidebarTrigger className="mb-4 text-gray-400 hover:text-white hover:bg-gray-800" />
                   {children}
                 </main>
               </div>

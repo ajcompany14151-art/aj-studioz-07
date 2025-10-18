@@ -298,7 +298,9 @@ const PurePreviewMessage = ({
       >
         {message.role === "assistant" && (
           <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 shadow-md">
-            <SparklesIcon size={16} className="text-primary-foreground" />
+            <div className="text-primary-foreground">
+              <SparklesIcon size={16} />
+            </div>
             {isLoading && (
               <motion.div
                 className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500"
@@ -555,7 +557,9 @@ export const ThinkingMessage = () => {
     >
       <div className="mx-auto flex w-full max-w-4xl items-start gap-4 justify-start">
         <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 shadow-md">
-          <SparklesIcon size={16} className="text-primary-foreground" />
+          <div className="text-primary-foreground">
+            <SparklesIcon size={16} />
+          </div>
           <motion.div
             className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500"
             animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}

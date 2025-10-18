@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/sidebar";
 import type { Chat } from "@/lib/db/schema";
 import { fetcher } from "@/lib/utils";
-import { LoaderIcon, MessageIcon } from "./icons";
+import { LoaderIcon } from "./icons";
 import { ChatItem } from "./sidebar-history-item";
 import { MessageSquare } from "lucide-react";
 
@@ -157,11 +157,16 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div
-            className={`flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-gray-400 ${
+            className={`flex w-full flex-col items-center justify-center gap-3 px-3 py-8 text-center ${
               open ? "" : "hidden"
             }`}
           >
-            Login to save and revisit previous chats!
+            <div className="p-3 rounded-full bg-gray-800/50">
+              <MessageSquare size={24} className="text-gray-500" />
+            </div>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Login to save and revisit previous chats!
+            </p>
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -172,18 +177,16 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     return (
       <SidebarGroup>
         <SidebarGroupContent>
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col space-y-2 px-2">
             {[44, 32, 28, 64, 52].map((item) => (
               <div
-                className="flex h-9 items-center gap-2 rounded-lg px-2"
+                className="flex h-10 items-center gap-3 rounded-xl px-3"
                 key={item}
               >
-                <span className={open ? "hidden" : ""}>
-                  <MessageSquare size={16} className="text-gray-400" />
-                </span>
+                <div className="size-[18px] rounded-md bg-gray-800/50 animate-pulse" />
                 {open && (
                   <div
-                    className="h-4 max-w-[var(--skeleton-width)] flex-1 rounded-md bg-gray-800"
+                    className="h-4 max-w-[var(--skeleton-width)] flex-1 rounded-md bg-gray-800/50 animate-pulse"
                     style={
                       {
                         "--skeleton-width": `${item}%`,
@@ -204,11 +207,16 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div
-            className={`flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-gray-400 ${
+            className={`flex w-full flex-col items-center justify-center gap-3 px-3 py-8 text-center ${
               open ? "" : "hidden"
             }`}
           >
-            Your conversations will appear here once you start chatting!
+            <div className="p-3 rounded-full bg-gray-800/50">
+              <MessageSquare size={24} className="text-gray-500" />
+            </div>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Your conversations will appear here once you start chatting!
+            </p>
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -229,11 +237,11 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                 const groupedChats = groupChatsByDate(chatsFromHistory);
 
                 return (
-                  <div className="flex flex-col space-y-1">
+                  <div className="flex flex-col space-y-2">
                     {groupedChats.today.length > 0 && (
                       <div className="space-y-1">
                         {open && (
-                          <div className="px-2 py-1 text-xs font-medium text-gray-500">
+                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                             Today
                           </div>
                         )}
@@ -255,7 +263,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.yesterday.length > 0 && (
                       <div className="space-y-1">
                         {open && (
-                          <div className="px-2 py-1 text-xs font-medium text-gray-500">
+                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                             Yesterday
                           </div>
                         )}
@@ -277,7 +285,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.lastWeek.length > 0 && (
                       <div className="space-y-1">
                         {open && (
-                          <div className="px-2 py-1 text-xs font-medium text-gray-500">
+                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                             Last 7 days
                           </div>
                         )}
@@ -299,7 +307,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.lastMonth.length > 0 && (
                       <div className="space-y-1">
                         {open && (
-                          <div className="px-2 py-1 text-xs font-medium text-gray-500">
+                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                             Last 30 days
                           </div>
                         )}
@@ -321,8 +329,8 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.older.length > 0 && (
                       <div className="space-y-1">
                         {open && (
-                          <div className="px-2 py-1 text-xs font-medium text-gray-500">
-                            Older than last month
+                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            Older
                           </div>
                         )}
                         {groupedChats.older.map((chat) => (
@@ -354,40 +362,45 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
           {hasReachedEnd ? (
             <div
-              className={`mt-8 flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-gray-400 ${
+              className={`mt-8 flex w-full flex-row items-center justify-center gap-2 px-3 text-xs text-gray-500 ${
                 open ? "" : "hidden"
               }`}
             >
-              You have reached the end of your chat history.
+              End of chat history
             </div>
           ) : (
             <div
-              className={`mt-8 flex flex-row items-center gap-2 p-2 text-gray-400 ${
+              className={`mt-6 flex flex-row items-center justify-center gap-2 p-3 text-gray-500 ${
                 open ? "" : "hidden"
               }`}
             >
               <div className="animate-spin">
                 <LoaderIcon />
               </div>
-              <div>Loading Chats...</div>
+              <div className="text-sm">Loading...</div>
             </div>
           )}
         </SidebarGroupContent>
       </SidebarGroup>
 
       <AlertDialog onOpenChange={setShowDeleteDialog} open={showDeleteDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-gray-900 border-gray-700">
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="text-white">Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
               This action cannot be undone. This will permanently delete your
               chat and remove it from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              Continue
+            <AlertDialogCancel className="bg-gray-800 text-white border-gray-700 hover:bg-gray-700">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDelete}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

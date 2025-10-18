@@ -9,7 +9,6 @@ import {
   MoreHorizontalIcon,
   ShareIcon,
   TrashIcon,
-  MessageIcon,
 } from "./icons";
 import {
   DropdownMenu,
@@ -27,6 +26,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "./ui/sidebar";
+import { MessageSquare } from "lucide-react";
 
 const PureChatItem = ({
   chat,
@@ -47,23 +47,32 @@ const PureChatItem = ({
 
   return (
     <SidebarMenuItem className="group">
-      <SidebarMenuButton asChild isActive={isActive} tooltip={chat.title}>
+      <SidebarMenuButton 
+        asChild 
+        isActive={isActive} 
+        tooltip={chat.title}
+        className={`h-9 rounded-lg transition-all duration-200 ${
+          isActive 
+            ? "bg-gray-800 text-white" 
+            : "text-gray-400 hover:bg-gray-800 hover:text-white"
+        }`}
+      >
         <Link
           href={`/chat/${chat.id}`}
           onClick={() => setOpenMobile(false)}
-          className="flex-1 overflow-hidden whitespace-nowrap text-ellipsis"
+          className="flex items-center gap-2"
         >
           <span className={open ? "hidden" : ""}>
-            <MessageIcon size={16} />
+            <MessageSquare size={16} />
           </span>
-          {open && <span>{chat.title}</span>}
+          {open && <span className="truncate">{chat.title}</span>}
         </Link>
       </SidebarMenuButton>
 
       <DropdownMenu modal={true}>
         <DropdownMenuTrigger asChild>
           <SidebarMenuAction
-            className={`opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 ${
+            className={`opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 text-gray-400 hover:text-white ${
               open ? "" : "hidden"
             }`}
             showOnHover={!isActive}
@@ -73,16 +82,20 @@ const PureChatItem = ({
           </SidebarMenuAction>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" side="bottom">
+        <DropdownMenuContent 
+          align="end" 
+          side="bottom"
+          className="bg-gray-800 text-white border-gray-700"
+        >
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="cursor-pointer">
+            <DropdownMenuSubTrigger className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white">
               <ShareIcon />
               <span>Share</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
-              <DropdownMenuSubContent>
+              <DropdownMenuSubContent className="bg-gray-800 text-white border-gray-700">
                 <DropdownMenuItem
-                  className="cursor-pointer flex-row justify-between"
+                  className="cursor-pointer flex-row justify-between text-gray-300 hover:bg-gray-700 hover:text-white"
                   onClick={() => {
                     setVisibilityType("private");
                   }}
@@ -96,7 +109,7 @@ const PureChatItem = ({
                   ) : null}
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className="cursor-pointer flex-row justify-between"
+                  className="cursor-pointer flex-row justify-between text-gray-300 hover:bg-gray-700 hover:text-white"
                   onClick={() => {
                     setVisibilityType("public");
                   }}
@@ -112,7 +125,7 @@ const PureChatItem = ({
           </DropdownMenuSub>
 
           <DropdownMenuItem
-            className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
+            className="cursor-pointer text-red-400 focus:bg-gray-700 focus:text-red-400"
             onSelect={() => onDelete(chat.id)}
           >
             <TrashIcon />

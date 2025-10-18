@@ -35,12 +35,14 @@ import { guestRegex } from "@/lib/constants";
 import { LoaderIcon } from "./icons";
 import { SettingsDialog } from "./settings-dialog";
 import { toast } from "./toast";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function SidebarUserNav({ user }: { user: User }) {
   const router = useRouter();
   const { data, status } = useSession();
   const { setTheme, resolvedTheme } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const { open } = useSidebar();
 
   const isGuest = guestRegex.test(data?.user?.email ?? "");
 
@@ -54,9 +56,11 @@ export function SidebarUserNav({ user }: { user: User }) {
               <SidebarMenuButton className="h-10 justify-between bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
                 <div className="flex flex-row gap-2">
                   <div className="size-6 animate-pulse rounded-full bg-zinc-500/30" />
-                  <span className="animate-pulse rounded-md bg-zinc-500/30 text-transparent">
-                    Loading auth status
-                  </span>
+                  {open && (
+                    <span className="animate-pulse rounded-md bg-zinc-500/30 text-transparent">
+                      Loading auth status
+                    </span>
+                  )}
                 </div>
                 <div className="animate-spin text-zinc-500">
                   <LoaderIcon />
@@ -75,10 +79,14 @@ export function SidebarUserNav({ user }: { user: User }) {
                   width={24}
                   unoptimized
                 />
-                <span className="truncate" data-testid="user-email">
-                  {isGuest ? "Guest" : user?.email}
-                </span>
-                <ChevronUp className="ml-auto" />
+                {open && (
+                  <>
+                    <span className="truncate" data-testid="user-email">
+                      {isGuest ? "Guest" : user?.email}
+                    </span>
+                    <ChevronUp className="ml-auto" />
+                  </>
+                )}
               </SidebarMenuButton>
             )}
           </DropdownMenuTrigger>

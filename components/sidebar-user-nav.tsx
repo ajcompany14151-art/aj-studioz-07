@@ -53,22 +53,22 @@ export function SidebarUserNav({ user }: { user: User }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             {status === "loading" ? (
-              <SidebarMenuButton className="h-10 justify-between bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+              <SidebarMenuButton className="h-9 justify-between bg-gray-800 data-[state=open]:bg-gray-700 data-[state=open]:text-white text-gray-400 rounded-lg">
                 <div className="flex flex-row gap-2">
-                  <div className="size-6 animate-pulse rounded-full bg-zinc-500/30" />
+                  <div className="size-6 animate-pulse rounded-full bg-gray-700" />
                   {open && (
-                    <span className="animate-pulse rounded-md bg-zinc-500/30 text-transparent">
+                    <span className="animate-pulse rounded-md bg-gray-700 text-transparent">
                       Loading auth status
                     </span>
                   )}
                 </div>
-                <div className="animate-spin text-zinc-500">
+                <div className="animate-spin text-gray-400">
                   <LoaderIcon />
                 </div>
               </SidebarMenuButton>
             ) : (
               <SidebarMenuButton
-                className="h-10 bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                className="h-9 bg-gray-800 data-[state=open]:bg-gray-700 data-[state=open]:text-white text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg"
                 data-testid="user-nav-button"
               >
                 <Image
@@ -81,10 +81,10 @@ export function SidebarUserNav({ user }: { user: User }) {
                 />
                 {open && (
                   <>
-                    <span className="truncate" data-testid="user-email">
+                    <span className="truncate text-gray-300" data-testid="user-email">
                       {isGuest ? "Guest" : user?.email}
                     </span>
-                    <ChevronUp className="ml-auto" />
+                    <ChevronUp className="ml-auto text-gray-400" />
                   </>
                 )}
               </SidebarMenuButton>
@@ -92,25 +92,25 @@ export function SidebarUserNav({ user }: { user: User }) {
           </DropdownMenuTrigger>
           {open && (
             <DropdownMenuContent
-              className="w-56"
+              className="w-56 bg-gray-800 text-white border-gray-700"
               data-testid="user-nav-menu"
               side="top"
               align="end"
             >
-              <DropdownMenuLabel className="font-normal">
+              <DropdownMenuLabel className="font-normal text-gray-300">
                 <div className="flex flex-col space-y-1">
-                  <p className="leading-none text-sm font-medium">
+                  <p className="leading-none text-sm font-medium text-white">
                     {isGuest ? "Guest" : user?.email}
                   </p>
-                  <p className="leading-none text-xs text-muted-foreground">
+                  <p className="leading-none text-xs text-gray-400">
                     {isGuest ? "Sign in to save your chats" : "Manage your account"}
                   </p>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-gray-700" />
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 onClick={() => setSettingsOpen(true)}
               >
                 <Settings className="mr-2 h-4 w-4" />
@@ -118,7 +118,7 @@ export function SidebarUserNav({ user }: { user: User }) {
               </DropdownMenuItem>
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 onClick={() => toast({ type: "success", description: "Report issue feature coming soon!" })}
               >
                 <MessageSquare className="mr-2 h-4 w-4" />
@@ -126,7 +126,7 @@ export function SidebarUserNav({ user }: { user: User }) {
               </DropdownMenuItem>
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 onClick={() => toast({ type: "success", description: "Tasks feature coming soon!" })}
               >
                 <CheckSquare className="mr-2 h-4 w-4" />
@@ -134,17 +134,17 @@ export function SidebarUserNav({ user }: { user: User }) {
               </DropdownMenuItem>
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 onClick={() => toast({ type: "success", description: "Files feature coming soon!" })}
               >
                 <FileText className="mr-2 h-4 w-4" />
                 <span>Files</span>
               </DropdownMenuItem>
               
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-gray-700" />
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 onClick={() => toast({ type: "success", description: "FAQ coming soon!" })}
               >
                 <HelpCircle className="mr-2 h-4 w-4" />
@@ -152,7 +152,7 @@ export function SidebarUserNav({ user }: { user: User }) {
               </DropdownMenuItem>
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 onClick={() => toast({ type: "success", description: "Changelog coming soon!" })}
               >
                 <GitBranch className="mr-2 h-4 w-4" />
@@ -160,17 +160,17 @@ export function SidebarUserNav({ user }: { user: User }) {
               </DropdownMenuItem>
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 onClick={() => toast({ type: "success", description: "Shared links feature coming soon!" })}
               >
                 <Share2 className="mr-2 h-4 w-4" />
                 <span>Shared Links</span>
               </DropdownMenuItem>
               
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-gray-700" />
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 onClick={() => toast({ type: "success", description: "Upgrade plans coming soon!" })}
               >
                 <Crown className="mr-2 h-4 w-4 text-yellow-500" />
@@ -178,7 +178,7 @@ export function SidebarUserNav({ user }: { user: User }) {
               </DropdownMenuItem>
               
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                 data-testid="user-nav-item-theme"
                 onSelect={() =>
                   setTheme(resolvedTheme === "dark" ? "light" : "dark")
@@ -187,11 +187,11 @@ export function SidebarUserNav({ user }: { user: User }) {
                 {`Toggle ${resolvedTheme === "light" ? "dark" : "light"} mode`}
               </DropdownMenuItem>
               
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-gray-700" />
               
               <DropdownMenuItem asChild data-testid="user-nav-item-auth">
                 <button
-                  className="w-full cursor-pointer"
+                  className="w-full cursor-pointer text-gray-300 hover:bg-gray-700 hover:text-white"
                   onClick={() => {
                     if (status === "loading") {
                       toast({

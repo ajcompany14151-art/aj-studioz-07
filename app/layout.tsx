@@ -1,50 +1,64 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarToggle } from "@/components/sidebar-toggle";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://chat.vercel.ai"),
-  title: "AJ STUDIOZ CHAT",
-  description: "AI-powered chat assistant by AJ STUDIOZ with Lynxa AI models - Fast, Pro, and Reasoning capabilities",
-  keywords: ["AI chat", "AJ STUDIOZ", "Lynxa AI", "chatbot", "artificial intelligence", "AI assistant"],
-  authors: [{ name: "AJ STUDIOZ" }],
+  metadataBase: new URL("https://aj-studioz-07.vercel.app"),
+  title: {
+    default: "AJ Studioz AI",
+    template: "%s | AJ Studioz AI"
+  },
+  description: "Advanced AI assistant with HTML preview, Grok-style responses, and mobile-optimized design. Get instant code previews, smart conversations, and creative solutions.",
+  keywords: [
+    "AI chat", "AJ STUDIOZ", "3D visualization", "code playground", "interactive diagrams", 
+    "PDF generation", "Excel integration", "artificial intelligence", "AI assistant", 
+    "Three.js", "D3.js", "Mermaid", "PWA", "offline AI", "advanced chatbot"
+  ],
+  authors: [{ name: "AJ STUDIOZ", url: "https://ajstudioz.com" }],
   creator: "AJ STUDIOZ",
   publisher: "AJ STUDIOZ",
+  applicationName: "AJ Studioz AI",
+  category: "productivity",
   robots: {
     index: true,
     follow: true,
   },
+  manifest: "/manifest.json",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://chat.vercel.ai",
-    title: "AJ STUDIOZ CHAT - Powered by Lynxa AI",
-    description: "Experience the power of AI with Lynxa - Choose from Lite, Pro, and Reasoning models for your conversations",
-    siteName: "AJ STUDIOZ CHAT",
+    url: "https://aj-studioz-07.vercel.app",
+    title: "AJ Studioz AI - Advanced AI with 3D Visualizations & Code Playground",
+    description: "Revolutionary AI chatbot featuring 3D visualizations, interactive diagrams, sandboxed code execution, PDF generation, Excel integration, and offline PWA capabilities.",
+    siteName: "AJ Studioz AI",
     images: [
       {
         url: "/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "AJ STUDIOZ CHAT - AI Assistant",
+        alt: "AJ Studioz AI - Advanced Chatbot with 3D & Code Features",
+      },
+      {
+        url: "/screenshot-desktop.png",
+        width: 1280,
+        height: 720,
+        alt: "AJ Studioz AI Desktop Interface",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AJ STUDIOZ CHAT - Powered by Lynxa AI",
-    description: "Experience the power of AI with Lynxa - Choose from Lite, Pro, and Reasoning models for your conversations",
+    title: "AJ Studioz AI - 3D Visualizations & Code Playground",
+    description: "🚀 Advanced AI with Three.js 3D scenes, interactive D3.js charts, Monaco code editor, PDF generation & more! Now with PWA offline support.",
     images: ["/logo.jpg"],
     creator: "@ajstudioz",
+    site: "@ajstudioz",
   },
+  // Additional meta tags for better social media sharing
   other: {
     "og:image:width": "1200",
     "og:image:height": "630",
@@ -53,7 +67,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  maximumScale: 1,
+  maximumScale: 1, // Disable auto-zoom on mobile Safari
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f0f0f" }
+  ],
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover"
 };
 
 const geist = Geist({
@@ -96,13 +117,70 @@ export default function RootLayout({
   return (
     <html
       className={`${geist.variable} ${geistMono.variable}`}
+      // `next-themes` injects an extra classname to the body element to avoid
+      // visual flicker before hydration. Hence the `suppressHydrationWarning`
+      // prop is necessary to avoid the React hydration mismatch warning.
+      // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
       lang="en"
       suppressHydrationWarning
     >
       <head>
+        <link rel="icon" href="/logo.jpg" type="image/jpeg" />
+        <link rel="alternate icon" href="/logo.jpg" />
+        <link rel="apple-touch-icon" href="/logo.jpg" />
         <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required"
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
+          }}
+        />
+        {/* PWA Service Worker */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for PWA"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+            `,
+          }}
+        />
+        {/* PWA Install Prompt */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for PWA"
+          dangerouslySetInnerHTML={{
+            __html: `
+              let deferredPrompt;
+              window.addEventListener('beforeinstallprompt', (e) => {
+                console.log('PWA install prompt available');
+                e.preventDefault();
+                deferredPrompt = e;
+                // You can show a custom install button here
+                const installBtn = document.getElementById('pwa-install-btn');
+                if (installBtn) {
+                  installBtn.style.display = 'block';
+                  installBtn.addEventListener('click', () => {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                      if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the PWA install');
+                      } else {
+                        console.log('User dismissed the PWA install');
+                      }
+                      deferredPrompt = null;
+                    });
+                  });
+                }
+              });
+            `,
           }}
         />
       </head>
@@ -113,23 +191,8 @@ export default function RootLayout({
           disableTransitionOnChange
           enableSystem
         >
-          <SessionProvider>
-            <SidebarProvider>
-              <AppSidebar user={undefined} />
-              <SidebarInset className="flex-1 flex flex-col">
-                <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
-                  <div className="flex items-center gap-2 px-4">
-                    <SidebarToggle />
-                  </div>
-                  <div className="flex-1" />
-                </header>
-                <main className="flex-1 overflow-hidden">
-                  {children}
-                </main>
-              </SidebarInset>
-            </SidebarProvider>
-          </SessionProvider>
           <Toaster position="top-center" />
+          <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>
       </body>
     </html>

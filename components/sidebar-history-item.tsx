@@ -1,3 +1,4 @@
+// components/sidebar-history-item.tsx
 import Link from "next/link";
 import { memo } from "react";
 import { useChatVisibility } from "@/hooks/use-chat-visibility";
@@ -9,6 +10,7 @@ import {
   MoreHorizontalIcon,
   ShareIcon,
   TrashIcon,
+  MessageIcon,
 } from "./icons";
 import {
   DropdownMenu,
@@ -24,6 +26,7 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "./ui/sidebar";
 
 const PureChatItem = ({
@@ -41,23 +44,27 @@ const PureChatItem = ({
     chatId: chat.id,
     initialVisibilityType: chat.visibility,
   });
+  const { open } = useSidebar();
 
   return (
     <SidebarMenuItem className="group">
-      <SidebarMenuButton asChild isActive={isActive}>
+      <SidebarMenuButton asChild isActive={isActive} tooltip={chat.title}>
         <Link
           href={`/chat/${chat.id}`}
           onClick={() => setOpenMobile(false)}
           className="flex-1 overflow-hidden whitespace-nowrap text-ellipsis"
         >
-          {chat.title}
+          <MessageIcon size={16} className={open ? "hidden" : ""} />
+          {open && <span>{chat.title}</span>}
         </Link>
       </SidebarMenuButton>
 
       <DropdownMenu modal={true}>
         <DropdownMenuTrigger asChild>
           <SidebarMenuAction
-            className="opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100"
+            className={`opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 ${
+              open ? "" : "hidden"
+            }`}
             showOnHover={!isActive}
           >
             <MoreHorizontalIcon />

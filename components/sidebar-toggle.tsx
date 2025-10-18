@@ -20,7 +20,7 @@ export function SidebarToggle({
       <TooltipTrigger asChild>
         <Button
           className={cn(
-            "h-8 w-8 rounded-2xl p-2 transition-all duration-300 hover:bg-primary/10 hover:text-primary",
+            "h-8 w-8 rounded-lg p-2 transition-all duration-200 hover:bg-gray-800 text-gray-400 hover:text-white",
             className
           )}
           data-testid="sidebar-toggle-button"
@@ -32,7 +32,7 @@ export function SidebarToggle({
           </span>
         </Button>
       </TooltipTrigger>
-      <TooltipContent align="start" className="hidden md:block">
+      <TooltipContent align="start" className="bg-gray-800 text-white border-gray-700 hidden md:block">
         {open ? "Collapse Sidebar" : "Expand Sidebar"}
       </TooltipContent>
     </Tooltip>

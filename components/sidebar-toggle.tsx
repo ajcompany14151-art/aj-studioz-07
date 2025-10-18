@@ -1,6 +1,7 @@
+// components/sidebar-toggle.tsx
 "use client";
 
-import { type SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
@@ -12,8 +13,8 @@ import { Button } from "./ui/button";
 
 export function SidebarToggle({
   className,
-}: ComponentProps<typeof SidebarTrigger>) {
-  const { toggleSidebar } = useSidebar();
+}: React.ComponentProps<typeof Button>) {
+  const { toggleSidebar, open } = useSidebar();
 
   return (
     <Tooltip>
@@ -27,11 +28,11 @@ export function SidebarToggle({
           onClick={toggleSidebar}
           variant="ghost"
         >
-          <SidebarLeftIcon size={16} />
+          <SidebarLeftIcon size={16} className={open ? "rotate-180" : ""} />
         </Button>
       </TooltipTrigger>
       <TooltipContent align="start" className="hidden md:block">
-        Toggle Sidebar
+        {open ? "Collapse Sidebar" : "Expand Sidebar"}
       </TooltipContent>
     </Tooltip>
   );

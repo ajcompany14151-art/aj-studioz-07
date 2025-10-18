@@ -13,6 +13,7 @@ import { DocumentToolResult } from "./document";
 import { DocumentPreview } from "./document-preview";
 import { MessageContent } from "./elements/message";
 import { Response } from "./elements/response";
+import GrokResponse from "./ui/grok-response";
 import {
   Tool,
   ToolContent,
@@ -170,14 +171,25 @@ const PurePreviewMessage = ({
 
             if (type === "text") {
               if (mode === "view") {
+                if (message.role === "assistant") {
+                  return (
+                    <div key={key}>
+                      <GrokResponse
+                        content={part.text}
+                        isStreaming={isLoading}
+                        showActions={false}
+                        model="AJ Studioz AI"
+                      />
+                    </div>
+                  );
+                }
+                
                 return (
                   <div key={key}>
                     <MessageContent
                       className={cn({
                         "w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base":
                           message.role === "user",
-                        "bg-transparent px-0 py-0 text-left text-sm sm:text-base":
-                          message.role === "assistant",
                       })}
                       data-testid="message-content"
                       style={

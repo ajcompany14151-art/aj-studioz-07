@@ -59,13 +59,18 @@ function PureMessages({
     }
   }, [status, messagesContainerRef]);
 
-  // Auto-scroll during streaming
+  // Auto-scroll during streaming - enhanced for smooth scrolling
   useEffect(() => {
     if (status === "streaming") {
       const container = messagesContainerRef.current;
       if (!container) return;
 
-      const scrollInterval = setInterval(() => {
+      let isActive = true;
+      let animationFrameId: number;
+      
+      const smoothScroll = () => {
+        if (!isActive) return;
+        
         // Only auto-scroll if user is near the bottom
         const isNearBottom = 
           container.scrollHeight - container.scrollTop - container.clientHeight < 200;
@@ -76,9 +81,22 @@ function PureMessages({
             behavior: "smooth",
           });
         }
-      }, 100); // Check every 100ms
+        
+        // Continue scrolling while streaming and active
+        if (isActive) {
+          animationFrameId = requestAnimationFrame(smoothScroll);
+        }
+      };
 
-      return () => clearInterval(scrollInterval);
+      // Start the smooth scroll loop
+      animationFrameId = requestAnimationFrame(smoothScroll);
+
+      return () => {
+        isActive = false;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      };
     }
   }, [status, messagesContainerRef]);
 

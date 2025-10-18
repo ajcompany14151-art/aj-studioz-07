@@ -1,4 +1,3 @@
-// components/sidebar-user-nav.tsx
 "use client";
 
 import {
@@ -74,7 +73,7 @@ export function SidebarUserNav({ user }: { user: User }) {
                 <SidebarMenuButton
                   className="h-10 bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   data-testid="user-nav-button"
-                  tooltip={isGuest ? "Guest" : user?.email}
+                  tooltip={isGuest ? "Guest" : (user?.email || "User")}
                 >
                   <Image
                     alt={user.name || user.email || "User"}

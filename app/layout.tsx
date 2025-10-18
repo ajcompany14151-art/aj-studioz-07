@@ -5,8 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SessionProvider } from "next-auth/react";
-import { getServerSession } from "next-auth"; // Named import
-import { authOptions } from "@/app/(auth)/auth"; // Import authOptions
+import { auth } from "@/app/(auth)/auth"; // 使用 auth 函数而不是 getServerSession
 import type { Session } from "next-auth"; // Import Session type
 
 import "./globals.css";
@@ -133,7 +132,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session: Session | null = await getServerSession(authOptions); // Explicitly type session
+  const session = await auth(); // 使用 auth() 函数而不是 getServerSession(authOptions)
 
   return (
     <html

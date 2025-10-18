@@ -1,8 +1,9 @@
 import { compare } from "bcrypt-ts";
-import NextAuth, { type DefaultSession, NextAuthOptions } from "next-auth";
+import NextAuth, { type DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import type { NextAuthConfig } from "next-auth"; // Use NextAuthConfig
 import { DUMMY_PASSWORD } from "@/lib/constants";
 import { createGuestUser, getUser } from "@/lib/db/queries";
 import { authConfig } from "./auth.config";
@@ -38,7 +39,7 @@ declare module "next-auth/jwt" {
   }
 }
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthConfig = {
   ...authConfig,
   providers: [
     Google({

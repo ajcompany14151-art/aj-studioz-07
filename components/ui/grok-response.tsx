@@ -363,39 +363,6 @@ export default function GrokResponse({
   return elements
   }
 
-// User Message Component - Exported for standalone use
-export function UserMessage({ content, timestamp, avatar }: UserMessageProps) {
-  return (
-    <div className="flex justify-end mb-4">
-      <div className="flex items-start gap-3 max-w-[85%] sm:max-w-[75%]">
-        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl px-4 py-3 shadow-lg">
-          <p className="text-white text-sm sm:text-base leading-relaxed">
-            {content}
-          </p>
-          {timestamp && (
-            <div className="text-xs text-blue-200/70 mt-1 text-right">
-              {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </div>
-          )}
-        </div>
-        <div className="flex-shrink-0">
-          {avatar ? (
-            <img 
-              src={avatar} 
-              alt="User" 
-              className="w-8 h-8 rounded-full border-2 border-blue-500/30"
-            />
-          ) : (
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-              U
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
   return (
     <div className="relative group w-full">
       <Card className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 border-gray-700/50 shadow-lg mx-auto max-w-4xl">
@@ -576,4 +543,35 @@ export function ExampleGrokResponse() {
   )
 }
 
-// UserMessage is already exported above
+// User Message Component - Exported for standalone use
+export function UserMessage({ content, timestamp, avatar }: UserMessageProps) {
+  return (
+    <div className="flex justify-end mb-4">
+      <div className="flex items-start gap-3 max-w-[85%] sm:max-w-[75%]">
+        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl px-4 py-3 shadow-lg">
+          <p className="text-white text-sm sm:text-base leading-relaxed">
+            {content}
+          </p>
+          {timestamp && (
+            <div className="text-xs text-blue-200/70 mt-1 text-right">
+              {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          )}
+        </div>
+        <div className="flex-shrink-0">
+          {avatar ? (
+            <img 
+              src={avatar} 
+              alt="User" 
+              className="w-8 h-8 rounded-full border-2 border-blue-500/30"
+            />
+          ) : (
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+              U
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -66,6 +66,66 @@ After updating the environment variable:
 
 ---
 
+## 🔄 API Key Rotation (Recommended for Production)
+
+To avoid rate limits and distribute load, you can configure multiple Groq API keys:
+
+### Method 1: GROQ_API_KEYS (Recommended)
+
+Set a single environment variable with comma-separated keys:
+
+```
+GROQ_API_KEYS=gsk_key1,gsk_key2,gsk_key3,gsk_key4,gsk_key5
+```
+
+**Benefits:**
+- ✅ Easier to manage (single variable)
+- ✅ Random key selection for load distribution
+- ✅ Supports any number of keys
+- ✅ Better for serverless deployments
+
+### Method 2: Individual Variables (Legacy)
+
+Set individual environment variables:
+
+```
+GROQ_API_KEY=gsk_key1
+GROQ_API_KEY_2=gsk_key2
+GROQ_API_KEY_3=gsk_key3
+GROQ_API_KEY_4=gsk_key4
+GROQ_API_KEY_5=gsk_key5
+```
+
+**Note:** The system automatically falls back to individual variables if `GROQ_API_KEYS` is not set.
+
+### Setting in Vercel:
+
+1. Go to https://vercel.com/ib-studiozs-projects/aj-studioz-07/settings/environment-variables
+2. Add `GROQ_API_KEYS` variable
+3. Paste your comma-separated keys (no spaces after commas recommended)
+4. Set for **Production**, **Preview**, and **Development**
+5. Click **Save**
+6. Redeploy your application
+
+### Token Management & Safety Margin
+
+The system includes automatic token estimation and message trimming to prevent 413 errors:
+
+- **Default Safety Margin:** 90% of token limit (configurable)
+- **Max Tokens Per Request:** ~7,372 tokens (8,192 * 0.9)
+- **Minimum Messages Kept:** 3 (to maintain context)
+
+**How it works:**
+1. Before each API call, the system estimates tokens for system prompt + messages
+2. If over the limit, it automatically trims older messages
+3. Always keeps the last 3 messages for context
+4. Logs trimming activity for debugging
+
+**To adjust the safety margin:**
+Edit `lib/ai/request-utils.ts` and change `DEFAULT_SAFETY_MARGIN` (e.g., 0.8 for 80%).
+
+---
+
 ## 🧪 Test Your API Key
 
 To verify your Groq API key works, you can test it with curl:

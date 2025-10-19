@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { PWARegister } from "@/components/pwa-register";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -134,25 +135,6 @@ export default function RootLayout({
             __html: THEME_COLOR_SCRIPT,
           }}
         />
-        {/* PWA Service Worker */}
-        <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for PWA"
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch((registrationError) => {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
-        />
         {/* PWA Install Prompt */}
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for PWA"
@@ -191,6 +173,7 @@ export default function RootLayout({
           disableTransitionOnChange
           enableSystem
         >
+          <PWARegister />
           <Toaster position="top-center" />
           <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>

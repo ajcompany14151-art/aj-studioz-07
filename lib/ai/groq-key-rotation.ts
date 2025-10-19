@@ -13,13 +13,25 @@ if (typeof window !== 'undefined') {
 }
 
 // Collect all available Groq API keys from environment variables
-const groqApiKeys = [
-  process.env.GROQ_API_KEY,
-  process.env.GROQ_API_KEY_2,
-  process.env.GROQ_API_KEY_3,
-  process.env.GROQ_API_KEY_4,
-  process.env.GROQ_API_KEY_5,
-].filter((key): key is string => Boolean(key));
+// Supports both GROQ_API_KEYS (comma-separated) and individual GROQ_API_KEY_* vars
+let groqApiKeys: string[] = [];
+
+// First, check for GROQ_API_KEYS (comma-separated format)
+const apiKeysEnv = process.env.GROQ_API_KEYS;
+if (apiKeysEnv) {
+  groqApiKeys = apiKeysEnv.split(',').map(k => k.trim()).filter(k => k.length > 0);
+}
+
+// If no GROQ_API_KEYS, fallback to individual GROQ_API_KEY_* environment variables
+if (groqApiKeys.length === 0) {
+  groqApiKeys = [
+    process.env.GROQ_API_KEY,
+    process.env.GROQ_API_KEY_2,
+    process.env.GROQ_API_KEY_3,
+    process.env.GROQ_API_KEY_4,
+    process.env.GROQ_API_KEY_5,
+  ].filter((key): key is string => Boolean(key));
+}
 
 if (groqApiKeys.length === 0) {
   throw new Error('No GROQ_API_KEY found in environment variables');

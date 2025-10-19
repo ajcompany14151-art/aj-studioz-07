@@ -170,21 +170,26 @@ const PurePreviewMessage = ({
 
             if (type === "text") {
               if (mode === "view") {
+                // For assistant messages, render directly without MessageContent wrapper
+                if (message.role === "assistant") {
+                  return (
+                    <div 
+                      key={key}
+                      className="text-left text-sm sm:text-base"
+                      data-testid="message-content"
+                    >
+                      <Response>{sanitizeText(part.text)}</Response>
+                    </div>
+                  );
+                }
+
+                // For user messages, keep the MessageContent wrapper with styling
                 return (
                   <div key={key}>
                     <MessageContent
-                      className={cn({
-                        "w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base":
-                          message.role === "user",
-                        "bg-transparent px-0 py-0 text-left text-sm sm:text-base":
-                          message.role === "assistant",
-                      })}
+                      className="w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base"
                       data-testid="message-content"
-                      style={
-                        message.role === "user"
-                          ? { backgroundColor: "#006cff" }
-                          : undefined
-                      }
+                      style={{ backgroundColor: "#006cff" }}
                     >
                       <Response>{sanitizeText(part.text)}</Response>
                     </MessageContent>

@@ -154,9 +154,9 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
   if (!user) {
     return (
-      <SidebarGroup>
+      <SidebarGroup className="flex-1">
         <SidebarGroupContent>
-          <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-muted-foreground">
+          <div className="flex h-full w-full items-center justify-center px-4 text-center text-sm text-muted-foreground">
             Login to save and revisit previous chats!
           </div>
         </SidebarGroupContent>
@@ -166,12 +166,12 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
   if (isLoading) {
     return (
-      <SidebarGroup>
+      <SidebarGroup className="flex-1">
         <div className="px-4 py-2 text-xs font-medium text-muted-foreground">
           Today
         </div>
         <SidebarGroupContent>
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col space-y-1 px-2">
             {[44, 32, 28, 64, 52].map((item) => (
               <div
                 className="flex h-10 items-center gap-2 rounded-md px-3"
@@ -195,9 +195,9 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
   if (hasEmptyChatHistory) {
     return (
-      <SidebarGroup>
+      <SidebarGroup className="flex-1">
         <SidebarGroupContent>
-          <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-muted-foreground">
+          <div className="flex h-full w-full items-center justify-center px-4 text-center text-sm text-muted-foreground">
             Your conversations will appear here once you start chatting!
           </div>
         </SidebarGroupContent>
@@ -207,9 +207,9 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
   return (
     <>
-      <SidebarGroup>
-        <SidebarGroupContent>
-          <SidebarMenu>
+      <SidebarGroup className="flex-1 overflow-hidden">
+        <SidebarGroupContent className="h-full overflow-y-auto">
+          <SidebarMenu className="px-2">
             {paginatedChatHistories &&
               (() => {
                 const chatsFromHistory = paginatedChatHistories.flatMap(
@@ -219,10 +219,10 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                 const groupedChats = groupChatsByDate(chatsFromHistory);
 
                 return (
-                  <div className="flex flex-col space-y-1">
+                  <div className="flex flex-col space-y-4 pb-4">
                     {groupedChats.today.length > 0 && (
                       <div className="space-y-1">
-                        <div className="px-4 py-2 text-xs font-medium text-muted-foreground">
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
                           Today
                         </div>
                         {groupedChats.today.map((chat) => (
@@ -242,7 +242,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
                     {groupedChats.yesterday.length > 0 && (
                       <div className="space-y-1">
-                        <div className="px-4 py-2 text-xs font-medium text-muted-foreground">
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
                           Yesterday
                         </div>
                         {groupedChats.yesterday.map((chat) => (
@@ -262,7 +262,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
                     {groupedChats.lastWeek.length > 0 && (
                       <div className="space-y-1">
-                        <div className="px-4 py-2 text-xs font-medium text-muted-foreground">
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
                           Last 7 days
                         </div>
                         {groupedChats.lastWeek.map((chat) => (
@@ -282,7 +282,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
                     {groupedChats.lastMonth.length > 0 && (
                       <div className="space-y-1">
-                        <div className="px-4 py-2 text-xs font-medium text-muted-foreground">
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
                           Last 30 days
                         </div>
                         {groupedChats.lastMonth.map((chat) => (
@@ -302,7 +302,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
                     {groupedChats.older.length > 0 && (
                       <div className="space-y-1">
-                        <div className="px-4 py-2 text-xs font-medium text-muted-foreground">
+                        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
                           Older than last month
                         </div>
                         {groupedChats.older.map((chat) => (
@@ -319,31 +319,31 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                         ))}
                       </div>
                     )}
+
+                    <motion.div
+                      onViewportEnter={() => {
+                        if (!isValidating && !hasReachedEnd) {
+                          setSize((size) => size + 1);
+                        }
+                      }}
+                    />
+
+                    {hasReachedEnd ? (
+                      <div className="flex w-full items-center justify-center px-2 py-4 text-center text-xs text-muted-foreground">
+                        You have reached the end of your chat history.
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 px-2 py-4 text-xs text-muted-foreground">
+                        <div className="animate-spin">
+                          <LoaderIcon />
+                        </div>
+                        <div>Loading Chats...</div>
+                      </div>
+                    )}
                   </div>
                 );
               })()}
           </SidebarMenu>
-
-          <motion.div
-            onViewportEnter={() => {
-              if (!isValidating && !hasReachedEnd) {
-                setSize((size) => size + 1);
-              }
-            }}
-          />
-
-          {hasReachedEnd ? (
-            <div className="mt-8 flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-muted-foreground">
-              You have reached the end of your chat history.
-            </div>
-          ) : (
-            <div className="mt-8 flex flex-row items-center gap-2 p-2 text-muted-foreground">
-              <div className="animate-spin">
-                <LoaderIcon />
-              </div>
-              <div>Loading Chats...</div>
-            </div>
-          )}
         </SidebarGroupContent>
       </SidebarGroup>
 

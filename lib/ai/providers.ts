@@ -71,6 +71,7 @@ export type modelID =
   | "title-model"
   | "artifact-model";
 
+// Export available models - client-side needs hardcoded list since models object is empty on client
 export const MODELS =
   typeof window === "undefined"
     ? Object.keys(languageModels)

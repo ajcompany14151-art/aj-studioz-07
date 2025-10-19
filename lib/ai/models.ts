@@ -1,5 +1,5 @@
 // lib/ai/models.ts
-export const DEFAULT_CHAT_MODEL: string = 'chat-model-lite';
+export const DEFAULT_CHAT_MODEL: string = 'chat-model';
 
 export type ChatModel = {
   id: string;
@@ -11,6 +11,16 @@ export const chatModels: ChatModel[] = [
   {
     id: 'chat-model-lite',
     name: 'Lynxa Lite',
-    description: '⚡ Fast, intelligent responses powered by Gemini - Your everyday AI assistant',
+    description: '⚡ Fast, ChatGPT-style responses - Perfect for quick questions',
+  },
+  {
+    id: 'chat-model',
+    name: 'Lynxa Pro',
+    description: '🚀 Most powerful model with artifacts - Best for complex tasks',
+  },
+  {
+    id: 'chat-model-reasoning',
+    name: 'Lynxa Student Pro',
+    description: '🎓 Educational tutor with comprehensive explanations - Ideal for learning',
   },
 ];

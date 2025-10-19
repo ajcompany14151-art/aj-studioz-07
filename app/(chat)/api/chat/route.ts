@@ -19,6 +19,11 @@ import {
   saveMessages,
 } from "@/lib/db/queries";
 import { convertToUIMessages, generateUUID } from "@/lib/utils";
+import {
+  estimateTotalTokens,
+  trimMessages,
+  MAX_TOKENS_PER_REQUEST,
+} from "@/lib/ai/request-utils";
 
 export const maxDuration = 60;
 
@@ -79,12 +84,27 @@ export async function POST(request: Request) {
   // Disable tools for Lite model (ChatGPT-style only)
   const isLiteModel = selectedChatModel === 'chat-model-lite';
   
+  // Get system prompt for token estimation
+  const systemPrompt = getSystemPrompt(selectedChatModel);
+  
+  // Estimate tokens and trim messages if necessary to prevent 413 errors
+  const modelMessages = convertToModelMessages(uiMessages);
+  const estimatedTokens = estimateTotalTokens(systemPrompt, modelMessages);
+  
+  let messagesToUse = modelMessages;
+  if (estimatedTokens > MAX_TOKENS_PER_REQUEST) {
+    console.log(`[Token Management] Estimated ${estimatedTokens} tokens, max allowed: ${MAX_TOKENS_PER_REQUEST}`);
+    messagesToUse = trimMessages(modelMessages, systemPrompt, MAX_TOKENS_PER_REQUEST);
+    const newEstimate = estimateTotalTokens(systemPrompt, messagesToUse);
+    console.log(`[Token Management] After trimming: ${newEstimate} tokens (${messagesToUse.length} messages)`);
+  }
+  
   const stream = createUIMessageStream({
     execute: ({ writer: dataStream }) => {
       const result = streamText({
         model: model.languageModel(selectedChatModel),
-        system: getSystemPrompt(selectedChatModel),
-        messages: convertToModelMessages(uiMessages),
+        system: systemPrompt,
+        messages: messagesToUse,
         experimental_activeTools: isLiteModel ? [] : [
           "getWeather",
           "createDocument",

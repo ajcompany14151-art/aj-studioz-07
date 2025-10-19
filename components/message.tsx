@@ -64,25 +64,51 @@ const PurePreviewMessage = ({
       initial={{ opacity: 0 }}
     >
       <div
-        className={cn("flex w-full items-start gap-3", {
+        className={cn("flex w-full items-start gap-1.5 sm:gap-2 md:gap-3", {
           "justify-end": message.role === "user" && mode !== "edit",
           "justify-start": message.role === "assistant",
         })}
       >
         {message.role === "assistant" && (
-          <div className="-mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-border">
-            <Image
-              src="/logo.jpg"
-              alt="AI Avatar"
-              width={28}
-              height={28}
-              className="object-cover"
-            />
-          </div>
+          <motion.div 
+            className="-mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900"
+            animate={isLoading ? {
+              boxShadow: [
+                "0 0 0 0 rgba(59, 130, 246, 0.4)",
+                "0 0 0 6px rgba(59, 130, 246, 0)",
+                "0 0 0 0 rgba(59, 130, 246, 0)",
+              ],
+            } : {}}
+            transition={{
+              duration: 2,
+              repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
+              ease: "easeInOut",
+            }}
+          >
+            <motion.div
+              animate={isLoading ? {
+                opacity: [1, 0.7, 1],
+              } : {}}
+              transition={{
+                duration: 1.5,
+                repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
+                ease: "easeInOut",
+              }}
+              className="relative size-full"
+            >
+              <Image
+                src="/logo.jpg"
+                alt="AI Avatar"
+                width={28}
+                height={28}
+                className="object-cover sm:h-8 sm:w-8"
+              />
+            </motion.div>
+          </motion.div>
         )}
 
         {message.role === "user" && session?.user && (
-          <div className="order-2 -mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-border">
+          <div className="order-2 -mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900">
             <Image
               src={session.user.image || `https://avatar.vercel.sh/${session.user.email}`}
               alt={session.user.name || "User"}

@@ -127,11 +127,7 @@ export function Chat({
 
   return (
     <>
-      <div className="relative flex h-dvh min-w-0 touch-pan-y flex-col overflow-hidden bg-gradient-to-br from-background via-background/95 to-background/90">
-        {/* Enhanced Background with Grok-style gradients */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 dark:from-blue-600/10 dark:via-purple-600/10 dark:to-pink-600/10" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-transparent via-transparent to-blue-500/5 dark:to-blue-600/10" />
-        
+      <div className="overscroll-behavior-contain flex h-dvh min-w-0 touch-pan-y flex-col bg-background">
         <ChatHeader
           chatId={id}
           isReadonly={isReadonly}
@@ -149,31 +145,25 @@ export function Chat({
           votes={votes}
         />
 
-        {/* Enhanced Input Area with Grok-style design */}
-        <div className="relative">
-          {/* Gradient overlay for seamless transition */}
-          <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-b from-transparent to-background/80 backdrop-blur-sm" />
-          
-          <div className="sticky bottom-0 z-10 mx-auto flex w-full max-w-4xl gap-2 border-t-0 bg-background/80 backdrop-blur-xl px-2 pb-2 sm:pb-3 md:px-4 md:pb-4">
-            {!isReadonly && (
-              <MultimodalInput
-                attachments={attachments}
-                chatId={id}
-                input={input}
-                messages={messages}
-                onModelChange={setCurrentModelId}
-                selectedModelId={currentModelId}
-                selectedVisibilityType="private"
-                sendMessage={sendMessage}
-                setAttachments={setAttachments}
-                setInput={setInput}
-                setMessages={setMessages}
-                status={status}
-                stop={stop}
-                usage={usage}
-              />
-            )}
-          </div>
+        <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-4xl gap-2 border-t-0 bg-background px-2 pb-2 sm:pb-3 md:px-4 md:pb-4">
+          {!isReadonly && (
+            <MultimodalInput
+              attachments={attachments}
+              chatId={id}
+              input={input}
+              messages={messages}
+              onModelChange={setCurrentModelId}
+              selectedModelId={currentModelId}
+              selectedVisibilityType="private"
+              sendMessage={sendMessage}
+              setAttachments={setAttachments}
+              setInput={setInput}
+              setMessages={setMessages}
+              status={status}
+              stop={stop}
+              usage={usage}
+            />
+          )}
         </div>
       </div>
 

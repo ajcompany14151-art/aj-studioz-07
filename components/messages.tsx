@@ -59,18 +59,13 @@ function PureMessages({
     }
   }, [status, messagesContainerRef]);
 
-  // Auto-scroll during streaming - enhanced for smooth scrolling
+  // Auto-scroll during streaming
   useEffect(() => {
     if (status === "streaming") {
       const container = messagesContainerRef.current;
       if (!container) return;
 
-      let isActive = true;
-      let animationFrameId: number;
-      
-      const smoothScroll = () => {
-        if (!isActive) return;
-        
+      const scrollInterval = setInterval(() => {
         // Only auto-scroll if user is near the bottom
         const isNearBottom = 
           container.scrollHeight - container.scrollTop - container.clientHeight < 200;
@@ -81,54 +76,31 @@ function PureMessages({
             behavior: "smooth",
           });
         }
-        
-        // Continue scrolling while streaming and active
-        if (isActive) {
-          animationFrameId = requestAnimationFrame(smoothScroll);
-        }
-      };
+      }, 100); // Check every 100ms
 
-      // Start the smooth scroll loop
-      animationFrameId = requestAnimationFrame(smoothScroll);
-
-      return () => {
-        isActive = false;
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-        }
-      };
+      return () => clearInterval(scrollInterval);
     }
   }, [status, messagesContainerRef]);
 
   return (
     <div
-      className="relative flex-1 overflow-y-auto overscroll-behavior-contain -webkit-overflow-scrolling-touch touch-pan-y"
+      className="overscroll-behavior-contain -webkit-overflow-scrolling-touch flex-1 touch-pan-y overflow-y-scroll"
       ref={messagesContainerRef}
       style={{ overflowAnchor: "none" }}
     >
-      {/* Enhanced Background Pattern */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_transparent_0%,_transparent_70%,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
-      </div>
-      
-      <Conversation className="relative mx-auto flex min-w-0 max-w-4xl flex-col gap-4 sm:gap-6 md:gap-8">
-        <ConversationContent className="flex flex-col gap-4 px-3 py-4 sm:gap-6 sm:py-6 md:gap-8 md:px-4">
+      <Conversation className="mx-auto flex min-w-0 max-w-4xl flex-col gap-3 sm:gap-4 md:gap-6">
+        <ConversationContent className="flex flex-col gap-3 px-2 py-3 sm:gap-4 sm:py-4 md:gap-6 md:px-4">
           {messages.length === 0 && <Greeting />}
           
-          {/* Enhanced AJ STUDIOZ Branding */}
-          <div className="flex items-center justify-center py-2 sm:py-3">
-            <div className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 px-4 py-2 transition-all duration-300 hover:from-blue-500/20 hover:via-purple-500/20 hover:to-pink-500/20 sm:gap-3 sm:px-6 sm:py-3">
-              <div className="relative">
-                <img 
-                  src="/logo.jpg"
-                  alt="AJ STUDIOZ Logo"
-                  className="h-6 w-6 rounded-lg transition-transform duration-300 group-hover:scale-110 sm:h-8 sm:w-8"
-                />
-                <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-0 blur transition-opacity duration-300 group-hover:opacity-20" />
-              </div>
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-sm font-medium text-transparent sm:text-base">
-                Powered by <span className="font-bold">AJ STUDIOZ</span>
-              </span>
+          {/* AJ STUDIOZ Branding with Logo */}
+          <div className="flex items-center justify-center py-1.5 text-xs text-muted-foreground sm:py-2 sm:text-sm">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <img 
+                src="https://z-cdn-media.chatglm.cn/files/797f27fe-c65b-4e25-91cd-3e0c6688287e_aj%20logo.jpg?auth_key=1791563173-34991f6fcb414a528e5e52039239c636-0-de0ec96ab994aea2993ad06289321950"
+                alt="AJ STUDIOZ Logo"
+                className="h-5 w-5 rounded sm:h-6 sm:w-6"
+              />
+              <span>Powered by <span className="font-semibold">AJ STUDIOZ</span></span>
             </div>
           </div>
 
@@ -169,12 +141,11 @@ function PureMessages({
       {!isAtBottom && (
         <button
           aria-label="Scroll to bottom"
-          className="group absolute bottom-32 left-1/2 z-20 -translate-x-1/2 rounded-full border border-border/50 bg-background/80 p-2 shadow-xl backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:border-blue-500/50 hover:bg-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/20 sm:bottom-40 sm:p-3"
+          className="absolute bottom-32 left-1/2 z-10 -translate-x-1/2 rounded-full border bg-background p-1.5 shadow-lg transition-colors hover:bg-muted sm:bottom-40 sm:p-2"
           onClick={() => scrollToBottom("smooth")}
           type="button"
         >
-          <ArrowDownIcon className="size-4 transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400 sm:size-5" />
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-0 blur transition-opacity duration-300 group-hover:opacity-10" />
+          <ArrowDownIcon className="size-3.5 sm:size-4" />
         </button>
       )}
     </div>

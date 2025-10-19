@@ -329,13 +329,13 @@ const PurePreviewMessage = ({
           {message.role === "assistant" && (
             <div className="mb-1 flex items-center">
               <span className="font-semibold text-foreground">Assistant</span>
-              <MessageTimestamp timestamp={message.createdAt || new Date()} />
+              <MessageTimestamp timestamp={new Date()} />
             </div>
           )}
 
           {message.role === "user" && (
             <div className="mb-1 flex items-center justify-end">
-              <MessageTimestamp timestamp={message.createdAt || new Date()} />
+              <MessageTimestamp timestamp={new Date()} />
               <span className="ml-2 font-semibold text-foreground">You</span>
             </div>
           )}

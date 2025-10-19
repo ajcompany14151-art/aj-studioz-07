@@ -277,10 +277,10 @@ const PurePreviewMessage = ({
   useDataStream();
 
   // Generate a timestamp for the message
-  const getMessageTimestamp = () => {
+  const getMessageTimestamp = (): Date | string => {
     // Check if message has a createdAt property
     if ('createdAt' in message && message.createdAt) {
-      return message.createdAt;
+      return message.createdAt as Date | string;
     }
     
     // Otherwise, use the current time

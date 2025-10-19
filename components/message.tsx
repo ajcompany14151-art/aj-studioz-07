@@ -57,11 +57,12 @@ const PurePreviewMessage = ({
 
   return (
     <motion.div
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 1, y: 0 }}
       className="group/message w-full"
       data-role={message.role}
       data-testid={`message-${message.role}`}
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <div
         className={cn("flex w-full items-start gap-1.5 sm:gap-2 md:gap-3", {
@@ -174,7 +175,7 @@ const PurePreviewMessage = ({
                   <div key={key}>
                     <MessageContent
                       className={cn({
-                        "w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base":
+                        "w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base shadow-md":
                           message.role === "user",
                         "bg-transparent px-0 py-0 text-left text-sm sm:text-base":
                           message.role === "assistant",
@@ -182,7 +183,10 @@ const PurePreviewMessage = ({
                       data-testid="message-content"
                       style={
                         message.role === "user"
-                          ? { backgroundColor: "#006cff" }
+                          ? { 
+                              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                              boxShadow: "0 4px 15px rgba(102, 126, 234, 0.4)"
+                            }
                           : undefined
                       }
                     >
@@ -362,14 +366,15 @@ export const ThinkingMessage = () => {
 
   return (
     <motion.div
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 1, y: 0 }}
       className="group/message w-full"
       data-role={role}
       data-testid="message-assistant-loading"
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <div className="flex items-start justify-start gap-3">
-        <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
+        <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
           <div className="text-white">
             <SparklesIcon size={14} />
           </div>

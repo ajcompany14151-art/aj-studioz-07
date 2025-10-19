@@ -268,7 +268,7 @@ function PureMultimodalInput({
   );
 
   return (
-    <div className={cn("relative w-full max-w-4xl mx-auto", className)}>
+    <div className={cn("relative flex w-full flex-col gap-4", className)}>
       {messages.length === 0 &&
         attachments.length === 0 &&
         uploadQueue.length === 0 && (
@@ -288,114 +288,108 @@ function PureMultimodalInput({
         type="file"
       />
 
-      <div className="relative">
-        <PromptInput
-          className={cn(
-            "relative w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm transition-all duration-200 focus-within:border-gray-300 dark:focus-within:border-gray-600 focus-within:shadow-md",
-            width && width < 640 ? "p-3" : "p-4"
-          )}
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (status !== "ready") {
-              toast.error("Please wait for the model to finish its response!");
-            } else {
-              submitForm();
-            }
-          }}
-        >
-          {(attachments.length > 0 || uploadQueue.length > 0) && (
-            <div
-              className={cn(
-                "flex flex-row items-end gap-2 overflow-x-auto pb-3 px-1",
-                width && width < 640 ? "gap-1.5 pb-2" : "gap-2 pb-3"
-              )}
-              data-testid="attachments-preview"
-            >
-              {attachments.map((attachment) => (
-                <PreviewAttachment
-                  attachment={attachment}
-                  key={attachment.url}
-                  onRemove={() => {
-                    setAttachments((currentAttachments) =>
-                      currentAttachments.filter((a) => a.url !== attachment.url)
-                    );
-                    if (fileInputRef.current) {
-                      fileInputRef.current.value = "";
-                    }
-                  }}
-                />
-              ))}
+      <PromptInput
+        className={cn(
+          "group relative rounded-3xl border border-border/50 bg-card/50 p-3 shadow-2xl shadow-black/10 backdrop-blur-xl transition-all duration-300 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 focus-within:border-primary focus-within:shadow-2xl focus-within:shadow-primary/20 sm:p-4 dark:bg-card/30 dark:shadow-black/30",
+          width && width < 640 ? "p-2.5" : "p-3 sm:p-4"
+        )}
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (status !== "ready") {
+            toast.error("Please wait for the model to finish its response!");
+          } else {
+            submitForm();
+          }
+        }}
+      >
+        {(attachments.length > 0 || uploadQueue.length > 0) && (
+          <div
+            className={cn(
+              "flex flex-row items-end gap-2 overflow-x-scroll px-1 pb-2",
+              width && width < 640 ? "gap-1.5" : "gap-2"
+            )}
+            data-testid="attachments-preview"
+          >
+            {attachments.map((attachment) => (
+              <PreviewAttachment
+                attachment={attachment}
+                key={attachment.url}
+                onRemove={() => {
+                  setAttachments((currentAttachments) =>
+                    currentAttachments.filter((a) => a.url !== attachment.url)
+                  );
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                  }
+                }}
+              />
+            ))}
 
-              {uploadQueue.map((filename) => (
-                <PreviewAttachment
-                  attachment={{
-                    url: "",
-                    name: filename,
-                    contentType: "",
-                  }}
-                  isUploading={true}
-                  key={filename}
-                />
-              ))}
-            </div>
-          )}
-          
-          <div className={cn(
-            "flex items-end gap-2",
-            width && width < 640 ? "gap-1.5" : "gap-2"
-          )}>
-            <div className="flex items-center gap-1">
-              <AttachmentsButton fileInputRef={fileInputRef} status={status} />
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <PromptInputTextarea
-                autoFocus
-                className={cn(
-                  "w-full resize-none border-0 bg-transparent px-3 py-3 text-base leading-relaxed outline-none ring-0 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                  width && width < 640 ? "px-2.5 py-2.5 text-sm" : "px-3 py-3 text-base"
-                )}
-                data-testid="multimodal-input"
-                disableAutoResize={true}
-                maxHeight={200}
-                minHeight={24}
-                onChange={handleInput}
-                placeholder="Send a message..."
-                ref={textareaRef}
-                rows={1}
-                value={input}
+            {uploadQueue.map((filename) => (
+              <PreviewAttachment
+                attachment={{
+                  url: "",
+                  name: filename,
+                  contentType: "",
+                }}
+                isUploading={true}
+                key={filename}
               />
-            </div>
-            
-            <div className="flex items-center gap-1">
-              <Context {...contextProps} />
-              {status === "submitted" ? (
-                <StopButton setMessages={setMessages} stop={stop} />
-              ) : (
-                <PromptInputSubmit
-                  className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 transition-all duration-200 hover:bg-gray-800 dark:hover:bg-gray-100 disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-gray-400 dark:disabled:text-gray-500",
-                    width && width < 640 ? "h-7 w-7" : "h-8 w-8"
-                  )}
-                  disabled={!input.trim() || uploadQueue.length > 0 || isRateLimited}
-                  status={status}
-                >
-                  <ArrowUpIcon size={width && width < 640 ? 16 : 18} />
-                </PromptInputSubmit>
-              )}
-            </div>
+            ))}
           </div>
-          
-          <PromptInputToolbar className="border-t border-gray-100 dark:border-gray-800 pt-2 mt-1">
-            <PromptInputTools className="justify-between w-full">
-              <ModelSelectorCompact
-                onModelChange={onModelChange}
-                selectedModelId={selectedModelId}
-              />
-            </PromptInputTools>
-          </PromptInputToolbar>
-        </PromptInput>
-      </div>
+        )}
+        <div className={cn(
+          "flex flex-row items-end gap-1 sm:gap-2",
+          width && width < 640 ? "gap-1" : "gap-1 sm:gap-2"
+        )}>
+          <AttachmentsButton fileInputRef={fileInputRef} status={status} />
+          <PromptInputTextarea
+            autoFocus
+            className={cn(
+              "grow resize-none border-0! bg-transparent px-3 py-2.5 text-base leading-relaxed outline-none ring-0 [-ms-overflow-style:none] [scrollbar-width:none] placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-scrollbar]:hidden",
+              width && width < 640 ? "px-2.5 py-2 text-sm" : "px-3 py-2.5 text-base"
+            )}
+            data-testid="multimodal-input"
+            disableAutoResize={true}
+            maxHeight={200}
+            minHeight={24}
+            onChange={handleInput}
+            placeholder="Ask me anything..."
+            ref={textareaRef}
+            rows={1}
+            value={input}
+          />
+          <Context {...contextProps} />
+          {status === "submitted" ? (
+            <StopButton setMessages={setMessages} stop={stop} />
+          ) : (
+            <PromptInputSubmit
+              className={cn(
+                "size-9 rounded-2xl bg-gradient-to-br from-primary via-primary to-accent text-primary-foreground shadow-lg shadow-primary/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/40 disabled:scale-100 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none",
+                width && width < 640 ? "size-8" : "size-9"
+              )}
+              disabled={!input.trim() || uploadQueue.length > 0 || isRateLimited}
+              status={status}
+            >
+              <ArrowUpIcon size={width && width < 640 ? 18 : 20} />
+            </PromptInputSubmit>
+          )}
+        </div>
+        <PromptInputToolbar className={cn(
+          "!border-top-0 border-t-0! p-0 pt-0.5 shadow-none sm:pt-1 dark:border-0 dark:border-transparent!",
+          width && width < 640 ? "pt-0.5" : "pt-0.5 sm:pt-1"
+        )}>
+          <PromptInputTools className={cn(
+            "gap-0.5 sm:gap-1 md:gap-1.5",
+            width && width < 640 ? "gap-0.5" : "gap-0.5 sm:gap-1 md:gap-1.5"
+          )}>
+            <ModelSelectorCompact
+              onModelChange={onModelChange}
+              selectedModelId={selectedModelId}
+            />
+          </PromptInputTools>
+        </PromptInputToolbar>
+      </PromptInput>
       
       {/* Rate limiting indicator */}
       {isRateLimited && (
@@ -443,8 +437,8 @@ function PureAttachmentsButton({
   return (
     <Button
       className={cn(
-        "h-8 w-8 rounded-lg p-0 text-gray-500 dark:text-gray-400 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300",
-        "sm:h-8 sm:w-8"
+        "aspect-square rounded-2xl p-2 text-muted-foreground transition-all duration-300 hover:bg-muted/50 hover:text-foreground",
+        "sm:size-9 size-8"
       )}
       data-testid="attachments-button"
       disabled={isDisabled}
@@ -454,7 +448,7 @@ function PureAttachmentsButton({
       }}
       variant="ghost"
     >
-      <PaperclipIcon size={18} />
+      <PaperclipIcon size={20} />
     </Button>
   );
 }
@@ -495,19 +489,19 @@ function PureModelSelectorCompact({
     >
       <Trigger
         className={cn(
-          "flex h-7 items-center gap-1.5 rounded-md border border-gray-200 dark:border-gray-700 bg-transparent px-2.5 text-xs font-medium text-gray-700 dark:text-gray-300 shadow-none transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
-          width && width < 640 ? "h-6 px-2 text-[10px]" : "h-7 px-2.5 text-xs"
+          "flex h-8 items-center gap-1.5 rounded-2xl border border-border/50 bg-muted/30 px-3 text-xs font-medium text-foreground shadow-none transition-all duration-300 hover:border-primary/50 hover:bg-muted/50 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
+          width && width < 640 ? "h-7 px-2.5 text-[10px]" : "h-8 px-3 text-xs"
         )}
         type="button"
       >
         <CpuIcon size={width && width < 640 ? 12 : 14} />
         <span className={cn(
-          "font-medium truncate max-w-[100px]",
+          "font-semibold",
           width && width < 640 ? "hidden" : "hidden sm:inline text-xs"
         )}>
           {selectedModel?.name}
         </span>
-        <ChevronDownIcon size={width && width < 640 ? 10 : 12} />
+        <ChevronDownIcon size={width && width < 640 ? 12 : 14} />
       </Trigger>
       <PromptInputModelSelectContent className="min-w-[260px] p-0">
         <div className="flex flex-col gap-px">
@@ -539,8 +533,8 @@ function PureStopButton({
   return (
     <Button
       className={cn(
-        "flex h-8 w-8 items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-700 p-0 text-gray-700 dark:text-gray-300 transition-all duration-200 hover:bg-gray-300 dark:hover:bg-gray-600",
-        width && width < 640 ? "h-7 w-7" : "h-8 w-8"
+        "rounded-2xl bg-destructive p-2 text-destructive-foreground shadow-lg shadow-destructive/30 transition-all duration-300 hover:scale-105 hover:bg-destructive/90 hover:shadow-xl hover:shadow-destructive/40 disabled:bg-muted disabled:text-muted-foreground",
+        width && width < 640 ? "size-8" : "size-9"
       )}
       data-testid="stop-button"
       onClick={(event) => {
@@ -549,7 +543,7 @@ function PureStopButton({
         setMessages((messages) => messages);
       }}
     >
-      <StopIcon size={width && width < 640 ? 16 : 18} />
+      <StopIcon size={width && width < 640 ? 18 : 20} />
     </Button>
   );
 }

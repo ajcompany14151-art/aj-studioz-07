@@ -19,6 +19,7 @@ import {
   saveMessages,
 } from "@/lib/db/queries";
 import { convertToUIMessages, generateUUID } from "@/lib/utils";
+import { markCurrentKeyAsRateLimited, getRotationStats } from "@/lib/ai/groq-key-rotation";
 
 export const maxDuration = 60;
 
@@ -80,41 +81,68 @@ export async function POST(request: Request) {
   const isLiteModel = selectedChatModel === 'chat-model-lite';
   
   const stream = createUIMessageStream({
-    execute: ({ writer: dataStream }) => {
-      const result = streamText({
-        model: model.languageModel(selectedChatModel),
-        system: getSystemPrompt(selectedChatModel),
-        messages: convertToModelMessages(uiMessages),
-        experimental_activeTools: isLiteModel ? [] : [
-          "getWeather",
-          "createDocument",
-          "updateDocument",
-          "requestSuggestions",
-        ],
-        tools: isLiteModel ? {} : {
-          getWeather,
-          createDocument: createDocument({ session, dataStream }),
-          updateDocument: updateDocument({ session, dataStream }),
-          requestSuggestions: requestSuggestions({ session, dataStream }),
-        },
-        experimental_telemetry: {
-          isEnabled: true,
-          functionId: "stream-text",
-        },
-      });
+    execute: ({ writer: dataStream }: { writer: any }) => {
+      try {
+        console.log('[Chat API] Starting stream with model:', selectedChatModel);
+        
+        const result = streamText({
+          model: model.languageModel(selectedChatModel),
+          system: getSystemPrompt(selectedChatModel),
+          messages: convertToModelMessages(uiMessages),
+          experimental_activeTools: isLiteModel ? [] : [
+            "getWeather",
+            "createDocument",
+            "updateDocument",
+            "requestSuggestions",
+          ],
+          tools: isLiteModel ? {} : {
+            getWeather,
+            createDocument: createDocument({ session, dataStream }),
+            updateDocument: updateDocument({ session, dataStream }),
+            requestSuggestions: requestSuggestions({ session, dataStream }),
+          },
+          experimental_telemetry: {
+            isEnabled: true,
+            functionId: "stream-text",
+          },
+          onError: (error: any) => {
+            console.error('[Chat API] Stream error:', error);
+            // Handle rate limiting and key rotation
+            const errorMessage = error?.message || error?.toString() || '';
+            if (errorMessage.includes('rate limit') || 
+                errorMessage.includes('429') || 
+                errorMessage.includes('quota') ||
+                errorMessage.includes('Rate limit exceeded')) {
+              try {
+                markCurrentKeyAsRateLimited();
+                const stats = getRotationStats();
+                console.log('[Chat API] Rate limited - Key rotation stats:', stats);
+              } catch (rotationError) {
+                console.error('[Chat API] Error in key rotation:', rotationError);
+              }
+            }
+          },
+        });
 
-      result.consumeStream();
+        result.consumeStream();
 
-      dataStream.merge(
-        result.toUIMessageStream({
-          sendReasoning: true,
-        })
-      );
+        dataStream.merge(
+          result.toUIMessageStream({
+            sendReasoning: true,
+          })
+        );
+      } catch (error) {
+        console.error('[Chat API] Error in stream execution:', error);
+        dataStream.writeData({
+          type: 'error',
+          content: `AI Error: ${error instanceof Error ? error.message : 'Unknown error occurred'}`
+        });
+      }
     },
     generateId: generateUUID,
-    onFinish: async ({ messages: responseMessages }) => {
+    onFinish: async ({ messages: responseMessages }: { messages: any[] }) => {
       await saveMessages({
-        messages: responseMessages.map((currentMessage) => ({
+        messages: responseMessages.map((currentMessage: any) => ({
           id: currentMessage.id,
           role: currentMessage.role,
           parts: currentMessage.parts,

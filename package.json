@@ -6,6 +6,7 @@
     "dev": "next dev --turbo -p 5000 -H 0.0.0.0",
     "build": "next build",
     "start": "next start -p 5000 -H 0.0.0.0",
+    "test-keys": "node test-groq-keys.js",
     "lint": "npx ultracite@latest check",
     "format": "npx ultracite@latest fix",
     "db:generate": "drizzle-kit generate",

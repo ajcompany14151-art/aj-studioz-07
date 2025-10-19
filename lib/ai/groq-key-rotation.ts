@@ -14,12 +14,12 @@ if (typeof window !== 'undefined') {
 
 // Collect all available Groq API keys from environment variables
 const groqApiKeys = [
-  process.env.GROQ_API_KEY,
+  process.env.GROQ_API_KEY_1,
   process.env.GROQ_API_KEY_2,
   process.env.GROQ_API_KEY_3,
   process.env.GROQ_API_KEY_4,
   process.env.GROQ_API_KEY_5,
-].filter((key): key is string => Boolean(key));
+].filter((key): key is string => Boolean(key?.trim()));
 
 if (groqApiKeys.length === 0) {
   throw new Error('No GROQ_API_KEY found in environment variables');

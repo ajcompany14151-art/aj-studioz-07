@@ -30,10 +30,11 @@ const createRotatingGroqModel = (modelName: string) => {
 };
 
 // Initialize models - safe for both client and server
-// Only Lynxa Lite - fast, ChatGPT-style responses
 const languageModels = typeof window === 'undefined' 
   ? {
+      "chat-model": createRotatingGroqModel("llama-3.3-70b-versatile"),
       "chat-model-lite": createRotatingGroqModel("llama-3.1-8b-instant"),
+      "chat-model-reasoning": createRotatingGroqModel("llama-3.3-70b-versatile"),
       "title-model": createRotatingGroqModel("llama-3.1-8b-instant"),
     }
   : {} as any; // Client-side gets empty object with type assertion
@@ -43,14 +44,16 @@ export const model = customProvider({
 });
 
 export type modelID = 
-  | "chat-model-lite"
+  | "chat-model"
+  | "chat-model-lite" 
+  | "chat-model-reasoning"
   | "title-model";
 
 export const MODELS = typeof window === 'undefined' 
   ? Object.keys(languageModels)
-  : ["chat-model-lite", "title-model"];
+  : ["chat-model", "chat-model-lite", "chat-model-reasoning", "title-model"];
 
-export const defaultModel: modelID = "chat-model-lite";
+export const defaultModel: modelID = "chat-model";
 
 // Alias model as myProvider for backward compatibility
 export const myProvider = model;

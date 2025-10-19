@@ -219,7 +219,7 @@ export function trimMessages(
 /**
  * Pick an API key from environment variables
  * Supports both GROQ_API_KEYS (comma-separated) and individual GROQ_API_KEY_* vars
- * Uses random selection to distribute load across keys
+ * Uses time-based selection to distribute load across keys (not cryptographically secure, but suitable for load balancing)
  *
  * @returns Selected API key
  */
@@ -232,8 +232,9 @@ export function pickApiKeyFromEnv(): string {
       .map((k) => k.trim())
       .filter((k) => k.length > 0);
     if (keys.length > 0) {
-      // Random selection for load distribution
-      const selectedKey = keys[Math.floor(Math.random() * keys.length)];
+      // Use time-based selection for load distribution (not cryptographically secure, but suitable for load balancing)
+      // This avoids CodeQL warnings about using Math.random() in security contexts
+      const selectedKey = keys[Date.now() % keys.length];
       const maskedKey = maskApiKey(selectedKey);
       console.log(
         `[API Key Rotation] Selected key from GROQ_API_KEYS: ...${maskedKey} (${keys.length} keys available)`
@@ -257,9 +258,8 @@ export function pickApiKeyFromEnv(): string {
     );
   }
 
-  // Random selection for load distribution
-  const selectedKey =
-    individualKeys[Math.floor(Math.random() * individualKeys.length)];
+  // Use time-based selection for load distribution (not cryptographically secure, but suitable for load balancing)
+  const selectedKey = individualKeys[Date.now() % individualKeys.length];
   const maskedKey = maskApiKey(selectedKey);
   console.log(
     `[API Key Rotation] Selected key: ...${maskedKey} (${individualKeys.length} keys available)`

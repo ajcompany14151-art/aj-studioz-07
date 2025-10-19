@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import SplashScreen from "@/components/splash-screen";
+import PWAInstallButton from "@/components/pwa-install-button";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -128,6 +130,18 @@ export default function RootLayout({
         <link rel="icon" href="/logo.jpg" type="image/jpeg" />
         <link rel="alternate icon" href="/logo.jpg" />
         <link rel="apple-touch-icon" href="/logo.jpg" />
+        {/* PWA Meta Tags */}
+        <meta name="application-name" content="AJ STUDIOZ" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="AJ STUDIOZ" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <link rel="apple-touch-icon" href="/logo.jpg" />
+        <link rel="manifest" href="/manifest.json" />
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required"
           dangerouslySetInnerHTML={{
@@ -191,8 +205,10 @@ export default function RootLayout({
           disableTransitionOnChange
           enableSystem
         >
+          <SplashScreen />
           <Toaster position="top-center" />
           <SessionProvider>{children}</SessionProvider>
+          <PWAInstallButton />
         </ThemeProvider>
       </body>
     </html>

@@ -19,10 +19,19 @@ const groqApiKeys = [
   process.env.GROQ_API_KEY_3,
   process.env.GROQ_API_KEY_4,
   process.env.GROQ_API_KEY_5,
+  // Fallback to single key for backwards compatibility
+  process.env.GROQ_API_KEY,
 ].filter((key): key is string => Boolean(key?.trim()));
 
 if (groqApiKeys.length === 0) {
-  throw new Error('No GROQ_API_KEY found in environment variables');
+  // During build time, this might not be available, so we'll use a placeholder
+  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+    console.warn('[Groq] No API keys found during build - will use runtime keys');
+    // Use a placeholder for build time
+    groqApiKeys.push('placeholder-key-for-build');
+  } else {
+    throw new Error('No GROQ_API_KEY found in environment variables. Please set GROQ_API_KEY_1 through GROQ_API_KEY_5.');
+  }
 }
 
 // Track current key index and failed keys

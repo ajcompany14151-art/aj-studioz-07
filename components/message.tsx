@@ -71,60 +71,52 @@ const PurePreviewMessage = ({
       >
         {message.role === "assistant" && (
           <motion.div 
-            className="group relative -mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-0.5 shadow-lg sm:size-10 sm:rounded-2xl"
+            className="-mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900"
             animate={isLoading ? {
               boxShadow: [
-                "0 0 0 0 rgba(59, 130, 246, 0.6)",
-                "0 0 0 8px rgba(147, 51, 234, 0.3)",
-                "0 0 0 12px rgba(236, 72, 153, 0)",
+                "0 0 0 0 rgba(59, 130, 246, 0.4)",
+                "0 0 0 6px rgba(59, 130, 246, 0)",
                 "0 0 0 0 rgba(59, 130, 246, 0)",
               ],
-              scale: [1, 1.05, 1],
             } : {}}
             transition={{
-              duration: 2.5,
+              duration: 2,
               repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
               ease: "easeInOut",
             }}
           >
             <motion.div
               animate={isLoading ? {
-                opacity: [1, 0.8, 1],
-                rotate: [0, 180, 360],
+                opacity: [1, 0.7, 1],
               } : {}}
               transition={{
-                duration: 3,
+                duration: 1.5,
                 repeat: isLoading ? Number.POSITIVE_INFINITY : 0,
                 ease: "easeInOut",
               }}
-              className="relative size-full overflow-hidden rounded-lg bg-background sm:rounded-xl"
+              className="relative size-full"
             >
               <Image
                 src="/logo.jpg"
-                alt="AJ STUDIOZ AI"
-                width={32}
-                height={32}
-                className="size-full object-cover transition-transform duration-300 group-hover:scale-110"
+                alt="AI Avatar"
+                width={28}
+                height={28}
+                className="object-cover sm:h-8 sm:w-8"
               />
-              {isLoading && (
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-pulse" />
-              )}
             </motion.div>
           </motion.div>
         )}
 
         {message.role === "user" && session?.user && (
-          <div className="group order-2 -mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-gray-400 via-gray-500 to-gray-600 p-0.5 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl sm:size-10 sm:rounded-2xl dark:from-gray-600 dark:via-gray-700 dark:to-gray-800">
-            <div className="size-full overflow-hidden rounded-lg sm:rounded-xl">
-              <Image
-                src={session.user.image || `https://avatar.vercel.sh/${session.user.email}`}
-                alt={session.user.name || "User"}
-                width={32}
-                height={32}
-                className="size-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-110 sm:rounded-xl"
-                unoptimized
-              />
-            </div>
+          <div className="order-2 -mt-1 flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-blue-400 ring-offset-1 sm:size-8 sm:ring-offset-2 dark:ring-offset-zinc-900">
+            <Image
+              src={session.user.image || `https://avatar.vercel.sh/${session.user.email}`}
+              alt={session.user.name || "User"}
+              width={32}
+              height={32}
+              className="size-full rounded-full object-cover"
+              unoptimized
+            />
           </div>
         )}
 
@@ -179,43 +171,24 @@ const PurePreviewMessage = ({
             if (type === "text") {
               if (mode === "view") {
                 return (
-                  <motion.div 
-                    key={key}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                  >
+                  <div key={key}>
                     <MessageContent
                       className={cn({
-                        "group relative w-fit break-words rounded-2xl px-4 py-3 text-right text-sm text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl sm:px-5 sm:py-4 sm:text-base":
+                        "w-fit break-words rounded-2xl px-2.5 py-1.5 text-right text-sm text-white sm:px-3 sm:py-2 sm:text-base":
                           message.role === "user",
-                        "relative rounded-2xl bg-gradient-to-br from-muted/30 via-muted/20 to-background/80 px-4 py-3 text-left text-sm backdrop-blur-sm transition-all duration-300 hover:from-muted/40 hover:via-muted/30 hover:to-background/90 sm:px-6 sm:py-4 sm:text-base":
+                        "bg-transparent px-0 py-0 text-left text-sm sm:text-base":
                           message.role === "assistant",
                       })}
                       data-testid="message-content"
                       style={
                         message.role === "user"
-                          ? { 
-                              background: "linear-gradient(135deg, #006cff 0%, #0052cc 50%, #003d99 100%)",
-                              boxShadow: "0 4px 20px rgba(0, 108, 255, 0.25)"
-                            }
+                          ? { backgroundColor: "#006cff" }
                           : undefined
                       }
                     >
-                      {message.role === "user" && (
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 via-transparent to-black/10 pointer-events-none" />
-                      )}
-                      {message.role === "assistant" && (
-                        <>
-                          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
-                          <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
-                        </>
-                      )}
-                      <div className="relative z-10">
-                        <Response>{sanitizeText(part.text)}</Response>
-                      </div>
+                      <Response>{sanitizeText(part.text)}</Response>
                     </MessageContent>
-                  </motion.div>
+                  </div>
                 );
               }
 
@@ -395,86 +368,15 @@ export const ThinkingMessage = () => {
       data-testid="message-assistant-loading"
       initial={{ opacity: 0 }}
     >
-      <div className="flex items-start justify-start gap-3 sm:gap-4">
-        {/* Enhanced AI Avatar with Pulsing Animation */}
-        <motion.div 
-          className="relative -mt-1 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-0.5 shadow-lg sm:size-10 sm:rounded-2xl"
-          animate={{
-            boxShadow: [
-              "0 0 0 0 rgba(59, 130, 246, 0.6)",
-              "0 0 0 8px rgba(147, 51, 234, 0.3)",
-              "0 0 0 12px rgba(236, 72, 153, 0.1)",
-              "0 0 0 16px rgba(59, 130, 246, 0)",
-            ],
-            scale: [1, 1.05, 1.1, 1.05, 1],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-        >
-          <motion.div
-            animate={{
-              rotate: [0, 180, 360],
-              opacity: [1, 0.8, 1],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-            className="relative size-full overflow-hidden rounded-lg bg-background sm:rounded-xl"
-          >
-            <Image
-              src="/logo.jpg"
-              alt="AJ STUDIOZ AI"
-              width={32}
-              height={32}
-              className="size-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 animate-pulse" />
-          </motion.div>
-        </motion.div>
+      <div className="flex items-start justify-start gap-3">
+        <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
+          <SparklesIcon size={14} />
+        </div>
 
         <div className="flex w-full flex-col gap-2 md:gap-4">
-          {/* Enhanced Thinking Bubble */}
-          <motion.div 
-            className="relative rounded-2xl bg-gradient-to-br from-muted/40 via-muted/30 to-background/80 px-4 py-3 backdrop-blur-sm sm:px-6 sm:py-4"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            {/* Gradient Border */}
-            <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-pulse" />
-            
-            {/* Background Gradient */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5" />
-            
-            <div className="relative z-10 flex items-center gap-3">
-              <LoadingText>AJ STUDIOZ is thinking</LoadingText>
-              
-              {/* Animated Dots */}
-              <div className="flex gap-1">
-                {[0, 1, 2].map((i) => (
-                  <motion.div
-                    key={i}
-                    className="size-1.5 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-                    animate={{
-                      scale: [1, 1.5, 1],
-                      opacity: [0.5, 1, 0.5],
-                    }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Number.POSITIVE_INFINITY,
-                      delay: i * 0.2,
-                      ease: "easeInOut",
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          </motion.div>
+          <div className="p-0 text-muted-foreground text-sm">
+            <LoadingText>Thinking...</LoadingText>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -484,19 +386,17 @@ export const ThinkingMessage = () => {
 const LoadingText = ({ children }: { children: React.ReactNode }) => {
   return (
     <motion.div
-      animate={{ 
-        backgroundPosition: ["200% 0%", "-200% 0%"],
-      }}
-      className="flex items-center text-transparent font-medium"
+      animate={{ backgroundPosition: ["100% 50%", "-100% 50%"] }}
+      className="flex items-center text-transparent"
       style={{
         background:
-          "linear-gradient(110deg, rgb(59, 130, 246) 0%, rgb(147, 51, 234) 25%, rgb(236, 72, 153) 50%, rgb(147, 51, 234) 75%, rgb(59, 130, 246) 100%)",
-        backgroundSize: "400% 100%",
+          "linear-gradient(90deg, hsl(var(--muted-foreground)) 0%, hsl(var(--muted-foreground)) 35%, hsl(var(--foreground)) 50%, hsl(var(--muted-foreground)) 65%, hsl(var(--muted-foreground)) 100%)",
+        backgroundSize: "200% 100%",
         WebkitBackgroundClip: "text",
         backgroundClip: "text",
       }}
       transition={{
-        duration: 2,
+        duration: 1.5,
         repeat: Number.POSITIVE_INFINITY,
         ease: "linear",
       }}

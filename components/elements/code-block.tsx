@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, TerminalIcon } from "lucide-react";
 import type { ComponentProps, HTMLAttributes, ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -37,69 +37,89 @@ export const CodeBlock = ({
   <CodeBlockContext.Provider value={{ code }}>
     <div
       className={cn(
-        "relative w-full overflow-hidden rounded-md border bg-background text-foreground",
+        "relative w-full overflow-hidden rounded-lg border-0 shadow-xl",
         className
       )}
       {...props}
     >
-      <div className="relative">
-        <SyntaxHighlighter
-          className="overflow-hidden dark:hidden"
-          codeTagProps={{
-            className: "font-mono text-sm",
-          }}
-          customStyle={{
-            margin: 0,
-            padding: "1rem",
-            fontSize: "0.875rem",
-            background: "hsl(var(--background))",
-            color: "hsl(var(--foreground))",
-            overflowX: "auto",
-            overflowWrap: "break-word",
-            wordBreak: "break-all",
-          }}
-          language={language}
-          lineNumberStyle={{
-            color: "hsl(var(--muted-foreground))",
-            paddingRight: "1rem",
-            minWidth: "2.5rem",
-          }}
-          showLineNumbers={showLineNumbers}
-          style={oneLight}
-        >
-          {code}
-        </SyntaxHighlighter>
-        <SyntaxHighlighter
-          className="hidden overflow-hidden dark:block"
-          codeTagProps={{
-            className: "font-mono text-sm",
-          }}
-          customStyle={{
-            margin: 0,
-            padding: "1rem",
-            fontSize: "0.875rem",
-            background: "hsl(var(--background))",
-            color: "hsl(var(--foreground))",
-            overflowX: "auto",
-            overflowWrap: "break-word",
-            wordBreak: "break-all",
-          }}
-          language={language}
-          lineNumberStyle={{
-            color: "hsl(var(--muted-foreground))",
-            paddingRight: "1rem",
-            minWidth: "2.5rem",
-          }}
-          showLineNumbers={showLineNumbers}
-          style={oneDark}
-        >
-          {code}
-        </SyntaxHighlighter>
-        {children && (
-          <div className="absolute top-2 right-2 flex items-center gap-2">
-            {children}
+      <div className="relative bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-2 dark:border-slate-700">
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1.5">
+              <div className="h-3 w-3 rounded-full bg-red-500 shadow-sm"></div>
+              <div className="h-3 w-3 rounded-full bg-yellow-500 shadow-sm"></div>
+              <div className="h-3 w-3 rounded-full bg-green-500 shadow-sm"></div>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <TerminalIcon size={12} />
+              <span className="font-mono">{language}</span>
+            </div>
           </div>
-        )}
+          {children && (
+            <div className="flex items-center gap-2">
+              {children}
+            </div>
+          )}
+        </div>
+        
+        <div className="relative">
+          <SyntaxHighlighter
+            className="overflow-hidden dark:hidden"
+            codeTagProps={{
+              className: "font-mono text-sm",
+            }}
+            customStyle={{
+              margin: 0,
+              padding: "1rem",
+              fontSize: "0.875rem",
+              background: "transparent",
+              color: "hsl(var(--foreground))",
+              overflowX: "auto",
+              overflowWrap: "break-word",
+              wordBreak: "break-all",
+            }}
+            language={language}
+            lineNumberStyle={{
+              color: "hsl(var(--muted-foreground))",
+              paddingRight: "1rem",
+              minWidth: "2.5rem",
+              borderRight: "1px solid hsl(var(--border))",
+              marginRight: "1rem",
+            }}
+            showLineNumbers={showLineNumbers}
+            style={oneLight}
+          >
+            {code}
+          </SyntaxHighlighter>
+          <SyntaxHighlighter
+            className="hidden overflow-hidden dark:block"
+            codeTagProps={{
+              className: "font-mono text-sm",
+            }}
+            customStyle={{
+              margin: 0,
+              padding: "1rem",
+              fontSize: "0.875rem",
+              background: "transparent",
+              color: "hsl(var(--foreground))",
+              overflowX: "auto",
+              overflowWrap: "break-word",
+              wordBreak: "break-all",
+            }}
+            language={language}
+            lineNumberStyle={{
+              color: "hsl(var(--muted-foreground))",
+              paddingRight: "1rem",
+              minWidth: "2.5rem",
+              borderRight: "1px solid hsl(var(--border))",
+              marginRight: "1rem",
+            }}
+            showLineNumbers={showLineNumbers}
+            style={oneDark}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </div>
       </div>
     </div>
   </CodeBlockContext.Provider>
@@ -142,7 +162,10 @@ export const CodeBlockCopyButton = ({
 
   return (
     <Button
-      className={cn("shrink-0", className)}
+      className={cn(
+        "h-7 w-7 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700",
+        className
+      )}
       onClick={copyToClipboard}
       size="icon"
       variant="ghost"

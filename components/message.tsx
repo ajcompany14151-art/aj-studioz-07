@@ -276,6 +276,17 @@ const PurePreviewMessage = ({
 
   useDataStream();
 
+  // Generate a timestamp for the message
+  const getMessageTimestamp = () => {
+    // Check if message has a createdAt property
+    if ('createdAt' in message && message.createdAt) {
+      return message.createdAt;
+    }
+    
+    // Otherwise, use the current time
+    return new Date();
+  };
+
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
@@ -329,13 +340,13 @@ const PurePreviewMessage = ({
           {message.role === "assistant" && (
             <div className="mb-1 flex items-center">
               <span className="font-semibold text-foreground">Assistant</span>
-              <MessageTimestamp timestamp={new Date()} />
+              <MessageTimestamp timestamp={getMessageTimestamp()} />
             </div>
           )}
 
           {message.role === "user" && (
             <div className="mb-1 flex items-center justify-end">
-              <MessageTimestamp timestamp={new Date()} />
+              <MessageTimestamp timestamp={getMessageTimestamp()} />
               <span className="ml-2 font-semibold text-foreground">You</span>
             </div>
           )}

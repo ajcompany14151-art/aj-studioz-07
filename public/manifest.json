@@ -1,6 +1,6 @@
 {
-  "name": "AJ STUDIOZ - AI Chat Assistant",
-  "short_name": "AJ STUDIOZ",
+  "name": "AJ STUDIOZ AI Chat",
+  "short_name": "AJ Chat",
   "description": "Advanced AI Chat Assistant with Lynxa Pro, Lite, and Student models. Create documents, get comprehensive answers, and chat with intelligence.",
   "start_url": "/?utm_source=pwa",
   "display": "standalone",

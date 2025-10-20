@@ -11,7 +11,7 @@ import { SessionProvider } from "next-auth/react";
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexa.ajstudioz.co.in"),
   title: {
-    default: "AJ STUDIOZ - Advanced AI Chat Assistant",
+    default: "AJ STUDIOZ AI Chat - Advanced Assistant",
     template: "%s | AJ STUDIOZ AI"
   },
   description: "Advanced AI Chat Assistant powered by Groq with Llama 3.3 70B. Features document generation, code execution, 3D visualizations, and comprehensive AI assistance for productivity and education.",
@@ -59,9 +59,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://nexa.ajstudioz.co.in",
-    title: "AJ STUDIOZ - Advanced AI Chat Assistant",
+    title: "AJ STUDIOZ AI Chat - Advanced Assistant",
     description: "Revolutionary AI chatbot featuring 3D visualizations, interactive diagrams, sandboxed code execution, PDF generation, Excel integration, and offline PWA capabilities.",
-    siteName: "AJ STUDIOZ AI",
+    siteName: "AJ STUDIOZ AI Chat",
     images: [
       {
         url: "https://nexa.ajstudioz.co.in/logo.jpg",
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@ajstudioz",
     creator: "@ajstudioz",
-    title: "AJ STUDIOZ - Advanced AI Chat Assistant",
+    title: "AJ STUDIOZ AI Chat - Advanced Assistant",
     description: "🚀 Advanced AI with Three.js 3D scenes, interactive D3.js charts, Monaco code editor, PDF generation & more! Now with PWA offline support.",
     images: ["https://nexa.ajstudioz.co.in/logo.jpg"],
   },

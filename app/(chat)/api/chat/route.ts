@@ -55,30 +55,49 @@ export async function POST(request: Request) {
       contentType: part.mediaType,
     })) || [];
 
-  // Handle image attachments - convert to text descriptions since Groq doesn't support vision
+  // Handle image attachments with vision analysis
   if (attachmentsFromParts.length > 0) {
     const imageAttachments = attachmentsFromParts.filter(att => 
       att.contentType?.startsWith('image/')
     );
     
     if (imageAttachments.length > 0) {
-      // Add image context to the message text
-      const imageContext = imageAttachments.map(img => 
-        `[Image uploaded: ${img.name}]`
-      ).join('\n');
+      // Import vision analyzer
+      const { analyzeImage } = await import("@/lib/ai/vision");
       
       const textPart = message.parts.find((part: any) => part.type === "text");
-      const currentText = textPart?.text || "";
+      const userQuestion = textPart?.text || "";
       
-      processedMessage = {
-        ...message,
-        parts: [
-          {
-            type: "text",
-            text: `${imageContext}\n\n${currentText}\n\nNote: I can see you've uploaded an image file "${imageAttachments[0].name}". While I cannot directly analyze images, I can help you with questions about the image if you describe what's in it, or assist with other tasks related to the file.`
-          }
-        ]
-      };
+      try {
+        // Analyze the first image
+        const imageAnalysis = await analyzeImage(imageAttachments[0].url, userQuestion);
+        
+        processedMessage = {
+          ...message,
+          parts: [
+            {
+              type: "text",
+              text: `📸 **Image Analysis:**\n\n${imageAnalysis}\n\n${userQuestion ? `\n**Your Question:** ${userQuestion}` : ''}`
+            }
+          ]
+        };
+      } catch (error) {
+        console.error('Image analysis failed:', error);
+        // Fallback to original message with helpful note
+        const imageContext = imageAttachments.map(img => 
+          `[Image uploaded: ${img.name}]`
+        ).join('\n');
+        
+        processedMessage = {
+          ...message,
+          parts: [
+            {
+              type: "text",
+              text: `${imageContext}\n\n${userQuestion}\n\n**Note:** I can see you've uploaded an image "${imageAttachments[0].name}". To get the best help, please describe what you see in the image, and I'll assist you accordingly!`
+            }
+          ]
+        };
+      }
     }
   }
 

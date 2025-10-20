@@ -254,6 +254,43 @@ export default function RootLayout({
           <SessionProvider>{children}</SessionProvider>
           <PWAInstallButton />
         </ThemeProvider>
+        
+        {/* PWA Service Worker Registration */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for PWA"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Only register service worker in production and HTTPS
+              if ('serviceWorker' in navigator && location.protocol === 'https:') {
+                window.addEventListener('load', async () => {
+                  try {
+                    const registration = await navigator.serviceWorker.register('/sw.js', {
+                      scope: '/',
+                      updateViaCache: 'none'
+                    });
+                    console.log('✅ SW registered:', registration.scope);
+                    
+                    // Handle updates gracefully
+                    registration.addEventListener('updatefound', () => {
+                      const newWorker = registration.installing;
+                      if (newWorker) {
+                        newWorker.addEventListener('statechange', () => {
+                          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('🆕 New content available');
+                          }
+                        });
+                      }
+                    });
+                  } catch (error) {
+                    console.warn('❌ SW registration failed:', error.message || error);
+                  }
+                });
+              } else if ('serviceWorker' in navigator) {
+                console.log('ℹ️ SW not registered - requires HTTPS in production');
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

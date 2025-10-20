@@ -44,7 +44,7 @@ export async function POST(request: Request) {
   }
 
   const messagesFromDb = await getMessagesByChatId({ id });
-  const uiMessages = [...convertToUIMessages(messagesFromDb), message];
+  let processedMessage = message;
 
   // Extract attachments from message parts
   const attachmentsFromParts = message.parts
@@ -54,6 +54,35 @@ export async function POST(request: Request) {
       url: part.url,
       contentType: part.mediaType,
     })) || [];
+
+  // Handle image attachments - convert to text descriptions since Groq doesn't support vision
+  if (attachmentsFromParts.length > 0) {
+    const imageAttachments = attachmentsFromParts.filter(att => 
+      att.contentType?.startsWith('image/')
+    );
+    
+    if (imageAttachments.length > 0) {
+      // Add image context to the message text
+      const imageContext = imageAttachments.map(img => 
+        `[Image uploaded: ${img.name}]`
+      ).join('\n');
+      
+      const textPart = message.parts.find((part: any) => part.type === "text");
+      const currentText = textPart?.text || "";
+      
+      processedMessage = {
+        ...message,
+        parts: [
+          {
+            type: "text",
+            text: `${imageContext}\n\n${currentText}\n\nNote: I can see you've uploaded an image file "${imageAttachments[0].name}". While I cannot directly analyze images, I can help you with questions about the image if you describe what's in it, or assist with other tasks related to the file.`
+          }
+        ]
+      };
+    }
+  }
+
+  const uiMessages = [...convertToUIMessages(messagesFromDb), processedMessage];
 
   await saveMessages({
     messages: [

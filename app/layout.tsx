@@ -64,17 +64,17 @@ export const metadata: Metadata = {
     siteName: "AJ STUDIOZ AI",
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "AJ STUDIOZ - Advanced AI Chat Assistant",
-        type: "image/jpeg",
-      },
-      {
-        url: "/logo.jpg",
+        url: "https://nexa.ajstudioz.co.in/logo.jpg",
         width: 512,
         height: 512,
         alt: "AJ STUDIOZ Logo",
+        type: "image/jpeg",
+      },
+      {
+        url: "https://nexa.ajstudioz.co.in/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "AJ STUDIOZ - Advanced AI Chat Assistant",
         type: "image/jpeg",
       },
     ],
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     creator: "@ajstudioz",
     title: "AJ STUDIOZ - Advanced AI Chat Assistant",
     description: "🚀 Advanced AI with Three.js 3D scenes, interactive D3.js charts, Monaco code editor, PDF generation & more! Now with PWA offline support.",
-    images: ["/og-image.jpg"],
+    images: ["https://nexa.ajstudioz.co.in/logo.jpg"],
   },
   alternates: {
     canonical: "https://nexa.ajstudioz.co.in",
@@ -176,6 +176,15 @@ export default function RootLayout({
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        
+        {/* WhatsApp and Social Media Specific */}
+        <meta property="og:image" content="https://nexa.ajstudioz.co.in/logo.jpg" />
+        <meta property="og:image:secure_url" content="https://nexa.ajstudioz.co.in/logo.jpg" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta property="og:image:alt" content="AJ STUDIOZ AI Assistant Logo" />
+        <meta name="twitter:image" content="https://nexa.ajstudioz.co.in/logo.jpg" />
+        <meta name="twitter:image:alt" content="AJ STUDIOZ AI Assistant Logo" />
         
         {/* PWA and Mobile Optimization */}
         <meta name="application-name" content="AJ STUDIOZ AI" />

@@ -42,12 +42,17 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
+      { url: "/logo.jpg", sizes: "32x32", type: "image/jpeg" },
+      { url: "/logo.jpg", sizes: "16x16", type: "image/jpeg" },
       { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/logo.jpg", sizes: "192x192", type: "image/jpeg" },
     ],
     apple: [
       { url: "/logo.jpg", sizes: "180x180", type: "image/jpeg" },
+    ],
+    shortcut: [
+      { url: "/logo.jpg", type: "image/jpeg" },
     ],
   },
   openGraph: {
@@ -162,7 +167,10 @@ export default function RootLayout({
         {/* Favicon and Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/logo.jpg" type="image/jpeg" sizes="32x32" />
+        <link rel="icon" href="/logo.jpg" type="image/jpeg" sizes="16x16" />
         <link rel="apple-touch-icon" href="/logo.jpg" />
+        <link rel="shortcut icon" href="/logo.jpg" />
         
         {/* SEO and Social Sharing */}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />

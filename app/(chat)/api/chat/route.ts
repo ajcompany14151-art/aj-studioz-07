@@ -46,6 +46,15 @@ export async function POST(request: Request) {
   const messagesFromDb = await getMessagesByChatId({ id });
   const uiMessages = [...convertToUIMessages(messagesFromDb), message];
 
+  // Extract attachments from message parts
+  const attachmentsFromParts = message.parts
+    ?.filter((part: any) => part.type === "file")
+    ?.map((part: any) => ({
+      name: part.name,
+      url: part.url,
+      contentType: part.mediaType,
+    })) || [];
+
   await saveMessages({
     messages: [
       {
@@ -53,7 +62,7 @@ export async function POST(request: Request) {
         id: message.id,
         role: "user",
         parts: message.parts,
-        attachments: message.experimental_attachments || [],
+        attachments: attachmentsFromParts,
         createdAt: new Date(),
       },
     ],

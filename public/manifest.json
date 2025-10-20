@@ -2,14 +2,18 @@
   "name": "AJ STUDIOZ - AI Chat Assistant",
   "short_name": "AJ STUDIOZ",
   "description": "Advanced AI Chat Assistant with Lynxa Pro, Lite, and Student models. Create documents, get comprehensive answers, and chat with intelligence.",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#000000",
   "theme_color": "#6366f1",
   "orientation": "portrait-primary",
   "categories": ["productivity", "education", "utilities"],
   "lang": "en",
   "scope": "/",
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
   "icons": [
     {
       "src": "/logo.jpg",

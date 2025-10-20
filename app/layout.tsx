@@ -9,62 +9,94 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aj-studioz-07.vercel.app"),
+  metadataBase: new URL("https://nexa.ajstudioz.co.in"),
   title: {
-    default: "AJ Studioz AI",
-    template: "%s | AJ Studioz AI"
+    default: "AJ STUDIOZ - Advanced AI Chat Assistant",
+    template: "%s | AJ STUDIOZ AI"
   },
-  description: "Advanced AI assistant with HTML preview, Grok-style responses, and mobile-optimized design. Get instant code previews, smart conversations, and creative solutions.",
+  description: "Advanced AI Chat Assistant powered by Groq with Llama 3.3 70B. Features document generation, code execution, 3D visualizations, and comprehensive AI assistance for productivity and education.",
   keywords: [
-    "AI chat", "AJ STUDIOZ", "3D visualization", "code playground", "interactive diagrams", 
-    "PDF generation", "Excel integration", "artificial intelligence", "AI assistant", 
+    "AI chatbot", "artificial intelligence", "Groq", "Llama 3.3", "AJ STUDIOZ",
+    "document generation", "code execution", "3D visualization", "AI assistant",
+    "productivity tools", "education AI", "chat assistant", "machine learning",
+    "natural language processing", "automated assistance", "AI technology",
+    "conversational AI", "intelligent assistant", "AI-powered tools",
     "Three.js", "D3.js", "Mermaid", "PWA", "offline AI", "advanced chatbot"
   ],
-  authors: [{ name: "AJ STUDIOZ", url: "https://ajstudioz.com" }],
+  authors: [{ name: "AJ STUDIOZ", url: "https://nexa.ajstudioz.co.in" }],
   creator: "AJ STUDIOZ",
   publisher: "AJ STUDIOZ",
-  applicationName: "AJ Studioz AI",
+  applicationName: "AJ STUDIOZ AI",
   category: "productivity",
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/logo.jpg", sizes: "192x192", type: "image/jpeg" },
+    ],
+    apple: [
+      { url: "/logo.jpg", sizes: "180x180", type: "image/jpeg" },
+    ],
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://aj-studioz-07.vercel.app",
-    title: "AJ Studioz AI - Advanced AI with 3D Visualizations & Code Playground",
+    url: "https://nexa.ajstudioz.co.in",
+    title: "AJ STUDIOZ - Advanced AI Chat Assistant",
     description: "Revolutionary AI chatbot featuring 3D visualizations, interactive diagrams, sandboxed code execution, PDF generation, Excel integration, and offline PWA capabilities.",
-    siteName: "AJ Studioz AI",
+    siteName: "AJ STUDIOZ AI",
     images: [
       {
-        url: "/logo.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "AJ Studioz AI - Advanced Chatbot with 3D & Code Features",
+        alt: "AJ STUDIOZ - Advanced AI Chat Assistant",
+        type: "image/jpeg",
       },
       {
-        url: "/screenshot-desktop.png",
-        width: 1280,
-        height: 720,
-        alt: "AJ Studioz AI Desktop Interface",
+        url: "/logo.jpg",
+        width: 512,
+        height: 512,
+        alt: "AJ STUDIOZ Logo",
+        type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AJ Studioz AI - 3D Visualizations & Code Playground",
-    description: "🚀 Advanced AI with Three.js 3D scenes, interactive D3.js charts, Monaco code editor, PDF generation & more! Now with PWA offline support.",
-    images: ["/logo.jpg"],
-    creator: "@ajstudioz",
     site: "@ajstudioz",
+    creator: "@ajstudioz",
+    title: "AJ STUDIOZ - Advanced AI Chat Assistant",
+    description: "🚀 Advanced AI with Three.js 3D scenes, interactive D3.js charts, Monaco code editor, PDF generation & more! Now with PWA offline support.",
+    images: ["/og-image.jpg"],
   },
-  // Additional meta tags for better social media sharing
+  alternates: {
+    canonical: "https://nexa.ajstudioz.co.in",
+  },
+  // Enhanced meta tags for better SEO and social sharing
   other: {
     "og:image:width": "1200",
     "og:image:height": "630",
     "og:image:type": "image/jpeg",
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "application-name": "AJ STUDIOZ AI",
+    "msapplication-TileColor": "#000000",
+    "theme-color": "#6366f1",
+    "format-detection": "telephone=no",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
   },
 };
 
@@ -127,11 +159,18 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Favicon and Icons */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="alternate icon" href="/logo.jpg" type="image/jpeg" />
         <link rel="apple-touch-icon" href="/logo.jpg" />
-        {/* PWA Meta Tags */}
-        <meta name="application-name" content="AJ STUDIOZ" />
+        
+        {/* SEO and Social Sharing */}
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        
+        {/* PWA and Mobile Optimization */}
+        <meta name="application-name" content="AJ STUDIOZ AI" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="AJ STUDIOZ" />
@@ -140,16 +179,66 @@ export default function RootLayout({
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <link rel="apple-touch-icon" href="/logo.jpg" />
+        <meta name="theme-color" content="#6366f1" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#1f2937" media="(prefers-color-scheme: dark)" />
+        
+        {/* Additional Performance and SEO */}
+        <meta name="referrer" content="origin-when-cross-origin" />
+        <meta name="color-scheme" content="light dark" />
+        <meta name="supported-color-schemes" content="light dark" />
+        
         <link rel="manifest" href="/manifest.json" />
         
-        {/* Viewport for proper PWA behavior */}
+        {/* Viewport for optimal PWA and mobile experience */}
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, viewport-fit=cover" />
+        
+        {/* Preconnect to external domains for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required"
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
+          }}
+        />
+        
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for SEO"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "AJ STUDIOZ - Advanced AI Chat Assistant",
+              "description": "Advanced AI Chat Assistant powered by Groq with Llama 3.3 70B. Features document generation, code execution, 3D visualizations, and comprehensive AI assistance.",
+              "url": "https://nexa.ajstudioz.co.in",
+              "applicationCategory": "ProductivityApplication",
+              "operatingSystem": "Web Browser",
+              "browserRequirements": "Requires JavaScript. Compatible with Chrome, Firefox, Safari, Edge.",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "AJ STUDIOZ",
+                "url": "https://nexa.ajstudioz.co.in"
+              },
+              "featureList": [
+                "AI-powered conversations",
+                "Code execution and preview",
+                "3D visualizations with Three.js",
+                "Document generation",
+                "PDF creation",
+                "Excel integration",
+                "Offline PWA support",
+                "Interactive diagrams"
+              ],
+              "screenshot": "https://nexa.ajstudioz.co.in/og-image.jpg"
+            })
           }}
         />
       </head>

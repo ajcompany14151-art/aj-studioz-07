@@ -447,9 +447,28 @@
   width: var(--sidebar-width-icon);
 }
 
+/* Fix main content area when sidebar is collapsed */
+.group\/sidebar-wrapper:has([data-state="collapsed"]) main {
+  margin-left: var(--sidebar-width-icon);
+}
+
+.group\/sidebar-wrapper:has([data-state="expanded"]) main {
+  margin-left: var(--sidebar-width);
+}
+
+/* Smooth transition for content area */
+main {
+  transition: margin-left 200ms ease-linear;
+}
+
 /* Fix for mobile sidebar */
 @media (max-width: 768px) {
   [data-mobile="true"][data-sidebar="sidebar"] {
     width: var(--sidebar-width-mobile) !important;
+  }
+  
+  /* Remove margin on mobile - sidebar is overlay */
+  .group\/sidebar-wrapper main {
+    margin-left: 0 !important;
   }
 }

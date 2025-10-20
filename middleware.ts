@@ -1,6 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { guestRegex, isDevelopmentEnvironment } from "./lib/constants";
+
+// Define constants inline to avoid import chain issues in Edge Runtime
+const guestRegex = /^guest-\d+$/;
+const isDevelopmentEnvironment = process.env.NODE_ENV === "development";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

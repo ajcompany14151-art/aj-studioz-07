@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
   // Handle image attachments with vision analysis
   if (attachmentsFromParts.length > 0) {
-    const imageAttachments = attachmentsFromParts.filter(att => 
+    const imageAttachments = attachmentsFromParts.filter((att: any) => 
       att.contentType?.startsWith('image/')
     );
     

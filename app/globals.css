@@ -199,13 +199,36 @@
   body {
     @apply bg-background text-foreground;
     overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
     font-feature-settings: "cv11", "ss01";
     font-optical-sizing: auto;
+    max-width: 100vw;
   }
 
   html {
     overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100vw;
+  }
+
+  /* Prevent horizontal overflow globally */
+  *:not(pre):not(code):not(.code-block):not(.cm-editor):not(.monaco-editor) {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  /* Allow horizontal scroll only for code blocks */
+  pre,
+  code,
+  .code-block,
+  .cm-editor,
+  .monaco-editor,
+  .cm-scroller,
+  .artifact-code-block {
+    overflow-x: auto;
+    overflow-y: auto;
   }
 
   /* Mobile input optimization */

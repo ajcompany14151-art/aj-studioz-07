@@ -430,3 +430,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Ensure sidebar visibility and prevent layout issues */
+[data-sidebar="sidebar"] {
+  min-width: var(--sidebar-width-icon);
+  background: hsl(var(--sidebar));
+  border-right: 1px solid hsl(var(--sidebar-border));
+}
+
+/* Ensure proper sidebar state handling */
+.group\/sidebar-wrapper:has([data-state="expanded"]) [data-sidebar="sidebar"] {
+  width: var(--sidebar-width);
+}
+
+.group\/sidebar-wrapper:has([data-state="collapsed"]) [data-sidebar="sidebar"] {
+  width: var(--sidebar-width-icon);
+}
+
+/* Fix for mobile sidebar */
+@media (max-width: 768px) {
+  [data-mobile="true"][data-sidebar="sidebar"] {
+    width: var(--sidebar-width-mobile) !important;
+  }
+}

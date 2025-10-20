@@ -26,9 +26,9 @@ import { cn } from "@/lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = "14rem"; // Narrower for a sleek, Grok-like look
-const SIDEBAR_WIDTH_MOBILE = "16rem";
-const SIDEBAR_WIDTH_ICON = "2.5rem"; // Narrower collapsed state
+const SIDEBAR_WIDTH = "16rem"; // Increase from 14rem for better visibility
+const SIDEBAR_WIDTH_MOBILE = "18rem"; // Increase from 16rem
+const SIDEBAR_WIDTH_ICON = "3rem"; // Increase from 2.5rem for better icon visibility
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContextProps = {
@@ -236,7 +236,7 @@ const Sidebar = React.forwardRef<
               ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
               : "group-data-[collapsible=icon]:w-[var(--sidebar-width-icon)] group-data-[side=left]:border-r group-data-[side=right]:border-l",
             className,
-            "bg-gradient-to-b from-gray-900 to-gray-800" // Grok-like aesthetic
+            "bg-sidebar" // Remove the gradient, use the CSS variable instead
           )}
           {...props}
         >

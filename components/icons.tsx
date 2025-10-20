@@ -1228,3 +1228,20 @@ export const FileTextIcon = ({ size = 16 }: { size?: number}) => (
     />
   </svg>
 );
+
+export const ArrowLeftIcon = ({ size = 16 }: { size?: number }) => (
+  <svg
+    height={size}
+    strokeLinejoin="round"
+    style={{ color: "currentcolor" }}
+    viewBox="0 0 16 16"
+    width={size}
+  >
+    <path
+      clipRule="evenodd"
+      d="M6.46967 13.7803L6.99999 14.3107L8.06065 13.2501L7.53032 12.7197L3.81065 9.00009H15H16V7.50009H15H3.81065L7.53032 3.78042L8.06065 3.25009L6.99999 2.18943L6.46967 2.71976L1.46966 7.71975L0.939331 8.25008L1.46966 8.78041L6.46967 13.7803Z"
+      fill="currentColor"
+      fillRule="evenodd"
+    />
+  </svg>
+);

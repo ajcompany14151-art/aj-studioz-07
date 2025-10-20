@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { tool } from "ai";
 import { generateImage, isImageGenerationRequest, extractImagePrompt } from "../image-generation";
 
-export const generateImageTool = {
+export const generateImageTool = tool({
   description: `Generate images from text descriptions using AI. Call this when users ask to:
   - Generate, create, or make images/pictures/photos
   - Draw, paint, sketch, or illustrate something  
@@ -13,7 +14,7 @@ export const generateImageTool = {
   - "Create a picture of a futuristic city"
   - "Draw a cute cat wearing a hat"
   - "Make an illustration of quantum physics"`,
-  parameters: z.object({
+  inputSchema: z.object({
     prompt: z.string().describe("Detailed description of the image to generate. Be specific and descriptive."),
     style: z.enum(["natural", "vivid", "artistic", "photographic", "digital_art"]).optional().describe("Style of the image"),
     size: z.enum(["1024x1024", "1024x1792", "1792x1024"]).optional().describe("Size of the generated image"),
@@ -56,4 +57,4 @@ export const generateImageTool = {
       };
     }
   }
-};
+});

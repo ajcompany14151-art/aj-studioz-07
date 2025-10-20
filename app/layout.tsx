@@ -127,13 +127,13 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/logo.jpg" type="image/jpeg" />
-        <link rel="alternate icon" href="/logo.jpg" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="alternate icon" href="/logo.jpg" type="image/jpeg" />
         <link rel="apple-touch-icon" href="/logo.jpg" />
         {/* PWA Meta Tags */}
         <meta name="application-name" content="AJ STUDIOZ" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="AJ STUDIOZ" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -142,59 +142,14 @@ export default function RootLayout({
         <meta name="msapplication-tap-highlight" content="no" />
         <link rel="apple-touch-icon" href="/logo.jpg" />
         <link rel="manifest" href="/manifest.json" />
+        
+        {/* Viewport for proper PWA behavior */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, viewport-fit=cover" />
+        
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required"
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
-          }}
-        />
-        {/* PWA Service Worker */}
-        <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for PWA"
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch((registrationError) => {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
-        />
-        {/* PWA Install Prompt */}
-        <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for PWA"
-          dangerouslySetInnerHTML={{
-            __html: `
-              let deferredPrompt;
-              window.addEventListener('beforeinstallprompt', (e) => {
-                console.log('PWA install prompt available');
-                e.preventDefault();
-                deferredPrompt = e;
-                // You can show a custom install button here
-                const installBtn = document.getElementById('pwa-install-btn');
-                if (installBtn) {
-                  installBtn.style.display = 'block';
-                  installBtn.addEventListener('click', () => {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                      if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the PWA install');
-                      } else {
-                        console.log('User dismissed the PWA install');
-                      }
-                      deferredPrompt = null;
-                    });
-                  });
-                }
-              });
-            `,
           }}
         />
       </head>

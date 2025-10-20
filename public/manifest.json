@@ -4,16 +4,53 @@
   "description": "Advanced AI Chat Assistant with Lynxa Pro, Lite, and Student models. Create documents, get comprehensive answers, and chat with intelligence.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#000000",
+  "theme_color": "#6366f1",
   "orientation": "portrait-primary",
   "categories": ["productivity", "education", "utilities"],
   "lang": "en",
   "scope": "/",
+  "id": "/",
   "icons": [
     {
       "src": "/logo.jpg",
+      "sizes": "72x72",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "96x96",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "128x128",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "144x144",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "152x152",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpg",
       "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "384x384",
       "type": "image/jpeg",
       "purpose": "any"
     },
@@ -38,18 +75,11 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshot-desktop.png",
+      "src": "/images/demo-thumbnail.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Desktop view of AJ Studioz AI"
-    },
-    {
-      "src": "/screenshot-mobile.png", 
-      "sizes": "375x812",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Mobile view of AJ Studioz AI"
     }
   ],
   "shortcuts": [
@@ -58,19 +88,14 @@
       "short_name": "New Chat",
       "description": "Start a new conversation",
       "url": "/",
-      "icons": [{"src": "/logo.jpg", "sizes": "96x96"}]
-    },
-    {
-      "name": "Code Playground",
-      "short_name": "Playground",
-      "description": "Open code playground",
-      "url": "/playground",
-      "icons": [{"src": "/logo.jpg", "sizes": "96x96"}]
+      "icons": [{"src": "/logo.jpg", "sizes": "96x96", "type": "image/jpeg"}]
     }
   ],
-  "features": [
-    "Cross Platform",
-    "fast",
-    "simple"
-  ]
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
 }
